@@ -8,5 +8,3 @@ Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https:
 ![licence](https://img.shields.io/badge/licence-GPLv3-red)
 
 > 🚴 This repository shows how to predict the demand of bikes needed for a bike rental service.
-
-This is Yannik!
