@@ -9,3 +9,4 @@ Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https:
 
 > 🚴 This repository shows how to predict the demand of bikes needed for a bike rental service.
 
+This is Yannik!
