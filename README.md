@@ -9,3 +9,28 @@ Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https:
 
 > 🚴 This repository shows how to predict the demand of bikes needed for a bike rental service.
 
+- [Bikerus](#bikerus)
+
+## Tasks
+
+### Data Science
+- [ ] Ask Peter Roßbach whether he can give us the location! (Insisting!)
+- [ ] Data Processing
+  - [ ] Finding Outliers
+  - [ ] Dealing with Outliers
+- [ ] Understanding the Business Case!
+  - [ ] What outcome do we want to have? (Domain knowledge)
+  - [ ] Look at comparable data sources (how did others do it?)
+- [ ] Create train and test split
+- [ ] First selection of methods to try out! (Reading literature and finding reasons why we chose this specific model.)
+- [ ] Apply model
+- [ ] Write report
+
+### Paper
+
+- [ ] Latex (Yannik)
+
+### Presentation
+
+- [ ] Structure
+  - [ ] Illustrative
