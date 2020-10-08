@@ -10,6 +10,7 @@ Within this markdown it will be explained how to write different type of things.
   - [Markdown](#markdown)
 - [Header 1](#header-1)
   - [Header 2](#header-2)
+  - [Docstring](#docstring)
 
 ## Markdown
 
@@ -50,3 +51,23 @@ We can also make a separator, using three minus signs in a row
 
 Markdown also supports HTML-tags. However, GitHub, does only accept specific ones. [Here](https://gist.github.com/seanh/13a93686bf4c2cb16e658b3cf96807f2) are a few.
 
+## Docstring
+
+```python
+def sum_(a, b):
+    """This calculates the sum from two numbers.
+    
+    Parameters
+    ----------
+    a: int
+        This is the first number of the sum.
+    
+    b: int
+        This is the second number of the sum.
+        
+    Returns
+    -------
+    This functions returns the sum from a and b.    
+    """
+    return a + b
+```
