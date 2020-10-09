@@ -36,12 +36,12 @@
 	// "image": "mcr.microsoft.com/vscode/devcontainers/python:3.7",
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"ms-python.python",
 		"eamodio.gitlens",
 		"pkief.material-icon-theme",
 		"ms-azuretools.vscode-docker",
 		"donjayamanne.githistory",
-		"davidanson.vscode-markdownlint"
+		"davidanson.vscode-markdownlint",
+		"ms-python.python@2020.8.109390"
 	],
 	// "containerEnv": {
 	// 	"http_proxy": "http://172.17.0.1:3128",
@@ -50,7 +50,9 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [9000],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install -r requirements.txt",
+	"postCreateCommand": [
+		"pip3 install -r requirements.txt"
+	],
 	// Comment out to connect as root instead.
 	// "remoteUser": "vscode"
 }
