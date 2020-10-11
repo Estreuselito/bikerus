@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\Yannik\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe",
+    "python.pythonPath": "/usr/local/bin/python",
     "python.dataScience.jupyterServerURI": "local",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true
