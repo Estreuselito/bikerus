@@ -1,2 +1,6 @@
 jupyter
+<<<<<<< HEAD
 pandas==1.1.3 
+=======
+pandas==1.1.3
+>>>>>>> b947bc81e30d2eab73d06ab32ce304ed159017fc
