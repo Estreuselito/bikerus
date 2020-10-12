@@ -3,6 +3,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,jupyternotebooks,pycharm,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode,jupyternotebooks,pycharm,python
 
+
+#### DrawIO ####
+*.drawio
+
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
