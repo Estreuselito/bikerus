@@ -11,19 +11,3 @@ Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https:
 
 - [Bikerus](#bikerus)
 
-## Tasks
-
-### Data Science
-
-- [ ] First selection of methods to try out! (Reading literature and finding reasons why we chose this specific model.)
-- [ ] Apply model
-- [ ] Write report
-
-### Paper
-
-- [ ] Latex (Yannik)
-
-### Presentation
-
-- [ ] Structure
-  - [ ] Illustrative
