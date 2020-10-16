@@ -3,6 +3,14 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,jupyternotebooks,pycharm,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode,jupyternotebooks,pycharm,python
 
+# Make sure resources do not get added to repo
+
+references/resources
+
+
+#### DrawIO ####
+*.drawio
+
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
@@ -258,6 +266,7 @@ dmypy.json
 .prof
 
 ### VisualStudioCode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
