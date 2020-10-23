@@ -42,7 +42,11 @@
 		"donjayamanne.githistory",
 		"davidanson.vscode-markdownlint",
 		"coenraads.bracket-pair-colorizer",
-		"ms-python.python@2020.9.114305"
+		"ms-python.python@2020.9.114305",
+		"ms-python.vscode-pylance",
+		"njpwerner.autodocstring",
+		"gruntfuggly.bettercomment",
+		"himanoa.python-autopep8"
 	],
 	// "containerEnv": {
 	// 	"http_proxy": "http://172.17.0.1:3128",

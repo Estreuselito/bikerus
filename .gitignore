@@ -7,9 +7,9 @@
 
 references/resources
 
-# ignore data for now
+# ignore data raw for now
 
-data/
+data/raw
 
 #### DrawIO ####
 *.drawio
