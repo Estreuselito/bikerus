@@ -22,7 +22,7 @@ def return_and_save_bike_station_map(df,
         returns a folium html map with a draggable legend
     """
     if len(df["Start station number"].unique()) == len(df["End station number"].unique()):
-        print("Both start and end stations are equal!")
+        pass
     else:
         return False
     unique_stats = (pd.DataFrame({"Start station number": (df["Start station number"].unique())})
