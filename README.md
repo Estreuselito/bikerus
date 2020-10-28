@@ -11,6 +11,7 @@ Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https:
 
 - [Bikerus](#bikerus)
 - [Data acquisition](#data-acquisition)
+- [Imputing NAs](#imputing-nas)
 - [Data visualization](#data-visualization)
   - [Bike Rental Station Map](#bike-rental-station-map)
 
@@ -22,6 +23,12 @@ In order to obtain the data, which is used within this project please clone this
 - Download the files from the web
 - Extract them into a folder within the parent directory called `data/raw`
 - Loads these raw datasets and converts them into a compressed file in `data/interim` (for the sake of convenience we left the raw data there, in order you want to change things).
+
+# Imputing NAs
+
+> 🥋 This paragraph will show how NAs are imputed
+
+In order to impute your own missing values please execute the script named `1_pipeline_impute_NAs.py`. This will create a file in the folder `data` which is named `preprocessed`. In this folder you can find the final version of the Bike Rental data. 
 
 # Data visualization
 
