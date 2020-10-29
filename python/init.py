@@ -1,4 +1,8 @@
-import pandas as pd
-data = pd.read_csv("BikeRental.csv")
-data.to_csv("This_is_a_test.csv")
-print("done man!")
+def test():
+    lst = []
+    for i in range(100):
+        lst.append(i)
+
+if __name__ == '__main__':
+    import timeit
+    print(timeit.timeit("test()", setup="from __main__ import test")) # 12 second
