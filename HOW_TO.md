@@ -71,3 +71,14 @@ def sum_(a, b):
     """
     return a + b
 ```
+
+## Import other ones scripts and function
+
+> 🛎️ Importing others peoples functions
+
+In order to import other peoples functions and scripts we can use the import statement. As long as the scripts are on one level we can just do
+
+```python
+from data_preprocessing import import_data
+```
+This will import the function ```import_data()``` from the script data_preprocessing.
