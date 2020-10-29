@@ -9,7 +9,7 @@ references/resources
 
 # ignore data raw for now
 
-data/raw
+data/
 
 #### DrawIO ####
 *.drawio

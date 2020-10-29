@@ -1,3 +1,6 @@
+# this file contains all functions, which are used in order to preprocess the data
+
+# imports
 import pandas as pd
 import bz2
 import pickle
@@ -19,11 +22,32 @@ def import_data(path, **kwargs):
 
 # Pickle a file and then compress it into a file with extension 
 def compressed_pickle(title, data):
- with bz2.BZ2File(title + '.pbz2', 'w') as f: 
-    cPickle.dump(data, f)
+    """loads data and compresses this into a .pbz2 file which reduces it immensly in size
 
-# Load any compressed pickle file
+    Parameters
+    ----------
+    title : str
+        the title/path of the file 
+    data : dataframe
+        the dataframe which shall be compressed
+    """
+    with bz2.BZ2File(title + '.pbz2', 'w') as f: 
+      cPickle.dump(data, f)
+
+  # Load any compressed pickle file
 def decompress_pickle(file):
- data = bz2.BZ2File(file, 'rb')
- data = cPickle.load(data)
- return data
+    """a function which loads .pbz2 files and decompresses them
+
+    Parameters
+    ----------
+    file : str
+        the path location of the file
+
+    Returns
+    -------
+    dataframe
+        this function returns a dataframe
+    """
+    data = bz2.BZ2File(file, 'rb')
+    data = cPickle.load(data)
+    return data
