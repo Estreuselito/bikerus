@@ -1,11 +1,6 @@
 pandas==1.1.3
 folium==0.11.0
-<<<<<<< HEAD
-pandas-profiling[notebook]==2.9.0
-seaborn==0.11.0 
-scikit-learn==0.23.2
-=======
 download==0.3.5
 pandas-profiling[notebook]==2.9.0
-
->>>>>>> d180cdddf072cc48a92dafee555f4358874904d4
+seaborn==0.11.0
+scikit-learn==0.23.2
