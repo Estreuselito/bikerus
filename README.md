@@ -28,7 +28,11 @@ In order to obtain the data, which is used within this project please clone this
 
 > 🥋 This paragraph will show how NAs are imputed
 
-In order to impute your own missing values please execute the script named `1_pipeline_impute_NAs.py`. This will create a file in the folder `data` which is named `preprocessed`. In this folder you can find the final version of the Bike Rental data. 
+In order to impute your own missing values please execute the script named `1_pipeline_impute_NAs.py`. This will create a file in the folder `data` which is named `preprocessed`. In this folder you can find the final version of the Bike Rental data.
+
+# Further preprocessing
+
+Based on the data resulting from imputing NAs, further preprocessing is done by executing the script `2_pipeline_preprocessing`: ❌ unnecessary data features are dropped, ➡️ data is transformed to correct data types, 📊 and the continous variables are normalized. This script will create a file for the preprocessed data in the folder `data` as well as another file for the storing the actual (non-normalized) minimum and maximum values for the variable to be predicted.
 
 # Data visualization
 
