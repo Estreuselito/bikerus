@@ -26,7 +26,7 @@ def train_test_split_ts(data, train_size):
     X_test and Y_test are only used for the testing.
     """
     # Necessary Imports
-    from data_preprocessing import decompress_pickle, compressed_pickle
+    from data_preprocessing import compressed_pickle
 
     # Sanity Check
     if train_size <= 0:
@@ -123,6 +123,7 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = False, vis = Fa
     
     if n_splits == fold:
         X_train_current = X_train.iloc[:list_tscv[fold-1][0]]
+        print('das ist ein test')
         Y_train_current = Y_train.iloc[:list_tscv[fold-1][0]]
         X_test_cv_current = X_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]+1]    # +1 to include the last element X_train
         Y_test_cv_current = Y_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]+1]    # +1 to include the last element of Y_train
@@ -132,11 +133,16 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = False, vis = Fa
         X_test_cv_current = X_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]]
         Y_test_cv_current = Y_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]] 
 
-    compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_train_current", X_train_current)
-    compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_train_current", Y_train_current)
-    compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_test_cv_current", X_test_cv_current)
-    compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_test_cv_current", Y_test_cv_current)
+    # compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_train_current", X_train_current)
+    # compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_train_current", Y_train_current)
+    # compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_test_cv_current", X_test_cv_current)
+    # compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_test_cv_current", Y_test_cv_current)
     
+    # X_train_current.to_csv("./data/partitioned/cross_validation/BikeRental_X_train_current.csv")
+    # Y_train_current.to_csv("./data/partitioned/cross_validation/BikeRental_Y_train_current.csv")
+    # X_test_cv_current.to_csv("./data/partitioned/cross_validation/BikeRental_X_test_cv_current.csv")
+    # Y_test_cv_current.to_csv("./data/partitioned/cross_validation/BikeRental_Y_test_cv_current.csv")
+
     # Visualization (Optional, only executed if vis is set to 'yes' when calling the function)
     if vis == True:
         list_vs_train = []
@@ -182,4 +188,4 @@ Y_train = decompress_pickle("./data/partitioned/BikeRental_Y_train.pbz2")
 X_test = decompress_pickle("./data/partitioned/BikeRental_X_test.pbz2")
 # get_sample_for_cv(9, 9, X_train, Y_train)
 # inlcuding the bar diagram
-get_sample_for_cv(9, 9, X_train, Y_train, X_test = X_test, vis = True)
+get_sample_for_cv(9, 1, X_train, Y_train, X_test = X_test, vis = True)
