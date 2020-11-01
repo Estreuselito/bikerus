@@ -30,9 +30,11 @@ def train_test_split_ts(data, train_size):
 
     # Sanity Check
     if train_size <= 0:
-        return 'The size of the train set has to be greater than 0.'
+        print('The size of the train set has to be greater than 0.')
+        return None
     if train_size >= 1:
-        return 'The size of the train set has to be smaller than 1.'
+        print('The size of the train set has to be smaller than 1.')
+        return None
     else:
         X = df.drop(['cnt'], axis = 1)
         Y = df['cnt']
@@ -47,7 +49,7 @@ def train_test_split_ts(data, train_size):
     compressed_pickle("./data/partitioned/BikeRental_X_test", X_test)
     compressed_pickle("./data/partitioned/BikeRental_Y_test", Y_test)
 
-def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = None, vis = None):
+def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = False, vis = False):
     """This function creates the train and test sets for cross validation for time-series data.
     Furthermore, it creates the horizontal bardiagramm to visualiuze cross-validation/testing iterations 
     including the final testing after all cross-validations have been performed.
@@ -98,15 +100,20 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = None, vis = Non
 
     # Sanity Check
     if type(n_splits) != int:
-        return 'Number of splits must be an integer.'
+        print ('Number of splits must be an integer.')
+        return None
     if type(fold) != int:
-        print('Number of folds must be an integer.')
+        print ('Number of folds must be an integer.')
+        return None
     if n_splits < 2:
-        return 'Number of splits must be at least 2.'
+        print('Number of splits must be at least 2.')
+        return None
     if fold == 0:
-        return 'Fold must be greater than 0.'
+        print('Fold must be greater than 0.')
+        return None
     if fold > n_splits:
-        return 'Fold cannot be greater than number of splits.'
+        print('Fold cannot be greater than number of splits.')
+        return None
 
     # Creation of train and test sets for cross validation
     tscv = TimeSeriesSplit(n_splits=n_splits)
@@ -123,7 +130,7 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = None, vis = Non
         X_train_current = X_train.iloc[:list_tscv[fold-1][0]]
         Y_train_current = Y_train.iloc[:list_tscv[fold-1][0]]
         X_test_cv_current = X_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]]
-        Y_test_cv_current = Y_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]]
+        Y_test_cv_current = Y_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]] 
 
     compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_train_current", X_train_current)
     compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_train_current", Y_train_current)
@@ -131,7 +138,7 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = None, vis = Non
     compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_test_cv_current", Y_test_cv_current)
     
     # Visualization (Optional, only executed if vis is set to 'yes' when calling the function)
-    if vis == 'yes':
+    if vis == True:
         list_vs_train = []
         list_vs_test = []
         for fold in list_tscv:
@@ -173,6 +180,6 @@ train_test_split_ts(df, 0.8)
 X_train = decompress_pickle("./data/partitioned/BikeRental_X_train.pbz2")
 Y_train = decompress_pickle("./data/partitioned/BikeRental_Y_train.pbz2")
 X_test = decompress_pickle("./data/partitioned/BikeRental_X_test.pbz2")
-get_sample_for_cv(9, 9, X_train, Y_train)
+# get_sample_for_cv(9, 9, X_train, Y_train)
 # inlcuding the bar diagram
-# get_sample_for_cv(9, 9, X_train, Y_train, X_test = X_test, vis = 'yes')
+get_sample_for_cv(9, 9, X_train, Y_train, X_test = X_test, vis = True)
