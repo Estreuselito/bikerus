@@ -36,8 +36,8 @@ def train_test_split_ts(data, train_size):
         print('The size of the train set has to be smaller than 1.')
         return None
     else:
-        X = df.drop(['cnt'], axis = 1)
-        Y = df['cnt']
+        X = data.drop(['cnt'], axis = 1)
+        Y = data['cnt']
         index = round(len(X) * train_size)
         X_train = X.iloc[:index]
         Y_train = Y.iloc[:index]
@@ -188,4 +188,4 @@ Y_train = decompress_pickle("./data/partitioned/BikeRental_Y_train.pbz2")
 X_test = decompress_pickle("./data/partitioned/BikeRental_X_test.pbz2")
 # get_sample_for_cv(9, 9, X_train, Y_train)
 # inlcuding the bar diagram
-get_sample_for_cv(9, 1, X_train, Y_train, X_test = X_test, vis = True)
+get_sample_for_cv(3, 3, X_train, Y_train, X_test = X_test, vis = True)
