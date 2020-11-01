@@ -29,33 +29,33 @@ def logging(func):
 
 def catboost_regressor():
 # load data
-    Y_train = decompress_pickle("./data/preprocessed/BikeRental_Y_train.pbz2")
-    Y_test = decompress_pickle("./data/preprocessed/BikeRental_Y_test.pbz2")
-    X_train = decompress_pickle("./data/preprocessed/BikeRental_X_train.pbz2")
-    X_test = decompress_pickle("./data/preprocessed/BikeRental_X_test.pbz2")
+    Y_train = decompress_pickle("./data/partitioned/BikeRental_Y_train.pbz2")
+    Y_test = decompress_pickle("./data/partitioned/BikeRental_Y_test.pbz2")
+    X_train = decompress_pickle("./data/partitioned/BikeRental_X_train.pbz2")
+    X_test = decompress_pickle("./data/partitioned/BikeRental_X_test.pbz2")
 
-    X_train = X_train.drop('yr', axis=1) 
-    X_train = X_train.drop('dteday', axis = 1)
-    X_train = X_train.drop('atemp', axis = 1)
-    X_train = X_train.drop('casual', axis = 1)
-    X_train = X_train.drop('registered', axis = 1)
 
-    X_test = X_test.drop('yr', axis=1) 
-    X_test = X_test.drop('dteday', axis = 1)
-    X_test = X_test.drop('atemp', axis = 1)
-    X_test = X_test.drop('casual', axis = 1)
-    X_test = X_test.drop('registered', axis = 1)
+    X_train = X_train.drop('datetime', axis=1)
+    X_test = X_test.drop('datetime', axis=1)
+ 
 
 
     Y_train_mean = Y_train.mean()
     Y_train_meandev = sum((Y_train-Y_train_mean)**2)
     Y_test_meandev = sum((Y_test-Y_train_mean)**2)
 
+    cat_var = ["season", "yr", "mnth", "hr", "holiday", "weekday", "workingday", "weathersit"]
+    for v in cat_var:
+        X_train[v] = X_train[v].astype("int64")
+        X_test[v] = X_test[v].astype("int64")
+
+
     model = CatBoostRegressor(loss_function='RMSE', depth=10, learning_rate=0.05, iterations=1000, od_type='Iter', od_wait=10) 
 
     model.fit(
         X_train, Y_train, 
-        use_best_model=True, 
+        use_best_model=True,
+        cat_features= ["season", "yr", "mnth", "hr", "holiday", "weekday", "workingday", "weathersit"],
         eval_set=(X_test, Y_test),
         verbose=True,  
         plot=True
