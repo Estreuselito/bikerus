@@ -46,8 +46,8 @@ def catboost_regressor():
 
     cat_var = ["season", "yr", "mnth", "hr", "holiday", "weekday", "workingday", "weathersit"]
     for v in cat_var:
-        X_train[v] = X_train[v].astype("int64")
-        X_test[v] = X_test[v].astype("int64")
+        X_train[v] = X_train[v].astype("str")
+        X_test[v] = X_test[v].astype("str")
 
 
     model = CatBoostRegressor(loss_function='RMSE', depth=10, learning_rate=0.05, iterations=1000, od_type='Iter', od_wait=10) 
