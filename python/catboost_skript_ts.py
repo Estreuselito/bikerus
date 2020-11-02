@@ -46,8 +46,8 @@ def catboost_regressor():
 
     cat_var = ["season", "yr", "mnth", "hr", "holiday", "weekday", "workingday", "weathersit"]
     for v in cat_var:
-        X_train[v] = X_train[v].astype("str")
-        X_test[v] = X_test[v].astype("str")
+        X_train[v] = X_train[v].astype("int64")
+        X_test[v] = X_test[v].astype("int64")
 
 
     model = CatBoostRegressor(loss_function='RMSE', depth=6, learning_rate=0.1, iterations=1000, od_type='Iter', od_wait=10) 
@@ -71,9 +71,6 @@ def catboost_regressor():
     Y_test_dev = sum((Y_test-Y_test_pred)**2)
     pseudor2 = 1 - Y_test_dev/Y_test_meandev
     print("Pseudo-R2 =", pseudor2)
-    model.save_model(fname= "./catboost_model/model.cbm")
-
-    model = CatBoostRegressor
-    model.load_model("model", format= "cpm") 
+    model.save_model("model")
 
 catboost_regressor()
