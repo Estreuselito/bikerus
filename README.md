@@ -1,10 +1,10 @@
-Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https://github.com/TazTornadoo), [Skyler MacGowan](https://github.com/Schuyler-lab), [Sebastian Sydow](https://gitlab.com/sydow), [Jacob Umland](https://gitlab.com/jacobumland)*
+Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https://github.com/TazTornadoo), [Skyler MacGowan](https://github.com/Schuyler-lab), [Sebastian Sydow](https://gitlab.com/sydow), [Jacob Umland](https://gitlab.com/jacobumland)*
 
 # Bikerus
 
 ![language](https://img.shields.io/badge/language-Python%20%7C%20Docker-blue)
 ![version](https://img.shields.io/badge/version-v0.0.1-yellow)
-![last-edited](https://img.shields.io/badge/last%20edited-28.10.2020-green)
+![last-edited](https://img.shields.io/badge/last%20edited-02.11.2020-green)
 ![licence](https://img.shields.io/badge/licence-GPLv3-red)
 
 > 🚴 This repository shows how to predict the demand of bikes needed for a bike rental service.
@@ -12,8 +12,10 @@ Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https:
 - [Bikerus](#bikerus)
 - [Data acquisition](#data-acquisition)
 - [Imputing NAs](#imputing-nas)
+- [Further preprocessing](#further-preprocessing)
 - [Data visualization](#data-visualization)
   - [Bike Rental Station Map](#bike-rental-station-map)
+- [Data Partitioning](#data-partitioning)
 
 # Data acquisition
 
