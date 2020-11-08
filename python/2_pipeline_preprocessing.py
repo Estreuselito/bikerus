@@ -24,9 +24,8 @@ red_var = ["dteday"]
 df = df.drop(red_var, axis=1)
 
 
-# coerce correct data types for categorical data
-cat_var = ["season", "yr", "mnth", "hr", "holiday",
-           "weekday", "workingday", "weathersit"]
+#coerce correct data types for categorical data
+cat_var = ["season", "yr", "mnth", "hr", "holiday", "weekday", "workingday", "weathersit"]
 for v in cat_var:
     df[v] = df[v].astype("category")
 
