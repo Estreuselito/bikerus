@@ -1,12 +1,14 @@
 from data_preprocessing import decompress_pickle, compressed_pickle
 import pandas as pd
 import numpy as np
+import os
 from catboost import CatBoostRegressor
 from sklearn.model_selection import train_test_split
 
 
 import time
 from functools import wraps
+
 
 def logging(func):
     """function for logging the time
@@ -37,7 +39,7 @@ def catboost_regressor():
 
     X_train = X_train.drop('datetime', axis=1)
     X_test = X_test.drop('datetime', axis=1)
- 
+
 
 
     Y_train_mean = Y_train.mean()
@@ -49,6 +51,10 @@ def catboost_regressor():
         X_train[v] = X_train[v].astype("int64")
         X_test[v] = X_test[v].astype("int64")
 
+    if not os.path.exists("./catboost"):
+        os.makedirs("./catboost")
+    
+    os.chdir("./catboost")
 
     model = CatBoostRegressor(loss_function='RMSE', depth=6, learning_rate=0.1, iterations=1000, od_type='Iter', od_wait=10) 
 
@@ -71,6 +77,10 @@ def catboost_regressor():
     Y_test_dev = sum((Y_test-Y_test_pred)**2)
     pseudor2 = 1 - Y_test_dev/Y_test_meandev
     print("Pseudo-R2 =", pseudor2)
-    model.save_model("Catboost_model")
+
+    if not os.path.exists("./catboost"):
+       pass
+    
+    model.save_model("catboost_model", format="cbm")
 
 catboost_regressor()
