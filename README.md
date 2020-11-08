@@ -48,23 +48,23 @@ In order to reproduce the map with the bike share rental stations, you have to e
 train set can be partitioned into a train set and a cross-validation-set (for additional testing).
 
 Steps for creating a train and test set:
-1. Import the data. Use df = decompress_pickle(<path>.pbz2) for importing.
-2. Call the function train_test_split_ts. 
+1. Import the data. Use `df = decompress_pickle(<path>.pbz2)` for importing.
+2. Call the function `train_test_split_ts`. 
     The function takes two arguments: The first one is the data (type: DataFrame). The second is the size of the training set (type: float). The size of the training set must be greater than 0 and smaller than 1.
-    The functions returns the sets for X_train, Y_train, X_test and Y_test. X_train and X_test include all columns except for the target column. Y_train and Y_test only include the target column (field to predict). X_train and Y_train are used for training including determining the samples for cross validation. X_test and Y_test are only used for the (final) testing. The files are exported to: './data/partitioned/'.
+    The functions returns the sets for `X_train`, `Y_train`, `X_test` and `Y_test`. `X_train` and `X_test` include all columns except for the target column. `Y_train` and `Y_test` only include the target column (field to predict). `X_train` and `Y_train` are used for training including determining the samples for cross validation. `X_test` and `Y_test` are only used for the (final) testing. The files are exported to: './data/partitioned/'.
 
 Steps for creating a train and test set for cross validation:
-1. Import the date: X_train, Y_train. Use df = decompress_pickle(<path>.pbz2) for importing.
-2. Call the function get_sample_for_cv.
+1. Import the date: X_train, Y_train. Use `df = decompress_pickle(<path>.pbz2)` for importing.
+2. Call the function `get_sample_for_cv`.
     The function takes six arguments. Two arguments are optional (refer to the steps for creating a horizontal bar diagram to visualize the train-test-splits). 
-    - n_splits: This determines the number of splits used for cross-validation. It must be an integer and greater than 1.
-    - fold: This determines the current fold (subsample) of the train and test set for cross validation.
+    - `n_splits`: This determines the number of splits used for cross-validation. It must be an integer and greater than 1.
+    - `fold`: This determines the current fold (subsample) of the train and test set for cross validation.
       It must be an integer and greater than 0 and not greater than the number of splits.
-    - X_train and Y_train: Data used for training including determining the samples for cross validation. X_train includes all columns except for the target column. Y_train onlys include the target column (field to predict).
-    The functions returns the sets for X_train_current and Y_train_current as the current fold/sub-sample. Additionally it returns X_test_cv_current and Y_test_cv_current for cross-validation.
+    - `X_train` and `Y_train`: Data used for training including determining the samples for cross validation. `X_train` includes all columns except for the target column. `Y_train` onlys include the target column (field to predict).
+    The functions returns the sets for `X_train_current` and `Y_train_current` as the current fold/sub-sample. Additionally it returns `X_test_cv_current` and `Y_test_cv_current` for cross-validation.
 
 Steps for creating a horizontal bar diagramm to visualizse the train-test-splits:
-1. The function get_sample_for_cv can create a horizontal bar diagram for the visualization of the
-the train-test-splits. The function only creates the bardiagram if X_test is added as a parameter and if the parameter vis == 'yes'.
-- X_test: X_test is needed to visualize the final round of testing with X_test and Y_test, which we created at the beginning with the function train_test_split_ts. To create the horizontal bardiagramm, X_test has to be added to the function.
-- vis: Vis is used as decision variable for the creation of the diagram. It is initalized as 'None'. Therefore, the horizontal bardiagramm will not be created. To create the horizontal bardiagramm, add 'yes' as the last parameter, when calling the function. The figure is saved in the path './data/partitioned/'.
+1. The function `get_sample_for_cv` can create a horizontal bar diagram for the visualization of the
+the train-test-splits. The function only creates the bardiagram if `X_test` is added as a parameter and if the parameter `vis` == 'True'.
+- `X_test`: `X_test` is needed to visualize the final round of testing with `X_test` and `Y_test`, which we created at the beginning with the function `train_test_split_ts`. To create the horizontal bardiagramm, `X_test` has to be added to the function.
+- `vis`: Vis is used as decision variable for the creation of the diagram. It is initalized as 'False'. Therefore, the horizontal bardiagramm will not be created. To create the horizontal bardiagramm, add 'True' as the last parameter, when calling the function. The figure is saved in the path './data/partitioned/'.
