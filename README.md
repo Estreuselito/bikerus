@@ -1,10 +1,10 @@
-Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https://github.com/TazTornadoo), [Skyler MacGowan](https://github.com/Schuyler-lab), [Sebastian Sydow](https://gitlab.com/sydow), [Jacob Umland](https://gitlab.com/jacobumland)*
+Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https://github.com/TazTornadoo), [Skyler MacGowan](https://github.com/Schuyler-lab), [Sebastian Sydow](https://gitlab.com/sydow), [Jacob Umland](https://gitlab.com/jacobumland)*
 
 # Bikerus
 
 ![language](https://img.shields.io/badge/language-Python%20%7C%20Docker-blue)
 ![version](https://img.shields.io/badge/version-v0.0.1-yellow)
-![last-edited](https://img.shields.io/badge/last%20edited-28.10.2020-green)
+![last-edited](https://img.shields.io/badge/last%20edited-02.11.2020-green)
 ![licence](https://img.shields.io/badge/licence-GPLv3-red)
 
 > 🚴 This repository shows how to predict the demand of bikes needed for a bike rental service.
@@ -12,8 +12,10 @@ Authors: *[Yannik Suhre](https://github.com/yanniksuhre), [Jan Faulstich](https:
 - [Bikerus](#bikerus)
 - [Data acquisition](#data-acquisition)
 - [Imputing NAs](#imputing-nas)
+- [Further preprocessing](#further-preprocessing)
 - [Data visualization](#data-visualization)
   - [Bike Rental Station Map](#bike-rental-station-map)
+- [Data Partitioning](#data-partitioning)
 
 # Data acquisition
 
@@ -70,6 +72,7 @@ the train-test-splits. The function only creates the bardiagram if X_test is add
 - vis: Vis is used as decision variable for the creation of the diagram. It is initalized as 'None'. Therefore, the horizontal bardiagramm will not be created. To create the horizontal bardiagramm, add 'yes' as the last parameter, when calling the function. The figure is saved in the path './data/partitioned/'.
 
 # CatBoost - Gradient Boosting on Decision Trees
+
 Step 1: Run the Grid_Search_Catboost-param.ipynb to comprehend my Catboost settings. The best parameters of the CatBoostRegressor for this dataset are depthe = 6, learning_rate         = 0.1 and iterations = 1000. 
 Step 2: Open the catboost_skript_ts.py script. Proof the calculated parameters with the parameters in the CatBoostRegressor. Afterwards run the catboost_skript_ts.py script to           create the CatBoost model based on the parameters and the BikeRental dataset. Additionally the script also saves the state of the CatBoost model in a file in the bikerus         folder. The file is named Catboost_model.
 Step 3: Last but not least open the load_catboost.py script. This script loads the previous saved CatBoost model. Additionally, there is also a test dataset of of 1. January             2013 0pm. If you run the script, the model will predict the Bike Rentals for this specific hour based on the testdata set. Since we fed the model with normalized data,           it returns a normalized count value.
