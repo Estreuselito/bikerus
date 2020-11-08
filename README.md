@@ -19,6 +19,7 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
   - [Data Partitioning](#data-partitioning)
 - [Data modelling](#data-modelling)
   - [CatBoost - Gradient Boosting on Decision Trees](#catboost---gradient-boosting-on-decision-trees)
+  - [Fastai - Neural Net Regressor](#fastai---neural-net-regressor)
 
 # Data acquisition
 
@@ -82,6 +83,15 @@ The function `get_sample_for_cv` can create a horizontal bar diagram for the vis
 
 # Data modelling
 
+In order to load or train all models (with exception of fastai - see [here](#fastai---neural-net-regressor) why) with the given train and test split, execute the script `4_models.py`. This will:
+- Load the given models or train them
+- Save them to the local drive
+- Creates two dataframe:
+  - One dataframe with all given prediction (normalized and unnormalized)
+  - Another with the given $R^2$ values
+- Saves the aforementioned dataframes
+
+
 ## CatBoost - Gradient Boosting on Decision Trees
 
 > 🐈 This paragraph explains how the catboost regressor is used
@@ -89,3 +99,12 @@ The function `get_sample_for_cv` can create a horizontal bar diagram for the vis
 1. Run the `Grid_Search_Catboost-param.ipynb` to comprehend my Catboost settings. The best parameters of the CatBoostRegressor for this dataset are `depth = 6`, `learning_rate = 0.1` and `iterations = 1000`. 
 2. Open the `catboost_skript_ts.py` script. Proof the calculated parameters with the parameters in the `CatBoostRegressor`. Afterwards run the `catboost_skript_ts.py` script to create the CatBoost model based on the parameters and the BikeRental dataset. Additionally the script also saves the state of the CatBoost model in a file in the bikerus folder. The file is named `Catboost_model`.
 3. Last but not least open the `load_catboost.py` script. This script loads the previous saved CatBoost model. Additionally, there is also a test dataset of of `1. January 2013 0pm`. If you run the script, the model will predict the Bike Rentals for this specific hour based on the testdata set. Since we fed the model with normalized data, it returns a normalized count value.
+
+## Fastai - Neural Net Regressor
+
+> ⚠️In order to try this one, one has to install [fastai](https://docs.fast.ai/#Installing) within an anaconda environment, since the pip version is really hard to install. Thus it could not be installed within a container. Please follow the fastai link above to get more detailed explanation of how to setup fastai in your local environment. You have to uncomment the function `fastai_neural_net_regression` within the script `model_creation` as well as the line where you import fastai. If you want to run the script `4_models.py` with the `fastai_neural_net_regression` make sure also to uncomment that, when you are in a anaconda enviroment with fastai.
+
+> 🌠 In the following will be explained how to use FastAI for a regression task
+
+FastAI is a framework developed for fast and accessible artificial intelligence. Since its second version it can deal with structure tabular data, using neural nets as a regressor.
+
