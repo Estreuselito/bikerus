@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from catboost import CatBoostRegressor
 from sklearn.model_selection import train_test_split
-import ipywidgets
+#import ipywidgets
 
 import time
 from functools import wraps
