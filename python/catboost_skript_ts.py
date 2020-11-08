@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from catboost import CatBoostRegressor
 from sklearn.model_selection import train_test_split
-#import ipywidgets
+
 
 import time
 from functools import wraps
@@ -71,6 +71,6 @@ def catboost_regressor():
     Y_test_dev = sum((Y_test-Y_test_pred)**2)
     pseudor2 = 1 - Y_test_dev/Y_test_meandev
     print("Pseudo-R2 =", pseudor2)
-    model.save_model("model")
+    model.save_model("Catboost_model")
 
 catboost_regressor()
