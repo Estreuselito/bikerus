@@ -24,7 +24,8 @@ Let's get you started by downloading you data!\n")
 
 list_of_zip_path = ["http://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip",
                     "https://s3.amazonaws.com/capitalbikeshare-data/2011-capitalbikeshare-tripdata.zip",
-                    "https://s3.amazonaws.com/capitalbikeshare-data/2012-capitalbikeshare-tripdata.zip"]
+                    "https://s3.amazonaws.com/capitalbikeshare-data/2012-capitalbikeshare-tripdata.zip",
+                    "https://s3.amazonaws.com/capitalbikeshare-data/2013-capitalbikeshare-tripdata.zip"]
 
 if not os.path.exists("./data/raw"):
     os.makedirs("./data/raw")
@@ -46,12 +47,21 @@ art12_br = pd.concat([import_data("./data/raw/2012Q1-capitalbikeshare-tripdata.c
                                   parse_dates=["Start date", "End date"]),
                       import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"])])
 
+art13_br = pd.concat([import_data("./data/raw/2013Q1-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"]),
+                      import_data("./data/raw/2013Q2-capitalbikeshare-tripdata.csv",
+                                  parse_dates=["Start date", "End date"]),
+                      import_data("./data/raw/2013Q3-capitalbikeshare-tripdata.csv",
+                                  parse_dates=["Start date", "End date"]),
+                      import_data("./data/raw/2013Q4-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"])])
+
+
 if not os.path.exists("./data/interim"):
     os.makedirs("./data/interim")
 # compress them
 compressed_pickle("./data/interim/BikeRental", ori_br)
 compressed_pickle("./data/interim/ArtificalRentals11", art11_br)
 compressed_pickle("./data/interim/ArtificalRentals12", art12_br)
+compressed_pickle("./data/interim/ArtificalRentals13", art13_br)
 compressed_pickle("./data/interim/Stations", station_locs)
 
 print("\n\nDone Men! \n\nYou can find you data in you parent folder under data/raw the raw files and under interim the compressed files!")
