@@ -19,9 +19,9 @@ X_train, Y_train, X_test, Y_test = train_test_split_ts(df, train_size)
 # Training the model incl. Cross Validation
 df_parameters = pd.DataFrame()
 folds = list(range(1, 6))
-max_depth = [11]
-n_estimators = [250]
-max_features = [9]
+max_depth = [13]
+n_estimators = [300]
+max_features = [10]
 min_samples_leaf = [1]
 max_leaf_nodes = [80]
 for depth in list(range(len(max_depth))):
@@ -29,14 +29,14 @@ for depth in list(range(len(max_depth))):
         for feature in list(range(len(max_features))):
             for leaf in list(range(len(min_samples_leaf))):
                 for node in list(range(len(max_leaf_nodes))):
-                    for fold in list(range(len(folds))): # important fold as the last category so that the dataframe is ordered to compute the means
+                    for fold in list(range(len(folds))): # important: fold needs to be the last for-loop to be able to compute the means of Pseudo R^2 across the folds
             
                         X_train_cv, Y_train_cv, X_test_cv, Y_test_cv = get_sample_for_cv(folds[-1], # specify the number of total folds, last index of the list
                                                                                         folds[fold], # specifiy the current fold
                                                                                         X_train, # DataFrame X_train, which was created with the function train_test_split_ts
                                                                                         Y_train) # DataFrame Y_train, which was created with the function train_test_split_ts
                 
-                        # to evaluate the prediction quality, we will use the R2 measure
+                        # to evaluate the prediction quality, we use the R2 measure
                         # as a benchmark, we initially calculated the mean value and the residual sum of squares of the target variable for the specific fold
                         Y_train_mean_cv = Y_train_cv.mean()
                         Y_train_meandev_cv = sum((Y_train_cv-Y_train_mean_cv)**2)
@@ -71,8 +71,7 @@ for depth in list(range(len(max_depth))):
                                     'min_samples_leaf': min_samples_leaf[leaf],
                                     'max_leaf_nodes': max_leaf_nodes[node],
                                     'R2': r2_cv, 
-                                    'PseudoR2': pseudor2_cv,
-                                    'Diff R2-PseudoRS': abs(r2_cv - pseudor2_cv)}
+                                    'PseudoR2': pseudor2_cv}
 
                         # Calculate means to find the best hyperparameters across all folds
                         n_folds = folds[-1]
@@ -89,13 +88,10 @@ for depth in list(range(len(max_depth))):
                         df_parameters = df_parameters.append(new_row, ignore_index=True)
                     
                         # best parameters based on mean of PseudoR^2
-                        best_parameters = pd.Series(df_parameters.iloc[index, 4:]) # only the hyperparameters are included here, therefore the index starts at 4
-
-print(mean_max, best_parameters)                    
-# print(df_parameters)
+                        best_parameters = pd.Series(df_parameters.iloc[index, 3:]) # only the hyperparameters are included here, therefore the index starts at 3
 
 # Apply the model with the found hyperparameters to the test set
-# to evaluate the prediction quality, we will use the R2 measure
+# to evaluate the prediction quality, we use the R2 measure
 # as a benchmark, we initially calculated the mean value and the residual sum of squares of the target variable
 Y_train_mean = Y_train.mean()
 Y_train_meandev = sum((Y_train-Y_train_mean)**2)
@@ -123,5 +119,5 @@ pseudor2 = 1 - Y_test_dev/Y_test_meandev
 print("Pseudo-R2 =", pseudor2)
 
 # Save the model
-filename = 'Model_RandomForest_bad.sav'
-joblib.dump(RForreg, filename)
+filename = 'Model_RandomForest.sav'
+joblib.dump(RForreg, "./RandomForest_Model/" + str(filename))
