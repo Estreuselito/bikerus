@@ -24,7 +24,7 @@ red_var = ["dteday"]
 df = df.drop(red_var, axis=1)
 
 
-# coerce correct data types for categorical data
+#coerce correct data types for categorical data
 cat_var = ["season", "yr", "mnth", "hr", "holiday", "weekday", "workingday", "weathersit"]
 for v in cat_var:
     df[v] = df[v].astype("category")
@@ -40,12 +40,14 @@ max_min_count = pd.concat([max_count, min_count], axis=1)
 max_min_count.columns = ["max", "min"]
 # store in pbz2 file
 compressed_pickle("./data/preprocessed/cnt_min_max", max_min_count)
+max_min_count.to_csv("./data/preprocessed/cnt_min_max.csv")
 # normalize data
 mm_scaler = preprocessing.MinMaxScaler()
 df[conti_var] = mm_scaler.fit_transform(df[conti_var])
 
 
 # storage of preprocessed file
+df.to_csv("./data/preprocessed/BikeRental_preprocessed.csv")
 compressed_pickle("./data/preprocessed/BikeRental_preprocessed", df)
 
 
