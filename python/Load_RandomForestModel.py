@@ -18,7 +18,7 @@ X_train, Y_train, X_test, Y_test = train_test_split_ts(df, train_size)
 
 # load the model from disk
 filename = 'Model_RandomForest.sav'
-loaded_model = joblib.load(filename)
+loaded_model = joblib.load("./RandomForest_Model/" + str(filename))
 
 # Create Prediction
 Y_pred = pd.Series(loaded_model.predict(X_test), index = (list(range(round(len(df)*0.8), len(df)))))
