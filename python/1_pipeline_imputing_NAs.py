@@ -2,12 +2,14 @@
 from data_preprocessing import decompress_pickle, compressed_pickle
 import pandas as pd
 import os
+from pandas_profiling import ProfileReport
 
 print("Loading data")
 
 # load data
 df = decompress_pickle("./data/interim/BikeRental.pbz2")
-
+df1 = decompress_pickle("./data/interim/BikeRental.pbz2")
+#profpath = os.path.join("./images", profilename)
 #
 df = df.set_index(pd.to_datetime(df["dteday"] + " " + pd.to_datetime(df["hr"], format = "%H").dt.strftime('%H')))
 df = df.asfreq("H")
@@ -29,8 +31,16 @@ df[columns] = df[columns].interpolate()
 
 df = df.drop("instant", axis=1).rename(columns={"index":"datetime"})
 
+os.chdir("./")
 if not os.path.exists("./data/preprocessed"):
     os.makedirs("./data/preprocessed")
 
 compressed_pickle("./data/preprocessed/BikeRental_complete", df)
+
+os.chdir("./images")
+prof = ProfileReport(df)
+prof.to_file(output_file='imputed_profile.html')
+
+prof1 = ProfileReport(df1)
+prof1.to_file(output_file='starting_profile.html')
 print('DONE Dikka')
