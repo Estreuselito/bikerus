@@ -177,9 +177,7 @@ def catboost_regressor():
     print(test_df)
 
     Y_train_pred = model.predict(X_train)
-    print("Mark one")
     Y_train_dev = sum((Y_train["cnt"].array-Y_train_pred)**2)
-    print("Mark two")
     # Y_train_dev = ((Y_train-Y_train_pred)**2).sum()
     r2 = 1 - Y_train_dev/Y_train_meandev
     print("R2 =", r2)
