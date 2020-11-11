@@ -1,10 +1,3 @@
-# import pandas as pd
-# import numpy as np
-# import matplotlib.pyplot as plt
-# import matplotlib.patches as mpatches
-# from data_preprocessing import decompress_pickle, compressed_pickle
-# from sklearn.model_selection import TimeSeriesSplit
-
 def train_test_split_ts(data, train_size):
     """This function creates the train and test set for time-series data.
     
@@ -48,6 +41,8 @@ def train_test_split_ts(data, train_size):
     compressed_pickle("./data/partitioned/BikeRental_Y_train", Y_train)
     compressed_pickle("./data/partitioned/BikeRental_X_test", X_test)
     compressed_pickle("./data/partitioned/BikeRental_Y_test", Y_test)
+
+    return X_train, Y_train, X_test, Y_test
 
 def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = False, vis = False):
     """This function creates the train and test sets for cross validation for time-series data.
@@ -123,7 +118,6 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = False, vis = Fa
     
     if n_splits == fold:
         X_train_current = X_train.iloc[:list_tscv[fold-1][0]]
-        print('das ist ein test')
         Y_train_current = Y_train.iloc[:list_tscv[fold-1][0]]
         X_test_cv_current = X_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]+1]    # +1 to include the last element X_train
         Y_test_cv_current = Y_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]+1]    # +1 to include the last element of Y_train
@@ -131,12 +125,12 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = False, vis = Fa
         X_train_current = X_train.iloc[:list_tscv[fold-1][0]]
         Y_train_current = Y_train.iloc[:list_tscv[fold-1][0]]
         X_test_cv_current = X_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]]
-        Y_test_cv_current = Y_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]] 
+        Y_test_cv_current = Y_train.iloc[list_tscv[fold-1][0]:list_tscv[fold-1][1]]
 
-    # compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_train_current", X_train_current)
-    # compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_train_current", Y_train_current)
-    # compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_test_cv_current", X_test_cv_current)
-    # compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_test_cv_current", Y_test_cv_current)
+    compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_train_current", X_train_current)
+    compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_train_current", Y_train_current)
+    compressed_pickle("./data/partitioned/cross_validation/BikeRental_X_test_cv_current", X_test_cv_current)
+    compressed_pickle("./data/partitioned/cross_validation/BikeRental_Y_test_cv_current", Y_test_cv_current)
     
     # X_train_current.to_csv("./data/partitioned/cross_validation/BikeRental_X_train_current.csv")
     # Y_train_current.to_csv("./data/partitioned/cross_validation/BikeRental_Y_train_current.csv")
@@ -174,4 +168,7 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test = False, vis = Fa
         plt.legend(handles=[train_patch, test_patch])
     
         # Save Diagramm
+        plt.show()
         plt.savefig("./data/partitioned/Train_Test_Split_Visualization", dpi = 300)
+
+    return X_train_current, Y_train_current, X_test_cv_current, Y_test_cv_current

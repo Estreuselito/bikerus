@@ -41,9 +41,9 @@ ori_br = import_data("./data/raw/hour.csv")
 art11_br = import_data("./data/raw/2011-capitalbikeshare-tripdata.csv",
                        parse_dates=["Start date", "End date"])
 art12_br = pd.concat([import_data("./data/raw/2012Q1-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"]),
-                      import_data("./data/raw/2012Q2-capitalbikeshare-tripdata.csv",
-                                  parse_dates=["Start date", "End date"]),
                       import_data("./data/raw/2012Q3-capitalbikeshare-tripdata.csv",
+                                  parse_dates=["Start date", "End date"]),
+                      import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv",
                                   parse_dates=["Start date", "End date"]),
                       import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"])])
 

@@ -20,6 +20,7 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
 - [Data modelling](#data-modelling)
   - [CatBoost - Gradient Boosting on Decision Trees](#catboost---gradient-boosting-on-decision-trees)
   - [Fastai - Neural Net Regressor](#fastai---neural-net-regressor)
+  - [Scikit-learn - RandomForestRegressor](#scikit-learn---randomforestregressor)
 
 # Data acquisition
 
@@ -54,7 +55,7 @@ Based on the data resulting from imputing NAs, further preprocessing is done by 
 
 ## Data Partitioning
 
-> 🪓 This paragraph will explain how you can partition the used data into a train and test set and how the train set can be partitioned into a train set and a cross-validation-set (for additional testing).
+> 🗂️ This paragraph will explain how you can partition the used data into a train and test set. Additionally it explains how the train set can be partitioned into a train set and a cross-validation-set (for additional testing), if `GridSearchCV` is not used. `GridSearchCV` uses [(Stratified)KFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) as a cross validation splitting strategy (see parameter `cv`). The following explaination describes a variation of KFold which returns first k folds as train set and the (k + 1)th fold as test set.
 
 **Steps for creating a train and test set:**
 1. Import the data. Use `df = decompress_pickle(<path>.pbz2)` for importing.
@@ -64,7 +65,7 @@ Based on the data resulting from imputing NAs, further preprocessing is done by 
 
     The function returns the sets for `X_train`, `Y_train`, `X_test` and `Y_test`. `X_train` and `X_test` include all columns except for the target column. `Y_train` and `Y_test` only include the target column (field to predict). `X_train` and `Y_train` are used for training including determining the samples for cross validation. `X_test` and `Y_test` are only used for the (final) testing. The files are exported to: `'./data/partitioned/'`.
 
-**Steps for creating a train and test set for cross validation:**
+**Steps for creating a train and test set for cross validation (if GridSearchCV is not used):**
 1. Import the date: `X_train`, `Y_train`. Use `df = decompress_pickle(<path>.pbz2)` for importing.
 2. Call the function `get_sample_for_cv`.
 
@@ -108,3 +109,16 @@ In order to load or train all models (with exception of fastai - see [here](#fas
 
 FastAI is a framework developed for fast and accessible artificial intelligence. Since its second version it can deal with structure tabular data, using neural nets as a regressor.
 
+
+## Scikit-learn - RandomForestRegressor
+
+> 🌲 This paragraph explains how the RandomForestRegressor is used
+
+1. Open the `random_forstest.py` script and run the script.
+2. The following steps are performed within the script:
+    1. The script loads the preprocessed data using `decompress_pickle("./data/preprocessed/BikeRental_preprocessed.pbz2")`. 
+    2. The column `'datetime'` needs to be dropped, because the RandomForestRegressor cannot handle its type.
+    3. The train and test samples are created using the function `train_test_split_ts`.
+    4. Here, `GridSearchCV` is not used. Following from the explaination about cross validation iterators in [scikit-learn](https://scikit-learn.org/stable/modules/cross_validation.html) (chapter 3.1.2.), if one knows that the samples have been generated using a time-dependent process, it is safer to use a time-series aware cross-validation scheme. Therefore, cross validation is performed by applying the function [get_sample_for_cv](#Data-Partitioning) to also consider the time series character for cross validation. Here, 5 folds are created. The different hyperparameters are applied to the folds through cascaded for loops. The `Pseudo-R^2` is calculated for each fold and the respective hyperparameter combination. At the end, a mean of each hyperparameter combination across the five folds is calculated. The `hyperparameter combination` with the highest mean is returned. Under consideration of the trade-off between a high `Pseudo-R^2` and the models robustness, the hyperparameters `max_depth = 13`, `n_estimators = 300`, `max_features = 10` and `max_leaf_nodes = 80` have been chosen.
+    5. The RandomForestRegressor is trained with the best hyperparameters and the `R^2` and `Pseudo-R^2` are calculated.
+    6. The Model is saved using `joblib.dump(RForreg, "./RandomForest_Model/" + str(filename))`.
