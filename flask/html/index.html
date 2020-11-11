@@ -2,18 +2,17 @@
 <html >
 <head>
   <meta charset="UTF-8">
-  <title>Deployment Tutorial 1</title>
-  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <title>Predicting Bike Share Rentals</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
   
 </head>
-
-<body style="background: #c7b2b2;">
+<img align="right" width="30%" height="30%" src="../images/image-capital_bikeshare.png" alt="ZDF Digital icon">
+<body style="background: #ffffff;">
  <div class="login">
-	<h1>Sales Forecasting</h1>
+  <font face="Verdana">
+	<center><h1>Bikerus</h1></center>
 
      <!-- Main Input For Receiving Query to our ML -->
     <form action="{{ url_for('predict')}}"method="post">
@@ -26,7 +25,7 @@
    <br>
    <br>
    {{ prediction_text }}
-
+  </font>
  </div>
 </body>
 </html>
