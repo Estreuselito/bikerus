@@ -19,7 +19,7 @@ X_train, Y_train, X_test, Y_test = train_test_split_ts(df, train_size)
 # Training the model incl. Cross Validation
 df_parameters = pd.DataFrame()
 folds = list(range(1, 6))
-max_depth = [13]
+max_depth = [11]
 n_estimators = [300]
 max_features = [10]
 min_samples_leaf = [1]
