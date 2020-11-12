@@ -25,6 +25,7 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
   - [CatBoost - Gradient Boosting on Decision Trees](#catboost---gradient-boosting-on-decision-trees)
   - [Fastai - Neural Net Regressor](#fastai---neural-net-regressor)
   - [Scikit-learn - RandomForestRegressor](#scikit-learn---randomforestregressor)
+  - [Scikit-learn - MLPRegressor](#scikit-learn---mlpregressor)
 - [Deployment and live predictions](#deployment-and-live-predictions)
 
 # Introduction for reproducibility
@@ -177,8 +178,8 @@ FastAI is a framework developed for fast and accessible artificial intelligence.
 
 > 🕸️ This paragraph explains how the MLPRegressor is used.
 
-1. after having finished all preprocessing steps, run `4_models.py` in order to run the models
-2. after execution you can find the saved multilayer perceptron model, its optimal hyperparamters and r squared values as well as the predicted dataframe in `NN_MLP_files`in the `models`folder
+1. after having finished all preprocessing steps, run `4_models.py` in order to run the models.
+2. after execution you can find the saved multilayer perceptron model, its optimal hyperparamters and r squared values as well as the predicted dataframe in `NN_MLP_files` in the `models` folder.
 
 # Deployment and live predictions
 

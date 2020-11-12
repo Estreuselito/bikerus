@@ -15,7 +15,8 @@ try:
                                  learning_rate=0.1, iterations=1000, od_type='Iter', od_wait=10)
     catboost.load_model("./models/catboost/catboost_model")
     neural_net = pickle.load(open("./models/NN_MLP_files/NN_MLP_saved", "rb"))
-    random_forest = joblib.load("./models/RandomForest_Model/Model_RandomForest.sav")
+    random_forest = joblib.load(
+        "./models/RandomForest_Model/Model_RandomForest.sav")
 except:
     print("Something did not work! Could not load models! Execute script 4 again!")
 

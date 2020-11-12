@@ -30,7 +30,7 @@ r2, pseudor2 = catboost_regressor()
 report = report.append({"Modelname": "Catboost regression",
                         "R-Squared": r2,
                         "Pseudo R-Squared": pseudor2},
-                        ignore_index=True)
+                       ignore_index=True)
 
 # Sklearn neural net
 print("\nsklearn nn MLP")
@@ -38,7 +38,7 @@ r2, pseudor2 = sklearn_neural_net_multilayerperceptron()
 report = report.append({"Modelname": "Sklearn NN MLP",
                         "R-Squared": r2,
                         "Pseudo R-Squared": pseudor2},
-                        ignore_index=True)
+                       ignore_index=True)
 
 # Sklearn random forest
 print("\nsklearn RandomForest")
@@ -46,7 +46,7 @@ r2, pseudor2 = sklearn_random_forest()
 report = report.append({"Modelname": "Sklearn RF",
                         "R-Squared": r2,
                         "Pseudo R-Squared": pseudor2},
-                        ignore_index=True)
+                       ignore_index=True)
 
 # print report
 print(" __ \                      |\n\
