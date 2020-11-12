@@ -7,10 +7,10 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
 ![last-edited](https://img.shields.io/badge/last%20edited-12.11.2020-green)
 ![licence](https://img.shields.io/badge/licence-GPLv3-red)
 
-> 🚴 This repository shows how to predict the demand of bikes needed for a bike rental service.
+> 🚴 This repository shows how to predict the demand for bikes available for rent through Washington D.C.'s Capital Bikeshare.
 
 - [Bikerus](#bikerus)
-- [Introduction for reproduciability](#introduction-for-reproduciability)
+- [Introduction for reproducibility](#introduction-for-reproducibility)
   - [Docker](#docker)
   - [Anaconda](#anaconda)
 - [TL;DR](#tldr)
@@ -27,11 +27,11 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
   - [Scikit-learn - RandomForestRegressor](#scikit-learn---randomforestregressor)
 - [Deployment and live predictions](#deployment-and-live-predictions)
 
-# Introduction for reproduciability
+# Introduction for reproducibility
 
-> 💡 Hereafter will be explained how to completely reproduce all the findings within this repo
+> 💡 The text that follows outlines how to fully reproduce the findings of this repository.
 
-To reproduce our findings you must first install and then run this repository. To do so we recommend that you use [docker](https://www.docker.com/products/docker-desktop) and [Visual Studio Code](https://code.visualstudio.com/) as this corresponds with our methodology. Alternatively, you can also use [Anaconda](https://www.anaconda.com/).
+You must firt install and then run this repository. To do so we recommend that you use [docker](https://www.docker.com/products/docker-desktop) and [Visual Studio Code](https://code.visualstudio.com/) as this corresponds with our methodology. Alternatively, you can also use [Anaconda](https://www.anaconda.com/).
 
 ## Docker
 
@@ -47,7 +47,7 @@ To use Visual Studio Code and Docker, please follow the steps outlined below.
 
 > 🐍 This will explain how to use Anaconda to use this repo
 
-Should you use [`Anaconda`](https://www.anaconda.com/) (*`miniconda` was not tested*) and you want to reproduce our findings download the repo. The open you `Anaconda prompt`. Navigate to the downloaded git-repository `Bikerus` (*one can navigate within the `Anaconda prompt` using normal command line commands. In that case `cd <your-path-to-bikerus>`. Should you have any spaces within your path use quotation marks around your path. Also, should you have to change your Harddrive use `\<your-harddrive-letter>`. In total that would look like: `cd \\<your-harddrive-letter> "<your-path-to-bikerus>"`*). Once you navigated there with your prompt, create a new python environment:
+Should you prefer to use [`Anaconda`](https://www.anaconda.com/) (*`miniconda` was not tested*) start by downloading the repository. Then open the `Anaconda prompt`, navigating to the downloaded git-repository `Bikerus` (*one can navigate within the `Anaconda prompt` using normal command line commands; `cd <your-path-to-bikerus>`. Should you have any spaces within your path use quotation marks around your path. Also, should you have to change your Harddrive use `\<your-harddrive-letter>`. In total that would look like: `cd \\<your-harddrive-letter> "<your-path-to-bikerus>"`*). Once you have navigated there with your prompt, create a new python environment:
 
 `conda create --name bikerus python=3.8`
 
@@ -59,27 +59,27 @@ Now, we use `pip` to install the necessary packages from the `requirements.txt`.
 
 `pip install -r requirements.txt`
 
-This install all the necessary packages within your `Anaconda` environment. Now you can start and execute every script by itself without worrying about packages and versions.
+This installs all the necessary packages within your `Anaconda` environment. Now you can start and execute every script by itself without worrying about packages and versions.
 
 # TL;DR
 
-> 🐳 This paragraph is only useful, if you are using Docker with VSCode
+> 🐳 This paragraph is only applicable if you are using Docker with VSCode
 
 Once your Docker Container is running inside your VSCode, you can just enter the following:
 
 `./execute_all_scripts.sh`
 
-This will execute all scripts in the correct order and your don't have to run them indivdually. Should you use `Anaconda` you have to run them individually, since the `Anaconda prompt` cannot execute shell scripts.
+This will execute all scripts in the correct order and you don't have to run them indivdually. Should you use `Anaconda` you have to run them individually, since the `Anaconda prompt` cannot execute shell scripts.
 
 # Data acquisition
 
 > 💾 This paragraph will explain how you can obtain the data used
 
-In order to obtain the data used by this project, please clone this repository and execute then the file `0_pipeline_data_getting_compression.py` file. This file will:
+In order to obtain the data used by this project, please clone this repository and then execute the `0_pipeline_data_getting_compression.py` file. This file will:
 
 - Download the files from the web
 - Extract them into a folder within the parent directory called `data/raw`
-- Load these raw datasets and convert them into a compressed file in `data/interim` (for the sake of convenience we left the raw data there, should you want to change things).
+- Load these raw datasets and convert them into a compressed file in `data/interim` (for the sake of convenience we left the raw data there, should you want to make modifications thereto).
 
 # Data visualization
 
@@ -93,7 +93,7 @@ In order to reproduce the map with the bike share rental stations, you have to e
 
 ## Imputing NAs
 
-> 🥋 This paragraph will show how NAs are imputed
+> 🥋 This paragraph will show how the NAs are imputed
 
 In order to impute your own missing values please execute the script named `1_pipeline_impute_NAs.py`. This will create a file in the folder `data` which is named `preprocessed`. In this folder you can find the final version of the Bike Rental data.
 
@@ -101,44 +101,44 @@ In order to impute your own missing values please execute the script named `1_pi
 
 > 🌾 This paragraph describes how the further preprocessing works
 
-Based on the data resulting from imputing NAs, further preprocessing is done by executing the script `2_pipeline_preprocessing`: ❌ unnecessary data features are dropped, ➡️ data is transformed to correct data types, 📊 and the continous variables are normalized. This script will create a file for the preprocessed data in the folder `data` as well as another file for the storing the actual (non-normalized) minimum and maximum values for the variable to be predicted.
+Based on the data resulting from imputing NAs, further preprocessing is done by executing the script `2_pipeline_preprocessing`: ❌ unnecessary data features are dropped, ➡️ data is transformed to correct data types, 📊 and the continous variables are normalized. This script will create a file for the preprocessed data in the folder `data` as well as another file for the storing the actual (non-normalized) minimum and maximum values for the target variable.
 
 ## Data Partitioning
 
-> 🗂️ This paragraph will explain how you can partition the used data into a train and test set. Additionally it explains how the train set can be partitioned into a train set and a cross-validation-set (for additional testing), if `GridSearchCV` is not used. `GridSearchCV` uses [(Stratified)KFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) as a cross validation splitting strategy (see parameter `cv`). The following explaination describes a variation of KFold which returns first k folds as train set and the (k + 1)th fold as test set.
+> 🗂️ This paragraph will explain how you can partition the used data into training and testing sets. Additionally it explains how the training set can be partitioned into a training set as well as a cross-validation-set (for additional testing), if `GridSearchCV` is not used. `GridSearchCV` uses [(Stratified)KFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) as a cross validation splitting strategy (see parameter `cv`). The following explaination describes a variation of KFold which returns first k folds as training set and the (k + 1)th fold as testing set.
 
-**Steps for creating a train and test set:**
+**Steps for creating training and testing sets:**
 1. Import the data. Use `df = decompress_pickle(<path>.pbz2)` for importing.
 2. Call the function `train_test_split_ts`. 
 
     The function takes two arguments: The first one is the `data (type: DataFrame)`. The second is the size of the `training set (type: float)`. The size of the training set must be greater than `0` and smaller than `1`.
 
-    The function returns the sets for `X_train`, `Y_train`, `X_test` and `Y_test`. `X_train` and `X_test` include all columns except for the target column. `Y_train` and `Y_test` only include the target column (field to predict). `X_train` and `Y_train` are used for training including determining the samples for cross validation. `X_test` and `Y_test` are only used for the (final) testing. The files are exported to: `'./data/partitioned/'`.
+    The function returns the sets for `X_train`, `Y_train`, `X_test` and `Y_test`. `X_train` and `X_test` including all columns except for the target column. `Y_train` and `Y_test` only include the target column (field to predict). `X_train` and `Y_train` are used for training including determining the samples for cross validation. `X_test` and `Y_test` are only used for the (final) testing. The files are exported to: `'./data/partitioned/'`.
 
-**Steps for creating a train and test set for cross validation (if GridSearchCV is not used):**
+**Steps for creating training and testing sets for cross validation (if GridSearchCV is not used):**
 1. Import the date: `X_train`, `Y_train`. Use `df = decompress_pickle(<path>.pbz2)` for importing.
 2. Call the function `get_sample_for_cv`.
 
     The function takes six arguments. Two arguments are optional (refer to the steps for creating a horizontal bar diagram to visualize the train-test-splits). 
-    - `n_splits`: This determines the number of splits used for cross-validation. It must be an integer and greater than `1`.
+    - `n_splits`: This determines the number of splits that will be used for cross-validation. It must be an integer and greater than `1`.
     - `fold`: This determines the current fold (subsample) of the `train` and `test` set for cross validation. It must be an integer and greater than `0` and not greater than the `number of splits`.
     - `X_train` and `Y_train`: Data used for training including determining the samples for cross validation. `X_train` includes all columns except for the target column. `Y_train` only includes the target column (field to predict).
 
-    The functions returns the sets for `X_train_current` and `Y_train_current` as the current fold/sub-sample. Additionally it returns `X_test_cv_current` and `Y_test_cv_current` for cross-validation.
+    The function returns the sets for `X_train_current` and `Y_train_current` as the current fold/sub-sample. Additionally it returns `X_test_cv_current` and `Y_test_cv_current` for cross-validation.
 
-**Steps for creating a horizontal bar diagramm to visualizse the train-test-splits:**
+**Steps for creating a horizontal bar diagram to visualize the train-test-splits:**
 
-The function `get_sample_for_cv` can create a horizontal bar diagram for the visualization of the the train-test-splits. The function only creates the bardiagram if `X_test` is added as a parameter and if the parameter `vis == True`.
-- `X_test`: `X_test` is needed to visualize the final round of testing with `X_test` and `Y_test`, which we created at the beginning with the function `train_test_split_ts`. To create the horizontal bardiagramm, `X_test` has to be added to the function.
-- `vis`: `Vis` is used as decision variable for the creation of the diagram. It is initalized as `False`. Therefore, the horizontal bardiagramm will not be created. To create the horizontal bardiagramm, add `True` as the last parameter, when calling the function. The figure is saved in the path `./data/partitioned/`.
+The function `get_sample_for_cv` can create a horizontal bar diagram for the visualization of the the train-test-splits. The function only creates the bar diagram if `X_test` is added as a parameter and if the parameter `vis == True`.
+- `X_test`: `X_test` is needed to visualize the final round of testing with `X_test` and `Y_test`, which we created at the beginning with the function `train_test_split_ts`. To create the horizontal bar diagram, `X_test` must be added to the function.
+- `vis`: `Vis` is used as decision variable for the creation of the diagram. It is initalized as `False`. Therefore, the horizontal bar diagram will not be created. To create the horizontal bar diagram, add `True` as the last parameter when calling the function. The figure is saved in the path `./data/partitioned/`.
 
 # Data modelling
 
-In order to load or train all models (with exception of fastai - see [here](#fastai---neural-net-regressor) why) with the given train and test split, execute the script `4_models.py`. This will:
+In order to load or train all models (with the exception of fastai - see [here](#fastai---neural-net-regressor) why) with the given train and test split, execute the script `4_models.py`. This will:
 - Load the given models or train them
 - Save them to the local drive
-- Creates two dataframe:
-  - One dataframe with all given prediction (normalized and unnormalized)
+- Create two dataframe:
+  - One dataframe with all given predictions (normalized and unnormalized)
   - Another with the given $R^2$ values
 - Saves the aforementioned dataframes
 
@@ -148,16 +148,16 @@ In order to load or train all models (with exception of fastai - see [here](#fas
 > 🐈 This paragraph explains how the catboost regressor is used
 
 1. Run the `Grid_Search_Catboost-param.ipynb` to comprehend my Catboost settings. The best parameters of the CatBoostRegressor for this dataset are `depth = 6`, `learning_rate = 0.1` and `iterations = 1000`. 
-2. Open the `catboost_skript_ts.py` script. Proof the calculated parameters with the parameters in the `CatBoostRegressor`. Afterwards run the `catboost_skript_ts.py` script to create the CatBoost model based on the parameters and the BikeRental dataset. Additionally the script also saves the state of the CatBoost model in a file in the bikerus folder. The file is named `Catboost_model`.
-3. Last but not least open the `load_catboost.py` script. This script loads the previous saved CatBoost model. Additionally, there is also a test dataset of of `1. January 2013 0pm`. If you run the script, the model will predict the Bike Rentals for this specific hour based on the testdata set. Since we fed the model with normalized data, it returns a normalized count value.
+2. Open the `catboost_skript_ts.py` script. Check the calculated parameters with the parameters in the `CatBoostRegressor`. Afterwards run the `catboost_skript_ts.py` script to create the CatBoost model based on the parameters and the BikeRental dataset. Additionally the script also saves the state of the CatBoost model in a file in the bikerus folder. The file is named `Catboost_model`.
+3. Last but not least open the `load_catboost.py` script. This script loads the previously saved CatBoost model. Additionally, there is also a test dataset of of `1. January 2013 0pm`. If you run the script, the model will predict the Bike Rentals for this specific hour based on the testdata set. Since we fed the model with normalized data, it returns a normalized count value.
 
 ## Fastai - Neural Net Regressor
 
-> ⚠️In order to try this one, one has to install [fastai](https://docs.fast.ai/#Installing) within an anaconda environment, since the pip version is really hard to install. Thus it cannot be installed within a container. Please follow the fastai link above to get more detailed explanation of how to setup fastai in your local environment. You have to uncomment the function `fastai_neural_net_regression` within the script `model_creation` as well as the line where you import fastai. If you want to run the script `4_models.py` with the `fastai_neural_net_regression` make sure also to uncomment that, when you are in a anaconda enviroment with fastai.
+> ⚠️In order to try this one, one has to install [fastai](https://docs.fast.ai/#Installing) within an anaconda environment, since the pip version is really hard to install. Thus it cannot be installed within a container. Please follow the fastai link above for a more detailed explanation of how to setup fastai in your local environment. You have to uncomment the function `fastai_neural_net_regression` within the script `model_creation` as well as the line where you import fastai. If you want to run the script `4_models.py` with the `fastai_neural_net_regression` make sure also to uncomment that, when you are in a anaconda enviroment with fastai.
 
-> 🌠 In the following will be explained how to use FastAI for a regression task
+> 🌠 The following will explain how to use FastAI for a regression task
 
-FastAI is a framework developed for fast and accessible artificial intelligence. Since its second version it can deal with structure tabular data, using neural nets as a regressor.
+FastAI is a framework developed for fast and accessible artificial intelligence. Since its second version it can deal with structured tabular data, using neural nets as a regressor.
 
 
 ## Scikit-learn - RandomForestRegressor
@@ -177,7 +177,7 @@ FastAI is a framework developed for fast and accessible artificial intelligence.
 
 > 🚀 This paragraph explains how to start up a flask app, which deploys the models and makes live predictions
 
-Bascially all you have to do is to run the `app.py`. In VSCode with Docker backend just click the play button in the top right corners. In Anaconda run the `app.py` from the top level of the bikerus folder:
+Bascially all you have to do is to run `app.py`. In VSCode with Docker backend just click the play button in the top right corner. In Anaconda run `app.py` from the top level of the bikerus folder:
 
 `python flask/app.py`
 
