@@ -173,6 +173,13 @@ FastAI is a framework developed for fast and accessible artificial intelligence.
     5. The RandomForestRegressor is trained with the best hyperparameters and the `R^2` and `Pseudo-R^2` are calculated.
     6. The Model is saved using `joblib.dump(RForreg, "./RandomForest_Model/" + str(filename))`.
 
+## Scikit-learn - MLPRegressor
+
+> 🕸️ This paragraph explains how the MLPRegressor is used.
+
+1. after having finished all preprocessing steps, run `4_models.py` in order to run the models
+2. after execution you can find the saved multilayer perceptron model, its optimal hyperparamters and r squared values as well as the predicted dataframe in `NN_MLP_files`in the `models`folder
+
 # Deployment and live predictions
 
 > 🚀 This paragraph explains how to start up a flask app, which deploys the models and makes live predictions
