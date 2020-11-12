@@ -10,6 +10,10 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
 > 🚴 This repository shows how to predict the demand of bikes needed for a bike rental service.
 
 - [Bikerus](#bikerus)
+- [Introduction for reproduciability](#introduction-for-reproduciability)
+  - [Docker](#docker)
+  - [Anaconda](#anaconda)
+- [TL;DR](#tldr)
 - [Data acquisition](#data-acquisition)
 - [Data visualization](#data-visualization)
   - [Bike Rental Station Map](#bike-rental-station-map)
@@ -21,12 +25,58 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
   - [CatBoost - Gradient Boosting on Decision Trees](#catboost---gradient-boosting-on-decision-trees)
   - [Fastai - Neural Net Regressor](#fastai---neural-net-regressor)
   - [Scikit-learn - RandomForestRegressor](#scikit-learn---randomforestregressor)
+- [Deployment and live predictions](#deployment-and-live-predictions)
+
+# Introduction for reproduciability
+
+> 💡 Hereafter will be explained how to completely reproduce all the findings within this repo
+
+To reproduce our findings you must first install and then run this repository. To do so we recommend that you use [docker](https://www.docker.com/products/docker-desktop) and [Visual Studio Code](https://code.visualstudio.com/), given that this corresponds with our methodology. Alternatively, you can also use [Anaconda](https://www.anaconda.com/).
+
+## Docker
+
+> 🐋 This will explain how to use docker for an easy install
+
+To use Visual Studio Code and Docker, please follow the steps outlined below.
+1. Download the repository and open the folder in [Visual Studio Code (VS Code)](https://code.visualstudio.com/). If you are new to VS Code please install the [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) Add-On. 
+2. On the bottom left corner of your open window on VS Code, two signs should appear. Click on those. Doing so should cause a list to open.
+3. On this list, click the `Remote-Containers: Reopen in Container` entry. Note: If this is the first time you are doing this, it can take some time as Docker will create your image with all the necessary requirements. 
+4. Following the completion of Step 3, you have your file editor on the left side and can click through the files. If you want to execute a file, just click the Play button on the top right corner; doing so will execute the Python script.
+
+## Anaconda
+
+> 🐍 This will explain how to use Anaconda to use this repo
+
+Should you use [`Anaconda`](https://www.anaconda.com/) (*`miniconda` was not tested*) and you want to reproduce our findings download the repo. The open you `Anaconda prompt`. Navigate to the downloaded git-repository `Bikerus` (*one can navigate within the `Anaconda prompt` using normal command line commands. In that case `cd <your-path-to-bikerus>`. Should you have any spaces within your path use quotationmarks around your path. Also, should you have to change your Harddrive use `\<your-harddrive-letter>`. In total that would look like: `cd \\<your-harddrive-letter> "<your-path-to-bikerus>"`*). Once you navigated there with your prompt, create a new python environment:
+
+`conda create --name bikerus python=3.8`
+
+Next activate this environment:
+
+`conda activate bikerus`
+
+Now, we use `pip` to install the necessary packages from the `requirements.txt`.
+
+`pip install -r requirements.txt`
+
+This install all the necessary packages within your `Anaconda` environment. Now you can start and execute every script by itself without worrying about packages and versions.
+
+# TL;DR
+
+> 🐳 This paragraph is only useful, if you are using Docker with VSCode
+
+Once your Docker Container is running inside your VSCode, you can just enter the following:
+
+`./execute_all_scripts.sh`
+
+This will execute all scripts in the correct order and your don't have to run them indivdually. Should you use `Anaconda` you have to run them individually, since the `Anaconda prompt` cannot execute shell scripts.
 
 # Data acquisition
 
 > 💾 This paragraph will explain how you can obtain the used data
 
 In order to obtain the data, which is used within this project please clone this repository and execute then the file `0_pipeline_data_getting_compression.py` file. This file will:
+
 - Download the files from the web
 - Extract them into a folder within the parent directory called `data/raw`
 - Loads these raw datasets and converts them into a compressed file in `data/interim` (for the sake of convenience we left the raw data there, in order you want to change things).
@@ -122,3 +172,13 @@ FastAI is a framework developed for fast and accessible artificial intelligence.
     4. Here, `GridSearchCV` is not used. Following from the explaination about cross validation iterators in [scikit-learn](https://scikit-learn.org/stable/modules/cross_validation.html) (chapter 3.1.2.), if one knows that the samples have been generated using a time-dependent process, it is safer to use a time-series aware cross-validation scheme. Therefore, cross validation is performed by applying the function [get_sample_for_cv](#Data-Partitioning) to also consider the time series character for cross validation. Here, 5 folds are created. The different hyperparameters are applied to the folds through cascaded for loops. The `Pseudo-R^2` is calculated for each fold and the respective hyperparameter combination. At the end, a mean of each hyperparameter combination across the five folds is calculated. The `hyperparameter combination` with the highest mean is returned. Under consideration of the trade-off between a high `Pseudo-R^2` and the models robustness, the hyperparameters `max_depth = 11`, `n_estimators = 300`, `max_features = 10` and `max_leaf_nodes = 80` have been chosen.
     5. The RandomForestRegressor is trained with the best hyperparameters and the `R^2` and `Pseudo-R^2` are calculated.
     6. The Model is saved using `joblib.dump(RForreg, "./RandomForest_Model/" + str(filename))`.
+
+# Deployment and live predictions
+
+> 🚀 In this paragraph is depicted how to start up a flask app, which deploys the models and makes live predictions
+
+Bascially all you have to do is to run the `app.py`. In VSCode with Docker backend just click on the top right corners' play button. In Anaconda run the `app.py` from the top level of the bikerus folder:
+
+`python flask/app.py`
+
+Go to the given webpage (*most likely 127.0.0.1:5000*) and enjoy predicting!
