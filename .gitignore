@@ -7,6 +7,10 @@
 
 references/resources
 
+# ignore powerpoint 
+
+*.pptx
+
 # ignore data raw for now
 
 data/
