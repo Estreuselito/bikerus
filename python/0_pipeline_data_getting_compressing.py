@@ -64,4 +64,9 @@ compressed_pickle("./data/interim/ArtificalRentals12", art12_br)
 compressed_pickle("./data/interim/ArtificalRentals13", art13_br)
 compressed_pickle("./data/interim/Stations", station_locs)
 
-print("\n\nDone Men! \n\nYou can find you data in you parent folder under data/raw the raw files and under interim the compressed files!")
+# print statement
+print(" __ \                      |\n\
+ |   |  _ \   __ \    _ \  |\n\
+ |   | (   |  |   |   __/ _|\n\
+____/ \___/  _|  _| \___| _)\n\
+You can find you data in you parent folder under data/raw the raw files and under interim the compressed files!")

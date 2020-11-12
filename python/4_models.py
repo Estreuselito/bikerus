@@ -6,6 +6,11 @@ import pandas as pd
 # only activate in an environment with fastai running
 # from model_creation import fastai_neural_regression
 
+print("  _ \                                                  |        \  |        |         _)              |\n\
+ |   |       __|   _` |  |   |   _` |   __|   _ \   _` |       |\/ |   _ \  __|   __|  |   __|   __|  |\n\
+ __ <      \__ \  (   |  |   |  (   |  |      __/  (   |       |   |   __/  |    |     |  (    \__ \ _|\n\
+_| \_\     ____/ \__. | \__._| \__._| _|    \___| \__._|      _|  _| \___| \__| _|    _| \___| ____/ _)\n\
+                     _|\n")
 
 # creating a report
 report = pd.DataFrame(columns=['Modelname', 'R-Squared', 'Pseudo R-Squared'])
@@ -20,7 +25,7 @@ report = pd.DataFrame(columns=['Modelname', 'R-Squared', 'Pseudo R-Squared'])
 #                         ignore_index=True)
 
 # catboost regression
-print("\nCatboost regressor\n")
+print("\nCatboost regressor")
 r2, pseudor2 = catboost_regressor()
 report = report.append({"Modelname": "Catboost regression",
                         "R-Squared": r2,
@@ -28,7 +33,7 @@ report = report.append({"Modelname": "Catboost regression",
                         ignore_index=True)
 
 # Sklearn neural net
-print("\nsklearn nn MLP\n")
+print("\nsklearn nn MLP")
 r2, pseudor2 = sklearn_neural_net_multilayerperceptron()
 report = report.append({"Modelname": "Sklearn NN MLP",
                         "R-Squared": r2,
@@ -36,7 +41,7 @@ report = report.append({"Modelname": "Sklearn NN MLP",
                         ignore_index=True)
 
 # Sklearn random forest
-print("\nsklearn RandomForest\n")
+print("\nsklearn RandomForest")
 r2, pseudor2 = sklearn_random_forest()
 report = report.append({"Modelname": "Sklearn RF",
                         "R-Squared": r2,
@@ -44,4 +49,8 @@ report = report.append({"Modelname": "Sklearn RF",
                         ignore_index=True)
 
 # print report
-print(report)
+print(" __ \                      |\n\
+ |   |  _ \   __ \    _ \  |\n\
+ |   | (   |  |   |   __/ _|\n\
+____/ \___/  _|  _| \___| _)\n\
+This is the final report: \n", report)

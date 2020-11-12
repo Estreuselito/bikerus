@@ -4,7 +4,11 @@ import pandas as pd
 import os
 from pandas_profiling import ProfileReport
 
-print("Loading data")
+print("_)                           |   _)                      \  |     \ \n\
+ |  __ `__ \   __ \   |   |  __|  |  __ \    _  |         \ |    _ \     __|\n\
+ |  |   |   |  |   |  |   |  |    |  |   |  (   |       |\  |   ___ \  \__ \ \n\
+_| _|  _|  _|  .__/  \__._| \__| _| _|  _| \__. |      _| \_| _/    _\ ____/\n\
+              _|                           |___/\n")
 
 # load data
 df = decompress_pickle("./data/interim/BikeRental.pbz2")
@@ -43,4 +47,12 @@ prof.to_file(output_file='imputed_profile.html')
 
 prof1 = ProfileReport(df1)
 prof1.to_file(output_file='starting_profile.html')
-print('DONE Dikka')
+
+# print statement
+print(" __ \                      |\n\
+ |   |  _ \   __ \    _ \  |\n\
+ |   | (   |  |   |   __/ _|\n\
+____/ \___/  _|  _| \___| _)\n\
+You can find the data with imputed NAs under data/preprocessed! \
+Moreover, you can find some nice Panda Profiling reports under images. Those are \
+.html files, where you can look at the different correlations and missings.")

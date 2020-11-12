@@ -3,7 +3,11 @@ import pandas as pd
 from sklearn import preprocessing
 import os
 
-print("Loading data")
+print("                                                               _)\n\
+ __ \    __|   _ \  __ \    __|   _ \    __|   _ \   __|   __|  |  __ \    _  |\n\
+ |   |  |      __/  |   |  |     (   |  (      __/ \__ \ \__ \  |  |   |  (   |\n\
+ .__/  _|    \___|  .__/  _|    \___/  \___| \___| ____/ ____/ _| _|  _| \__. |\n\
+_|                 _|                                                    |___/\n")
 
 # load data
 df = decompress_pickle("./data/preprocessed/BikeRental_complete.pbz2")
@@ -51,21 +55,9 @@ df[conti_var] = mm_scaler.fit_transform(df[conti_var])
 df.to_csv("./data/preprocessed/BikeRental_preprocessed.csv")
 compressed_pickle("./data/preprocessed/BikeRental_preprocessed", df)
 
-
-print("                              _       _           _                 \n\
-                             ( )     ( )_        ( )                \n\
- _   _   _   _   _ _ __     _| |  _ _|  _)  _ _  | |__    _ _  ___  \n\
-( ) ( )/ _ \( ) ( )  __)  / _  |/ _  ) |  / _  ) |  _  \/ _  )  __) \n\
-| (_) | (_) ) (_) | |    ( (_| | (_| | |_( (_| | | | | | (_| |__  \ \n\
- \__  |\___/ \___/(_)     \__ _)\__ _)\__)\__ _) (_) (_)\__ _)____/ \n\
-( )_| |                                                             \n\
- \___/                                                              \n\
- _                                                                                           _ \n\
-( )                                                                                         ( )\n\
-| |_     __    __   ___    _ _   _ __   __  _ _   _ __   _     ___   __   ___  ___   __    _| |\n\
-|  _ \ / __ \/ __ \  _  \ (  _ \(  __)/ __ \  _ \(  __)/ _ \ / ___)/ __ \  __)  __)/ __ \/ _  |\n\
-| |_) )  ___/  ___/ ( ) | | (_) ) |  (  ___/ (_) ) |  ( (_) ) (___(  ___/__  \__  \  ___/ (_| |\n\
-(_ __/ \____)\____)_) (_) |  __/(_)   \____)  __/(_)   \___/ \____)\____)____/____/\____)\__ _)\n\
-                          | |              | |                                                 \n\
-                          (_)              (_)                                                 \n\
-\n")
+# print statement
+print(" __ \                      |\n\
+ |   |  _ \   __ \    _ \  |\n\
+ |   | (   |  |   |   __/ _|\n\
+____/ \___/  _|  _| \___| _)\n\
+You can find the preprocessd data under data/preprocessed!")
