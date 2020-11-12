@@ -1,5 +1,6 @@
 from model_creation import catboost_regressor
 from model_creation import sklearn_neural_net_multilayerperceptron
+from model_creation import sklearn_random_forest
 import pandas as pd
 
 # only activate in an environment with fastai running
@@ -30,6 +31,14 @@ report = report.append({"Modelname": "Catboost regression",
 print("\nsklearn nn MLP\n")
 r2, pseudor2 = sklearn_neural_net_multilayerperceptron()
 report = report.append({"Modelname": "Sklearn NN MLP",
+                        "R-Squared": r2,
+                        "Pseudo R-Squared": pseudor2},
+                        ignore_index=True)
+
+# Sklearn random forest
+print("\nsklearn RandomForest\n")
+r2, pseudor2 = sklearn_random_forest()
+report = report.append({"Modelname": "Sklearn RF",
                         "R-Squared": r2,
                         "Pseudo R-Squared": pseudor2},
                         ignore_index=True)
