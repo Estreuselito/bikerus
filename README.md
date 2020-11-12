@@ -31,7 +31,7 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
 
 > 💡 Hereafter will be explained how to completely reproduce all the findings within this repo
 
-To reproduce our findings you must first install and then run this repository. To do so we recommend that you use [docker](https://www.docker.com/products/docker-desktop) and [Visual Studio Code](https://code.visualstudio.com/), given that this corresponds with our methodology. Alternatively, you can also use [Anaconda](https://www.anaconda.com/).
+To reproduce our findings you must first install and then run this repository. To do so we recommend that you use [docker](https://www.docker.com/products/docker-desktop) and [Visual Studio Code](https://code.visualstudio.com/) as this corresponds with our methodology. Alternatively, you can also use [Anaconda](https://www.anaconda.com/).
 
 ## Docker
 
@@ -47,7 +47,7 @@ To use Visual Studio Code and Docker, please follow the steps outlined below.
 
 > 🐍 This will explain how to use Anaconda to use this repo
 
-Should you use [`Anaconda`](https://www.anaconda.com/) (*`miniconda` was not tested*) and you want to reproduce our findings download the repo. The open you `Anaconda prompt`. Navigate to the downloaded git-repository `Bikerus` (*one can navigate within the `Anaconda prompt` using normal command line commands. In that case `cd <your-path-to-bikerus>`. Should you have any spaces within your path use quotationmarks around your path. Also, should you have to change your Harddrive use `\<your-harddrive-letter>`. In total that would look like: `cd \\<your-harddrive-letter> "<your-path-to-bikerus>"`*). Once you navigated there with your prompt, create a new python environment:
+Should you use [`Anaconda`](https://www.anaconda.com/) (*`miniconda` was not tested*) and you want to reproduce our findings download the repo. The open you `Anaconda prompt`. Navigate to the downloaded git-repository `Bikerus` (*one can navigate within the `Anaconda prompt` using normal command line commands. In that case `cd <your-path-to-bikerus>`. Should you have any spaces within your path use quotation marks around your path. Also, should you have to change your Harddrive use `\<your-harddrive-letter>`. In total that would look like: `cd \\<your-harddrive-letter> "<your-path-to-bikerus>"`*). Once you navigated there with your prompt, create a new python environment:
 
 `conda create --name bikerus python=3.8`
 
@@ -73,21 +73,21 @@ This will execute all scripts in the correct order and your don't have to run th
 
 # Data acquisition
 
-> 💾 This paragraph will explain how you can obtain the used data
+> 💾 This paragraph will explain how you can obtain the data used
 
-In order to obtain the data, which is used within this project please clone this repository and execute then the file `0_pipeline_data_getting_compression.py` file. This file will:
+In order to obtain the data used by this project, please clone this repository and execute then the file `0_pipeline_data_getting_compression.py` file. This file will:
 
 - Download the files from the web
 - Extract them into a folder within the parent directory called `data/raw`
-- Loads these raw datasets and converts them into a compressed file in `data/interim` (for the sake of convenience we left the raw data there, in order you want to change things).
+- Load these raw datasets and convert them into a compressed file in `data/interim` (for the sake of convenience we left the raw data there, should you want to change things).
 
 # Data visualization
 
-> 🗺️ Here will be shown how the data visualizations can be created
+> 🗺️ This section shows how the data visualizations can be created
 
 ## Bike Rental Station Map
 
-In order to reproduce the map with the bike share rental stations, you have to execute the file `0.1_pipeline_bike_station_viz.py` within the `python` folder. This will create a folder `images` within the parent directory. Once you enter this folder there should be an `.html` file, which contains this map.
+In order to reproduce the map with the bike share rental stations, you have to execute the file `0.1_pipeline_bike_station_viz.py` within the `python` folder. This will create a folder `images` within the parent directory. Once you enter this folder there should be a `.html` file, which contains this map.
 
 # Data Preprocessing
 
@@ -153,7 +153,7 @@ In order to load or train all models (with exception of fastai - see [here](#fas
 
 ## Fastai - Neural Net Regressor
 
-> ⚠️In order to try this one, one has to install [fastai](https://docs.fast.ai/#Installing) within an anaconda environment, since the pip version is really hard to install. Thus it could not be installed within a container. Please follow the fastai link above to get more detailed explanation of how to setup fastai in your local environment. You have to uncomment the function `fastai_neural_net_regression` within the script `model_creation` as well as the line where you import fastai. If you want to run the script `4_models.py` with the `fastai_neural_net_regression` make sure also to uncomment that, when you are in a anaconda enviroment with fastai.
+> ⚠️In order to try this one, one has to install [fastai](https://docs.fast.ai/#Installing) within an anaconda environment, since the pip version is really hard to install. Thus it cannot be installed within a container. Please follow the fastai link above to get more detailed explanation of how to setup fastai in your local environment. You have to uncomment the function `fastai_neural_net_regression` within the script `model_creation` as well as the line where you import fastai. If you want to run the script `4_models.py` with the `fastai_neural_net_regression` make sure also to uncomment that, when you are in a anaconda enviroment with fastai.
 
 > 🌠 In the following will be explained how to use FastAI for a regression task
 
@@ -162,22 +162,22 @@ FastAI is a framework developed for fast and accessible artificial intelligence.
 
 ## Scikit-learn - RandomForestRegressor
 
-> 🌲 This paragraph explains how the RandomForestRegressor is used
+> 🌲 This paragraph explains how the RandomForestRegressor is used.
 
-1. Open the `random_forstest.py` script and run the script.
+1. Open the `random_forstest.py` script and run it.
 2. The following steps are performed within the script:
     1. The script loads the preprocessed data using `decompress_pickle("./data/preprocessed/BikeRental_preprocessed.pbz2")`. 
     2. The column `'datetime'` needs to be dropped, because the RandomForestRegressor cannot handle its type.
     3. The train and test samples are created using the function `train_test_split_ts`.
-    4. Here, `GridSearchCV` is not used. Following from the explaination about cross validation iterators in [scikit-learn](https://scikit-learn.org/stable/modules/cross_validation.html) (chapter 3.1.2.), if one knows that the samples have been generated using a time-dependent process, it is safer to use a time-series aware cross-validation scheme. Therefore, cross validation is performed by applying the function [get_sample_for_cv](#Data-Partitioning) to also consider the time series character for cross validation. Here, 5 folds are created. The different hyperparameters are applied to the folds through cascaded for loops. The `Pseudo-R^2` is calculated for each fold and the respective hyperparameter combination. At the end, a mean of each hyperparameter combination across the five folds is calculated. The `hyperparameter combination` with the highest mean is returned. Under consideration of the trade-off between a high `Pseudo-R^2` and the models robustness, the hyperparameters `max_depth = 11`, `n_estimators = 300`, `max_features = 10` and `max_leaf_nodes = 80` have been chosen.
+    4. Here, `GridSearchCV` is not used. Following from the explanation about cross validation iterators in [scikit-learn](https://scikit-learn.org/stable/modules/cross_validation.html) (chapter 3.1.2.), if one knows that the samples have been generated using a time-dependent process, it is safer to use a time-series aware cross-validation scheme. Therefore, cross validation is performed by applying the function [get_sample_for_cv](#Data-Partitioning) to also consider the time series character for cross validation. Here, 5 folds are created. The different hyperparameters are applied to the folds through cascaded for loops. The `Pseudo-R^2` is calculated for each fold and the respective hyperparameter combination. At the end, a mean of each hyperparameter combination across the five folds is calculated. The `hyperparameter combination` with the highest mean is returned. Under consideration of the trade-off between a high `Pseudo-R^2` and the model's robustness, the hyperparameters `max_depth = 11`, `n_estimators = 300`, `max_features = 10` and `max_leaf_nodes = 80` were chosen.
     5. The RandomForestRegressor is trained with the best hyperparameters and the `R^2` and `Pseudo-R^2` are calculated.
     6. The Model is saved using `joblib.dump(RForreg, "./RandomForest_Model/" + str(filename))`.
 
 # Deployment and live predictions
 
-> 🚀 In this paragraph is depicted how to start up a flask app, which deploys the models and makes live predictions
+> 🚀 This paragraph explains how to start up a flask app, which deploys the models and makes live predictions
 
-Bascially all you have to do is to run the `app.py`. In VSCode with Docker backend just click on the top right corners' play button. In Anaconda run the `app.py` from the top level of the bikerus folder:
+Bascially all you have to do is to run the `app.py`. In VSCode with Docker backend just click the play button in the top right corners. In Anaconda run the `app.py` from the top level of the bikerus folder:
 
 `python flask/app.py`
 
