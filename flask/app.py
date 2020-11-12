@@ -1,6 +1,7 @@
 import numpy as np
 from flask import Flask, request, jsonify, render_template
 import pickle
+import joblib
 from catboost import CatBoostRegressor
 from datetime import datetime
 import pandas as pd
@@ -27,6 +28,7 @@ catboost.load_model("./models/catboost/catboost_model")
 
 neural_net = pickle.load(open("./models/NN_MLP_files/NN_MLP_saved", "rb"))
 
+random_forest = joblib.load("./models/RandomForest_Model/Model_RandomForest.sav")
 # model = pickle.load(open('model.pkl', 'rb'))
 
 
@@ -48,7 +50,7 @@ def predict():
     nn_pred = nn_pred.drop(['cnt', "datetime", "cnt_norm"], axis=1)
     nn_pred_val = neural_net.predict(nn_pred)
 
-
+    rf_pred = random_forest.predict(nn_pred)
 
     test_df = train_dataset[(train_dataset.datetime == date)]
     test_df = test_df.drop('datetime', axis=1)
@@ -74,7 +76,8 @@ def predict():
      date = date,
      prediction=round(real_cnt.item()),
      Catboost = int(vfunc(catboost_pred).round()),
-     Neural_net = int(vfunc(nn_pred_val).round().item()))
+     Neural_net = int(vfunc(nn_pred_val).round().item()),
+     random_forest = int(vfunc(rf_pred).round().item()))
 
 
 """ app.route('/results', methods=['POST'])

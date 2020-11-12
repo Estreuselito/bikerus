@@ -391,7 +391,7 @@ def sklearn_random_forest():
                                             max_leaf_nodes=int(best_parameters['max_leaf_nodes']),
                                             random_state=0)
         # train the model with the hyperparameters
-        RForreg.fit(X_train, Y_train)
+        random_forest.fit(X_train, Y_train)
     
     test_df = df[round(len(df)*0.8):].copy()
     test_df = test_df.drop('datetime', axis=1)

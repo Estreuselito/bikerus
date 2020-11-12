@@ -51,18 +51,20 @@
         <br>
         <center>
           <h2>
-            <p>The predicted datetime is:<br>{{ date }}</p>
+            <p>The selected timeframe is:<br>{{ date }}</p>
           </h2>
         </center>
         <div style="width: 100%; overflow: hidden;">
-          <div style="width: 25%; float: left;">
+          <div style="width: 33.3%; float: left;">
             <img align="middle" width="80%" height="80%" src="../static/image-capital_bikeshare.png"
               alt="Capital Bike Share Logo"><br> {{ prediction }}
           </div>
-          <div style="width: 25%; float: left;"><img align="middle" width="80%" height="80%"
+          <div style="width: 33.3%; float: left;"><img align="middle" width="80%" height="80%"
               src="../static/image_catboost.png" alt="Catboost Logo"><br> {{ Catboost }} </div>
-          <div style="width: 25%; float: left;"><img align="middle" width="60%" height="60%"
-              src="../static/scitlearn-logo.png" alt="Scikit learn Logo"><br> {{ Neural_net }}
+          <div style="width: 33.3%; float: left;"><img align="middle" width="60%" height="60%"
+              src="../static/scitlearn-logo.png" alt="Scikit learn Logo"><br>
+            <p>Neural net: </p>{{ Neural_net }} <br>
+            <p>Random forest: </p> {{ random_forest}}
           </div>
           <br style="clear: left;" />
         </div>
