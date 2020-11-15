@@ -16,62 +16,66 @@
   </script>
 
 </head>
-<img align="right" width="30%" height="30%" src="../static/image-capital_bikeshare.png" alt="Capital Bike Share Logo">
+<img align="right" width="20%" height="20%" src="../static/image-capital_bikeshare.png" alt="Capital Bike Share Logo">
 
 <br>
-<img align="left" width="30%" height="30%" src="../static/Frankfurt_School_Logo.jpg" alt="Frankfurt School Logo">
+<img align="left" width="20%" height="20%" src="../static/Frankfurt_School_Logo.jpg" alt="Frankfurt School Logo">
 
 <body style="background: #ffffff;">
   <div class="login">
     <font face="Verdana">
-      <center><br>
+      <center>
+        <br>
         <h1>
           <font face="Verdana" size="20">Bikerus</font>
         </h1>
+      </center>
 
-        <br>
-        <br>
+      <center>
         <h2>Live Demo!</h2>
-        <br>
-        <br>
-        <br>
-        <br>
+      </center>
+      <br>
+      <center>
         <!-- Main Input For Receiving Query to our ML -->
         <form action="{{ url_for('predict')}}" method="post">
           <input type="date" id="date" name="date" value="2012-10-12" min="2012-08-09" max="2012-12-31"
-            required="required" style="font-size: 3rem"> <br> <br>
+            required="required" style="font-size: 2rem"> <br> <br>
           <!-- yyyy-mm-dd -->
-          <input type="text" id="hour" min="0" max="23" name="hour" style="font-size: 3rem" placeholder="Hour of day"
+          <input type="text" id="hour" min="0" max="23" name="hour" style="font-size: 2rem" placeholder="Hour of day"
             required="required" /> <br><br>
-          <button type="submit" style="font-size: 3rem" class="btn btn-primary btn-block btn-large">Predict bike share
+          <button type="submit" style="font-size: 2rem" class="btn btn-primary btn-block btn-large">Predict bike share
             rentals!</button>
         </form>
-
-        <br>
-        <br>
-        <center>
-          <h2>
-            <p>The selected timeframe is:<br>{{ date }}</p>
-          </h2>
-        </center>
-        <div style="width: 100%; overflow: hidden;">
-          <div style="width: 33.3%; float: left;">
-            <img align="middle" width="80%" height="80%" src="../static/image-capital_bikeshare.png"
-              alt="Capital Bike Share Logo"><br>
+      </center>
+      <br>
+      <br>
+      <center>
+        <h2>
+          <p>The selected timeframe is:<br>{{ date }}</p>
+        </h2>
+      </center>
+      <div style="width: 100%; overflow: hidden;">
+        <div style="width: 33.3%; float: left;">
+          <img align="middle" width="80%" height="80%" src="../static/image-capital_bikeshare.png"
+            alt="Capital Bike Share Logo"><br>
+          <center>
             <h2> {{ prediction }} </h2>
-          </div>
-          <div style="width: 33.3%; float: left;"><img align="middle" width="80%" height="80%"
-              src="../static/image_catboost.png" alt="Catboost Logo"><br>
-            <h2> {{ Catboost }} </h2>
-          </div>
-          <div style="width: 33.3%; float: left;"><img align="middle" width="60%" height="60%"
-              src="../static/scitlearn-logo.png" alt="Scikit learn Logo"><br>
-            <h2>Neural net: {{ Neural_net }} </h2><br>
-            <h2>Random forest: {{ random_forest}}</h2>
-          </div>
-          <br style="clear: left;" />
+          </center>
         </div>
-        {{ cnt }}
+        <div style="width: 33.3%; float: left;"><img align="middle" width="80%" height="80%"
+            src="../static/image_catboost.png" alt="Catboost Logo"><br>
+          <center>
+            <h2> {{ Catboost }} </h2>
+          </center>
+        </div>
+        <div style="width: 33.3%; float: left;"><img align="middle" width="60%" height="60%"
+            src="../static/scitlearn-logo.png" alt="Scikit learn Logo"><br>
+          <h2>Neural net: {{ Neural_net }} </h2><br>
+          <h2>Random forest: {{ random_forest}}</h2>
+        </div>
+        <br style="clear: left;" />
+      </div>
+      {{ cnt }}
     </font>
     </center>
   </div>
