@@ -1,21 +1,20 @@
+from data_storage import connection
 import pandas as pd
 from tqdm import tqdm
 
 
 def import_train_test_calc():
-    df = pd.read_csv(
-        "./data/preprocessed/BikeRental_preprocessed.csv", index_col=[0])
-    min_max = pd.read_csv("./data/preprocessed/cnt_min_max.csv")
+    """Returns various metrics regarding the train and test splits
+    """
 
-    Y_train = pd.read_csv(
-        "./data/partitioned/BikeRental_Y_train.csv", index_col=[0])
-    Y_test = pd.read_csv(
-        "./data/partitioned/BikeRental_Y_test.csv", index_col=[0])
-    X_train = pd.read_csv(
-        "./data/partitioned/BikeRental_X_train.csv", index_col=[0])
-    X_test = pd.read_csv(
-        "./data/partitioned/BikeRental_X_test.csv", index_col=[0])
+    df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
+    min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
 
+    Y_train = pd.read_sql_query('''SELECT * FROM Y_train''', connection)
+    X_train = pd.read_sql_query('''SELECT * FROM X_train''', connection)
+    Y_test = pd.read_sql_query('''SELECT * FROM Y_test''', connection)
+    X_test = pd.read_sql_query('''SELECT * FROM X_test''', connection)
+    
     X_train = X_train.drop('datetime', axis=1)
     X_test = X_test.drop('datetime', axis=1)
 
@@ -45,9 +44,9 @@ def r_squared_metrics(X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_
 
 
 def predict_test_df(*models):
-    df = pd.read_csv(
-        "./data/preprocessed/BikeRental_preprocessed.csv", index_col=[0])
-    min_max = pd.read_csv("./data/preprocessed/cnt_min_max.csv")
+
+    df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
+    min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
 
     test_df = df[round(len(df)*0.8):].copy()
     final_df = df[round(len(df)*0.8):].copy()

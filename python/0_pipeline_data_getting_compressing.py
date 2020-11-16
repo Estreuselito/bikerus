@@ -1,7 +1,10 @@
 # This file compresses all the data to smaller pieces
 import pandas as pd
 import os
-from data_preprocessing import compressed_pickle, decompress_pickle, import_data
+import shutil
+from data_preprocessing import import_data
+from data_storage import check_and_create_and_insert, connection
+from sql_commands import create_table_hours, create_table_raw, create_table_station_locations
 from download import download
 
 print(" _       _       _                                 _           ___     _                           _\n\
@@ -19,54 +22,45 @@ print(" _       _       _                                 _           ___     _ 
                                             \____)\____)\__)\____/|  __/ \n\
                                                                   | | \n\
                                                                   (_) \n\n\
-Let's get you started by downloading you data!\n")
+Let's get you started by downloading you data and inputting this in a database!\n")
 # load data
 
 list_of_zip_path = ["http://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip",
                     "https://s3.amazonaws.com/capitalbikeshare-data/2011-capitalbikeshare-tripdata.zip",
-                    "https://s3.amazonaws.com/capitalbikeshare-data/2012-capitalbikeshare-tripdata.zip",
-                    "https://s3.amazonaws.com/capitalbikeshare-data/2013-capitalbikeshare-tripdata.zip"]
+                    "https://s3.amazonaws.com/capitalbikeshare-data/2012-capitalbikeshare-tripdata.zip"]
 
-if not os.path.exists("./data/raw"):
-    os.makedirs("./data/raw")
 
 for file_path in list_of_zip_path:
     path = download(file_path, "./data/raw", kind="zip", replace=True)
 
 station_locs = pd.read_csv(
     "https://opendata.arcgis.com/datasets/a1f7acf65795451d89f0a38565a975b3_5.csv")
-print("\n\nYour data has been downloaded! \n\nNow your data is going to be compressed!\n")
+print("\n\nYour data has been downloaded! \n\nNow your data is inputed into a database!\n")
 
-ori_br = import_data("./data/raw/hour.csv")
-art11_br = import_data("./data/raw/2011-capitalbikeshare-tripdata.csv",
-                       parse_dates=["Start date", "End date"])
-art12_br = pd.concat([import_data("./data/raw/2012Q1-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"]),
+raw = pd.concat([import_data("./data/raw/2011-capitalbikeshare-tripdata.csv",
+                       parse_dates=["Start date", "End date"]),
+                      import_data("./data/raw/2012Q1-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"]),
                       import_data("./data/raw/2012Q3-capitalbikeshare-tripdata.csv",
                                   parse_dates=["Start date", "End date"]),
                       import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv",
                                   parse_dates=["Start date", "End date"]),
                       import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"])])
 
-art13_br = pd.concat([import_data("./data/raw/2013Q1-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"]),
-                      import_data("./data/raw/2013Q2-capitalbikeshare-tripdata.csv",
-                                  parse_dates=["Start date", "End date"]),
-                      import_data("./data/raw/2013Q3-capitalbikeshare-tripdata.csv",
-                                  parse_dates=["Start date", "End date"]),
-                      import_data("./data/raw/2013Q4-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"])])
+check_and_create_and_insert(connection, "hours", pd.read_csv("./data/raw/hour.csv", index_col = [0]), create_table_hours)
 
+check_and_create_and_insert(connection, "raw", raw, create_table_raw)
 
-if not os.path.exists("./data/interim"):
-    os.makedirs("./data/interim")
-# compress them
-compressed_pickle("./data/interim/BikeRental", ori_br)
-compressed_pickle("./data/interim/ArtificalRentals11", art11_br)
-compressed_pickle("./data/interim/ArtificalRentals12", art12_br)
-compressed_pickle("./data/interim/ArtificalRentals13", art13_br)
-compressed_pickle("./data/interim/Stations", station_locs)
+check_and_create_and_insert(connection, "station_locs", station_locs, create_table_station_locations)
+
+dir_path = './data'
+try:
+    shutil.rmtree(dir_path)
+except OSError as e:
+    print("Error: %s : %s" % (dir_path, e.strerror))
 
 # print statement
 print(" __ \                      |\n\
  |   |  _ \   __ \    _ \  |\n\
  |   | (   |  |   |   __/ _|\n\
 ____/ \___/  _|  _| \___| _)\n\
-You can find you data in you parent folder under data/raw the raw files and under interim the compressed files!")
+Your data is now stored in a database within the folder database. You can access this database using DBeaver or other tools!")

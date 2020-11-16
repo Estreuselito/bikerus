@@ -14,6 +14,8 @@ references/resources
 # ignore data raw for now
 
 data/
+database/
+*.db
 
 #### DrawIO ####
 *.drawio

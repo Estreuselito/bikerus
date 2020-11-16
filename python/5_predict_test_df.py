@@ -1,3 +1,5 @@
+from data_storage import connection, check_and_create_and_insert
+from sql_commands import create_table_predicted_df
 from model_helpers import predict_test_df
 from catboost import CatBoostRegressor
 import pickle
@@ -20,15 +22,14 @@ try:
 except:
     print("Something did not work! Could not load models! Execute script 4 again!")
 
-final_df = predict_test_df(neural_net, random_forest, catboost)
+check_and_create_and_insert(connection,
+                            "predicted_df",
+                            predict_test_df(neural_net, random_forest, catboost),
+                            create_table_predicted_df)
 
-if not os.path.exists("./data/predictions"):
-    os.makedirs("./data/predictions")
-
-final_df.to_csv("./data/predictions/final_df.csv")
 
 print(" __ \                      |\n\
  |   |  _ \   __ \    _ \  |\n\
  |   | (   |  |   |   __/ _|\n\
 ____/ \___/  _|  _| \___| _)\n\
-You can find the final dataframe with all the normalized and denormalized values under data/predictions/final_df.csv!")
+You can find the final dataframe with all the normalized and denormalized values under the table predicted_df in the database!")

@@ -18,8 +18,6 @@ def train_test_split_ts(data, train_size):
     X_train and Y_train are used for training including determining the samples for cross validation.
     X_test and Y_test are only used for the testing.
     """
-    # Necessary Imports
-    from data_preprocessing import compressed_pickle
 
     # Sanity Check
     if train_size <= 0:
@@ -36,11 +34,6 @@ def train_test_split_ts(data, train_size):
         Y_train = Y.iloc[:index]
         X_test = X.iloc[index:]
         Y_test = Y.iloc[index:]
-
-    compressed_pickle("./data/partitioned/BikeRental_X_train", X_train)
-    compressed_pickle("./data/partitioned/BikeRental_Y_train", Y_train)
-    compressed_pickle("./data/partitioned/BikeRental_X_test", X_test)
-    compressed_pickle("./data/partitioned/BikeRental_Y_test", Y_test)
 
     return X_train, Y_train, X_test, Y_test
 
@@ -89,7 +82,8 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False)
     import numpy as np
     import matplotlib.pyplot as plt
     import matplotlib.patches as mpatches
-    from data_preprocessing import decompress_pickle, compressed_pickle
+    from data_storage import check_and_create_and_insert, connection
+    from sql_commands import create_table_X_train_test, create_table_Y_train_test
     from sklearn.model_selection import TimeSeriesSplit
 
     # Sanity Check
@@ -132,19 +126,10 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False)
         Y_test_cv_current = Y_train.iloc[list_tscv[fold-1]
                                          [0]:list_tscv[fold-1][1]]
 
-    compressed_pickle(
-        "./data/partitioned/cross_validation/BikeRental_X_train_current", X_train_current)
-    compressed_pickle(
-        "./data/partitioned/cross_validation/BikeRental_Y_train_current", Y_train_current)
-    compressed_pickle(
-        "./data/partitioned/cross_validation/BikeRental_X_test_cv_current", X_test_cv_current)
-    compressed_pickle(
-        "./data/partitioned/cross_validation/BikeRental_Y_test_cv_current", Y_test_cv_current)
-
-    # X_train_current.to_csv("./data/partitioned/cross_validation/BikeRental_X_train_current.csv")
-    # Y_train_current.to_csv("./data/partitioned/cross_validation/BikeRental_Y_train_current.csv")
-    # X_test_cv_current.to_csv("./data/partitioned/cross_validation/BikeRental_X_test_cv_current.csv")
-    # Y_test_cv_current.to_csv("./data/partitioned/cross_validation/BikeRental_Y_test_cv_current.csv")
+    check_and_create_and_insert(connection, "X_train_current", X_train_current, create_table_X_train_test.format("X_train_current"))
+    check_and_create_and_insert(connection, "Y_train_current", Y_train_current, create_table_Y_train_test.format("Y_train_current"))
+    check_and_create_and_insert(connection, "X_test_cv_current", X_test_cv_current, create_table_X_train_test.format("X_test_cv_current"))
+    check_and_create_and_insert(connection, "Y_test_cv_current", Y_test_cv_current, create_table_Y_train_test.format("Y_test_cv_current"))
 
     # Visualization (Optional, only executed if vis is set to 'yes' when calling the function)
     if vis == True:

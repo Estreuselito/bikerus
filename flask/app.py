@@ -9,17 +9,13 @@ import pandas as pd
 app = Flask(__name__)
 
 #### load train dataset
-train_dataset = pd.read_csv("./data/preprocessed/BikeRental_preprocessed.csv", index_col=[0], parse_dates=["datetime"])
+train_dataset = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
+train_dataset["datetime"] = pd.to_datetime(train_dataset["datetime"])
+min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
 train_dataset = train_dataset[round(len(train_dataset)*0.8):]
-#train_dataset["day"] = train_dataset["datetime"].day
-min_max = pd.read_csv("./data/preprocessed/cnt_min_max.csv", index_col=[0])
 train_dataset["cnt_norm"] = train_dataset["cnt"].apply(
         lambda x: x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0])
-
-
 test_df = train_dataset[round(len(train_dataset)*0.8):].copy()
-
-
 
 #### load catboost model
 catboost = CatBoostRegressor(loss_function='RMSE', depth=6,
