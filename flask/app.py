@@ -5,6 +5,11 @@ import joblib
 from catboost import CatBoostRegressor
 from datetime import datetime
 import pandas as pd
+import sys
+
+sys.path.insert(1, './python')
+
+from data_storage import connection
 
 app = Flask(__name__)
 
