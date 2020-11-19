@@ -20,8 +20,8 @@ print(" ___         _           _   _\n\
                         (_) \n\
 Creating a map with all bike rental stations in Washington D.C.!")
 
-return_and_save_bike_station_map(pd.read_sql_query('''SELECT * FROM raw''', connection),
-                                 pd.read_sql_query('''SELECT * FROM station_locations''', connection)).save("./images/bike_rental_stations.html")
+return_and_save_bike_station_map(pd.read_sql_query('''SELECT * FROM raw''', connection).dropna(),
+                                 pd.read_sql_query('''SELECT * FROM station_locations''', connection).dropna()).save("./images/bike_rental_stations.html")
 
 # print statement
 print(" __ \                      |\n\
