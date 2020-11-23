@@ -1,5 +1,26 @@
 def train_test_split_ts(data, train_size):
-    """This function creates the train and test set for time-series data.
+    # Sanity Check
+    if train_size <= 0:
+        print('The size of the train set has to be greater than 0.')
+        return None
+    if train_size >= 1:
+        print('The size of the train set has to be smaller than 1.')
+        return None
+    # Split
+    else:
+        X = data.drop(['cnt'], axis=1)
+        Y = data['cnt']
+        index = round(len(X) * train_size)
+        X_train = X.iloc[:index]
+        Y_train = Y.iloc[:index]
+        X_test = X.iloc[index:]
+        Y_test = Y.iloc[index:]
+
+    return X_train, Y_train, X_test, Y_test
+
+
+def train_test_split_random(data, train_size):
+    """This function creates the train and test set based on a random sample.
 
     Parameters
     ----------
@@ -19,6 +40,9 @@ def train_test_split_ts(data, train_size):
     X_test and Y_test are only used for the testing.
     """
 
+    # Necessary Imports
+    from sklearn.model_selection import train_test_split
+
     # Sanity Check
     if train_size <= 0:
         print('The size of the train set has to be greater than 0.')
@@ -26,15 +50,12 @@ def train_test_split_ts(data, train_size):
     if train_size >= 1:
         print('The size of the train set has to be smaller than 1.')
         return None
+    # Split
     else:
         X = data.drop(['cnt'], axis=1)
         Y = data['cnt']
-        index = round(len(X) * train_size)
-        X_train = X.iloc[:index]
-        Y_train = Y.iloc[:index]
-        X_test = X.iloc[index:]
-        Y_test = Y.iloc[index:]
-
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size = train_size, random_state=0)
+    
     return X_train, Y_train, X_test, Y_test
 
 

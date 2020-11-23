@@ -16,6 +16,8 @@ df = pd.read_sql_query('''SELECT * FROM hours''', connection)
 df1 = pd.read_sql_query('''SELECT * FROM hours''', connection)
 #profpath = os.path.join("./images", profilename)
 #
+
+# have to drop wheathersit 4 and interpolate this data so our timeseries is complete again
 df = df.set_index(pd.to_datetime(df["dteday"] + " " + pd.to_datetime(df["hr"], format = "%H").dt.strftime('%H')))
 df = df.asfreq("H")
 df = df.reset_index()
