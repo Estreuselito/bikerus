@@ -1,9 +1,8 @@
 # this file will create a html map
-
-# imports
-import pandas as pd
-from data_visualization import return_and_save_bike_station_map
 from data_storage import connection
+from data_visualization import return_and_save_bike_station_map
+import pandas as pd
+# imports
 
 print(" ___         _           _   _\n\
 (  _ \      ( )_        ( ) ( )_ \n\

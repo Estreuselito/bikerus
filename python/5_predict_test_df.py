@@ -24,7 +24,8 @@ except:
 
 check_and_create_and_insert(connection,
                             "predicted_df",
-                            predict_test_df(neural_net, random_forest, catboost),
+                            predict_test_df(
+                                neural_net, random_forest, catboost),
                             create_table_predicted_df)
 
 

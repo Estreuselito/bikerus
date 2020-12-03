@@ -16,7 +16,7 @@ def create_connection(db_name):
     -------
     c: connection object
         conn.cursor
-    
+
     conn: connection
         direct connect to database
     """
@@ -25,14 +25,14 @@ def create_connection(db_name):
     return conn
 
 
-def table_exists(table_name, conn): 
+def table_exists(table_name, conn):
     """check if a table already exists within the database
 
     Parameters
     ----------
     table_name: str
         name of the table within the database
-    
+
     conn: connection
         connection to database
 
@@ -42,9 +42,10 @@ def table_exists(table_name, conn):
     False: when table does not exists
     """
     c = conn.cursor()
-    c.execute('''SELECT count(name) FROM sqlite_master WHERE TYPE = 'table' AND name = '{}' '''.format(table_name)) 
-    if c.fetchone()[0] == 1: 
-        return True 
+    c.execute(
+        '''SELECT count(name) FROM sqlite_master WHERE TYPE = 'table' AND name = '{}' '''.format(table_name))
+    if c.fetchone()[0] == 1:
+        return True
     return False
 
 
@@ -58,7 +59,7 @@ def check_and_create_and_insert(conn, table_name, df, sql_table_creating_string)
 
     table_name: str
         the name of the table which shall be checked and/or created
-    
+
     df: dataframe
         the dataframe, which should be saved into the database
 
@@ -74,11 +75,11 @@ def check_and_create_and_insert(conn, table_name, df, sql_table_creating_string)
         return None
     else:
         conn.execute(sql_table_creating_string)
-        df.to_sql(name=table_name, con=conn, if_exists='append', index = False)
+        df.to_sql(name=table_name, con=conn, if_exists='append', index=False)
         print("Table is created!")
         return None
 
-    
+
 if not os.path.exists("./database"):
     os.makedirs("./database")
 

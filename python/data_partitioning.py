@@ -1,5 +1,26 @@
 def train_test_split_ts(data, train_size):
-    """This function creates the train and test set for time-series data.
+    # Sanity Check
+    if train_size <= 0:
+        print('The size of the train set has to be greater than 0.')
+        return None
+    if train_size >= 1:
+        print('The size of the train set has to be smaller than 1.')
+        return None
+    # Split
+    else:
+        X = data.drop(['cnt'], axis=1)
+        Y = data['cnt']
+        index = round(len(X) * train_size)
+        X_train = X.iloc[:index]
+        Y_train = Y.iloc[:index]
+        X_test = X.iloc[index:]
+        Y_test = Y.iloc[index:]
+
+    return X_train, Y_train, X_test, Y_test
+
+
+def train_test_split_rs(data, train_size):
+    """This function creates the train and test set based on a random sample.
 
     Parameters
     ----------
@@ -19,6 +40,9 @@ def train_test_split_ts(data, train_size):
     X_test and Y_test are only used for the testing.
     """
 
+    # Necessary Imports
+    from sklearn.model_selection import train_test_split
+
     # Sanity Check
     if train_size <= 0:
         print('The size of the train set has to be greater than 0.')
@@ -26,16 +50,14 @@ def train_test_split_ts(data, train_size):
     if train_size >= 1:
         print('The size of the train set has to be smaller than 1.')
         return None
+    # Split
     else:
         X = data.drop(['cnt'], axis=1)
         Y = data['cnt']
-        index = round(len(X) * train_size)
-        X_train = X.iloc[:index]
-        Y_train = Y.iloc[:index]
-        X_test = X.iloc[index:]
-        Y_test = Y.iloc[index:]
+        X_train_rs, X_test_rs, Y_train_rs, Y_test_rs = train_test_split(
+            X, Y, train_size=train_size, random_state=0)
 
-    return X_train, Y_train, X_test, Y_test
+    return X_train_rs, Y_train_rs, X_test_rs, Y_test_rs
 
 
 def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False):
@@ -126,10 +148,14 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False)
         Y_test_cv_current = Y_train.iloc[list_tscv[fold-1]
                                          [0]:list_tscv[fold-1][1]]
 
-    check_and_create_and_insert(connection, "X_train_current", X_train_current, create_table_X_train_test.format("X_train_current"))
-    check_and_create_and_insert(connection, "Y_train_current", Y_train_current, create_table_Y_train_test.format("Y_train_current"))
-    check_and_create_and_insert(connection, "X_test_cv_current", X_test_cv_current, create_table_X_train_test.format("X_test_cv_current"))
-    check_and_create_and_insert(connection, "Y_test_cv_current", Y_test_cv_current, create_table_Y_train_test.format("Y_test_cv_current"))
+    check_and_create_and_insert(connection, "X_train_current", X_train_current,
+                                create_table_X_train_test.format("X_train_current"))
+    check_and_create_and_insert(connection, "Y_train_current", Y_train_current,
+                                create_table_Y_train_test.format("Y_train_current"))
+    check_and_create_and_insert(connection, "X_test_cv_current", X_test_cv_current,
+                                create_table_X_train_test.format("X_test_cv_current"))
+    check_and_create_and_insert(connection, "Y_test_cv_current", Y_test_cv_current,
+                                create_table_Y_train_test.format("Y_test_cv_current"))
 
     # Visualization (Optional, only executed if vis is set to 'yes' when calling the function)
     if vis == True:
