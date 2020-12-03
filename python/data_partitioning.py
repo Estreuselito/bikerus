@@ -19,7 +19,7 @@ def train_test_split_ts(data, train_size):
     return X_train, Y_train, X_test, Y_test
 
 
-def train_test_split_random(data, train_size):
+def train_test_split_rs(data, train_size):
     """This function creates the train and test set based on a random sample.
 
     Parameters
@@ -54,9 +54,9 @@ def train_test_split_random(data, train_size):
     else:
         X = data.drop(['cnt'], axis=1)
         Y = data['cnt']
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size = train_size, random_state=0)
+        X_train_rs, X_test_rs, Y_train_rs, Y_test_rs = train_test_split(X, Y, train_size = train_size, random_state=0)
     
-    return X_train, Y_train, X_test, Y_test
+    return X_train_rs, Y_train_rs, X_test_rs, Y_test_rs
 
 
 def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False):
