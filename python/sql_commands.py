@@ -54,8 +54,9 @@ create_table_hours_preprocessed = '''
             holiday INTEGER,
             weekday INTEGER,
             workingday INTEGER,
+            rush_hour INTEGER, 
             weathersit INTEGER,
-            temp REAL,
+            atemp REAL,
             hum REAL,
             windspeed INTEGER,
             cnt INTEGER 
@@ -115,8 +116,9 @@ create_table_X_train_test = """
             holiday INTEGER,
             weekday INTEGER,
             workingday INTEGER,
+            rush_hour INTEGER,
             weathersit INTEGER,
-            temp REAL,
+            atemp REAL,
             hum REAL,
             windspeed INTEGER
             ) 
@@ -139,7 +141,7 @@ create_table_predicted_df = """
         weekday INTEGER,
         workingday INTEGER,
         weathersit INTEGER,
-        temp REAL,
+        atemp REAL,
         hum REAL,
         windspeed INTEGER,
         cnt INTEGER,

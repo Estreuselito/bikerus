@@ -11,14 +11,22 @@ _|                 _|                                                    |___/\n
 # load data
 df = pd.read_sql_query('''SELECT * FROM hours_complete''', connection)
 
+#add new rush-hour column
+df["rush_hour"] = 0
+
+rush_hours = [7, 8, 16, 17, 18]
+
+for rush_hour in rush_hours:
+    df.loc[df.hr == rush_hour, "rush_hour"] = 1
+df.loc[df.workingday == 0, 'rush_hour'] = 0
 
 # drop leakage variables
 leak_var = ["casual", "registered"]
 df = df.drop(leak_var, axis=1)
 
 
-# drop highly correlated variables
-high_corr_var = ["atemp"]
+# drop highly correlated variables we dropped temp since atemp is more important for human decision makings
+high_corr_var = ["temp"]
 df = df.drop(high_corr_var, axis=1)
 
 
@@ -35,7 +43,7 @@ df = df.drop(red_var, axis=1)
 
 
 # normalize continous variables
-conti_var = ["temp", "windspeed", "cnt"]
+conti_var = ["atemp", "windspeed", "cnt"]
 # store true min & max to be able to revert normalization
 count_var = ["cnt"]
 max_count = pd.DataFrame(df[count_var].max())

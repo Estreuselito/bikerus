@@ -1,6 +1,7 @@
 # imports
 from data_storage import connection
 import pandas as pd
+import numpy as np
 import os
 from pandas_profiling import ProfileReport
 
@@ -16,9 +17,10 @@ reports = False
 df = pd.read_sql_query('''SELECT * FROM hours''', connection)
 df1 = pd.read_sql_query('''SELECT * FROM hours''', connection)
 #profpath = os.path.join("./images", profilename)
-#
 
 # have to drop wheathersit 4 and interpolate this data so our timeseries is complete again
+df = df.drop(df[df['weathersit'] == 4].index, axis=0)
+
 df = df.set_index(pd.to_datetime(
     df["dteday"] + " " + pd.to_datetime(df["hr"], format="%H").dt.strftime('%H')))
 df = df.asfreq("H")
@@ -32,13 +34,13 @@ df["weekday"] = df["index"].dt.weekday
 # working day can be interfered from weekday!
 # map month to season
 
-columns = ["holiday", "yr", "season", "workingday"]
+columns = ["holiday", "yr", "season", "workingday", "weathersit"]
 df[columns] = df[columns].ffill()
 
 # please review interpolate methods, since the filling with interpolate of registered and cnt is maybe not the best way
-columns = ["temp", "weathersit", "atemp", "hum",
-           "windspeed", "casual", "registered", "cnt"]
+columns = ["temp", "atemp", "hum", "windspeed", "casual", "registered", "cnt"]
 df[columns] = df[columns].interpolate()
+
 
 df = df.drop("instant", axis=1).rename(columns={"index": "datetime"})
 
