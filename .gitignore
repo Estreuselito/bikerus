@@ -6,6 +6,7 @@
 # Make sure resources do not get added to repo
 
 references/resources
+references/Methodology
 
 # ignore powerpoint 
 
