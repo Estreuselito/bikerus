@@ -18,7 +18,8 @@ df1 = pd.read_sql_query('''SELECT * FROM hours''', connection)
 #
 
 # have to drop wheathersit 4 and interpolate this data so our timeseries is complete again
-df = df.set_index(pd.to_datetime(df["dteday"] + " " + pd.to_datetime(df["hr"], format = "%H").dt.strftime('%H')))
+df = df.set_index(pd.to_datetime(
+    df["dteday"] + " " + pd.to_datetime(df["hr"], format="%H").dt.strftime('%H')))
 df = df.asfreq("H")
 df = df.reset_index()
 
@@ -30,15 +31,18 @@ df["weekday"] = df["index"].dt.weekday
 # working day can be interfered from weekday!
 # map month to season
 
-columns = ["holiday","yr", "season", "workingday"]
+columns = ["holiday", "yr", "season", "workingday"]
 df[columns] = df[columns].ffill()
 
-columns = ["temp", "weathersit", "atemp", "hum", "windspeed", "casual", "registered", "cnt"] # please review interpolate methods, since the filling with interpolate of registered and cnt is maybe not the best way
+# please review interpolate methods, since the filling with interpolate of registered and cnt is maybe not the best way
+columns = ["temp", "weathersit", "atemp", "hum",
+           "windspeed", "casual", "registered", "cnt"]
 df[columns] = df[columns].interpolate()
 
-df = df.drop("instant", axis=1).rename(columns={"index":"datetime"})
+df = df.drop("instant", axis=1).rename(columns={"index": "datetime"})
 
-check_and_create_and_insert(connection, "hours_complete", df, create_table_hours_complete)
+check_and_create_and_insert(
+    connection, "hours_complete", df, create_table_hours_complete)
 
 os.chdir("./images")
 prof = ProfileReport(df)

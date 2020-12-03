@@ -45,7 +45,8 @@ max_min_count = pd.concat([max_count, min_count], axis=1)
 max_min_count.columns = ["max", "min"]
 
 # store in database
-check_and_create_and_insert(connection, "max_min_count", max_min_count, create_table_max_min_count)
+check_and_create_and_insert(
+    connection, "max_min_count", max_min_count, create_table_max_min_count)
 
 # normalize data
 mm_scaler = preprocessing.MinMaxScaler()
@@ -53,7 +54,8 @@ df[conti_var] = mm_scaler.fit_transform(df[conti_var])
 
 
 # storage of preprocessed file
-check_and_create_and_insert(connection, "hours_preprocessed", df, create_table_hours_preprocessed)
+check_and_create_and_insert(
+    connection, "hours_preprocessed", df, create_table_hours_preprocessed)
 
 # print statement
 print(" __ \                      |\n\

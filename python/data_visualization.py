@@ -1,9 +1,10 @@
-# This file contains all functions, which will be used for visualization    
+# This file contains all functions, which will be used for visualization
 
 # imports
 import pandas as pd
 import folium  # for creating a map
 from branca.element import Template, MacroElement  # for creating the legend
+
 
 def return_and_save_bike_station_map(df,
                                      station_location):
@@ -27,22 +28,22 @@ def return_and_save_bike_station_map(df,
         return False
     unique_stats = (pd.DataFrame({"Start station number": (df["Start station number"].unique())})
                     .merge(pd.DataFrame({"NO_OF_BIKES": (df.groupby(["Start station number"])
-                                                                .count()["Bike number"])}),
-                            on="Start station number", how="left")
+                                                         .count()["Bike number"])}),
+                           on="Start station number", how="left")
                     .rename(columns={"Start station number": "TERMINAL_NUMBER"}))
     unique_stats["color"] = pd.cut(unique_stats['NO_OF_BIKES'],
-                                bins=3,
-                                labels=['green', 'orange', 'red'])
+                                   bins=3,
+                                   labels=['green', 'orange', 'red'])
     cuts = pd.cut(unique_stats['NO_OF_BIKES'],
-                    bins=3,
-                    retbins=True,
-                    labels=['green', 'orange', 'red'])
-    station_loc_full = pd.merge(unique_stats, station_location[["TERMINAL_NUMBER", "LONGITUDE", "LATITUDE", "ADDRESS"]], on = "TERMINAL_NUMBER")
-    m = folium.Map(location=[((station_loc_full.LATITUDE.min() + station_loc_full.LATITUDE.max())/2), ((station_loc_full.LONGITUDE.min() +  station_loc_full.LONGITUDE.max()) / 2)],
-                zoom_start = 12,
-                no_touch=True,
-                control_scale=True)
-                
+                  bins=3,
+                  retbins=True,
+                  labels=['green', 'orange', 'red'])
+    station_loc_full = pd.merge(unique_stats, station_location[[
+                                "TERMINAL_NUMBER", "LONGITUDE", "LATITUDE", "ADDRESS"]], on="TERMINAL_NUMBER")
+    m = folium.Map(location=[((station_loc_full.LATITUDE.min() + station_loc_full.LATITUDE.max())/2), ((station_loc_full.LONGITUDE.min() + station_loc_full.LONGITUDE.max()) / 2)],
+                   zoom_start=12,
+                   no_touch=True,
+                   control_scale=True)
 
     template = """
     {% macro html(this, kwargs) %}
@@ -139,7 +140,8 @@ def return_and_save_bike_station_map(df,
     macro._template = Template(template)
 
     for i in range(0, len(station_loc_full)-1):
-        folium.Marker([station_loc_full["LATITUDE"][i], station_loc_full["LONGITUDE"][i]], icon=folium.Icon(color=station_loc_full["color"][i], icon = "bicycle", prefix='fa')).add_to(m)
+        folium.Marker([station_loc_full["LATITUDE"][i], station_loc_full["LONGITUDE"][i]], icon=folium.Icon(
+            color=station_loc_full["color"][i], icon="bicycle", prefix='fa')).add_to(m)
 
     m = m.get_root().add_child(macro)
 

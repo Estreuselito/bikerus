@@ -54,8 +54,9 @@ def train_test_split_rs(data, train_size):
     else:
         X = data.drop(['cnt'], axis=1)
         Y = data['cnt']
-        X_train_rs, X_test_rs, Y_train_rs, Y_test_rs = train_test_split(X, Y, train_size = train_size, random_state=0)
-    
+        X_train_rs, X_test_rs, Y_train_rs, Y_test_rs = train_test_split(
+            X, Y, train_size=train_size, random_state=0)
+
     return X_train_rs, Y_train_rs, X_test_rs, Y_test_rs
 
 
@@ -147,10 +148,14 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False)
         Y_test_cv_current = Y_train.iloc[list_tscv[fold-1]
                                          [0]:list_tscv[fold-1][1]]
 
-    check_and_create_and_insert(connection, "X_train_current", X_train_current, create_table_X_train_test.format("X_train_current"))
-    check_and_create_and_insert(connection, "Y_train_current", Y_train_current, create_table_Y_train_test.format("Y_train_current"))
-    check_and_create_and_insert(connection, "X_test_cv_current", X_test_cv_current, create_table_X_train_test.format("X_test_cv_current"))
-    check_and_create_and_insert(connection, "Y_test_cv_current", Y_test_cv_current, create_table_Y_train_test.format("Y_test_cv_current"))
+    check_and_create_and_insert(connection, "X_train_current", X_train_current,
+                                create_table_X_train_test.format("X_train_current"))
+    check_and_create_and_insert(connection, "Y_train_current", Y_train_current,
+                                create_table_Y_train_test.format("Y_train_current"))
+    check_and_create_and_insert(connection, "X_test_cv_current", X_test_cv_current,
+                                create_table_X_train_test.format("X_test_cv_current"))
+    check_and_create_and_insert(connection, "Y_test_cv_current", Y_test_cv_current,
+                                create_table_Y_train_test.format("Y_test_cv_current"))
 
     # Visualization (Optional, only executed if vis is set to 'yes' when calling the function)
     if vis == True:

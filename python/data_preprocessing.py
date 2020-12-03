@@ -20,7 +20,9 @@ def import_data(path, **kwargs):
     data = pd.read_csv(path, **kwargs)
     return data
 
-# Pickle a file and then compress it into a file with extension 
+# Pickle a file and then compress it into a file with extension
+
+
 def compressed_pickle(title, data):
     """loads data and compresses this into a .pbz2 file which reduces it immensly in size
 
@@ -31,10 +33,12 @@ def compressed_pickle(title, data):
     data : dataframe
         the dataframe which shall be compressed
     """
-    with bz2.BZ2File(title + '.pbz2', 'w') as f: 
-      cPickle.dump(data, f)
+    with bz2.BZ2File(title + '.pbz2', 'w') as f:
+        cPickle.dump(data, f)
 
-  # Load any compressed pickle file
+    # Load any compressed pickle file
+
+
 def decompress_pickle(file):
     """a function which loads .pbz2 files and decompresses them
 

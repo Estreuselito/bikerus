@@ -38,19 +38,22 @@ station_locs = pd.read_csv(
 print("\n\nYour data has been downloaded! \n\nNow your data is inputed into a database!\n")
 
 raw = pd.concat([import_data("./data/raw/2011-capitalbikeshare-tripdata.csv",
-                       parse_dates=["Start date", "End date"]),
-                      import_data("./data/raw/2012Q1-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"]),
-                      import_data("./data/raw/2012Q3-capitalbikeshare-tripdata.csv",
-                                  parse_dates=["Start date", "End date"]),
-                      import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv",
-                                  parse_dates=["Start date", "End date"]),
-                      import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"])])
+                             parse_dates=["Start date", "End date"]),
+                 import_data("./data/raw/2012Q1-capitalbikeshare-tripdata.csv",
+                             parse_dates=["Start date", "End date"]),
+                 import_data("./data/raw/2012Q3-capitalbikeshare-tripdata.csv",
+                             parse_dates=["Start date", "End date"]),
+                 import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv",
+                             parse_dates=["Start date", "End date"]),
+                 import_data("./data/raw/2012Q4-capitalbikeshare-tripdata.csv", parse_dates=["Start date", "End date"])])
 
-check_and_create_and_insert(connection, "hours", pd.read_csv("./data/raw/hour.csv", index_col = [0]), create_table_hours)
+check_and_create_and_insert(connection, "hours", pd.read_csv(
+    "./data/raw/hour.csv", index_col=[0]), create_table_hours)
 
 check_and_create_and_insert(connection, "raw", raw, create_table_raw)
 
-check_and_create_and_insert(connection, "station_locs", station_locs, create_table_station_locations)
+check_and_create_and_insert(
+    connection, "station_locs", station_locs, create_table_station_locations)
 
 dir_path = './data'
 try:

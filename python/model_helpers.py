@@ -3,18 +3,22 @@ import pandas as pd
 from tqdm import tqdm
 
 
-def import_train_test_calc():
+def import_train_test_calc(rs=None):
     """Returns various metrics regarding the train and test splits
     """
 
     df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
     min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
 
-    Y_train = pd.read_sql_query('''SELECT * FROM Y_train''', connection)
-    X_train = pd.read_sql_query('''SELECT * FROM X_train''', connection)
-    Y_test = pd.read_sql_query('''SELECT * FROM Y_test''', connection)
-    X_test = pd.read_sql_query('''SELECT * FROM X_test''', connection)
-    
+    Y_train = pd.read_sql_query(
+        '''SELECT * FROM Y_train''' + str(rs or ""), connection)
+    X_train = pd.read_sql_query(
+        '''SELECT * FROM X_train''' + str(rs or ""), connection)
+    Y_test = pd.read_sql_query(
+        '''SELECT * FROM Y_test''' + str(rs or ""), connection)
+    X_test = pd.read_sql_query(
+        '''SELECT * FROM X_test''' + str(rs or ""), connection)
+
     X_train = X_train.drop('datetime', axis=1)
     X_test = X_test.drop('datetime', axis=1)
 
