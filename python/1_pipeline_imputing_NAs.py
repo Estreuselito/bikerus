@@ -1,6 +1,5 @@
 # imports
-from data_storage import connection, check_and_create_and_insert
-from sql_commands import create_table_hours_complete
+from data_storage import connection
 import pandas as pd
 import os
 from pandas_profiling import ProfileReport
@@ -10,6 +9,8 @@ print("_)                           |   _)                      \  |     \ \n\
  |  |   |   |  |   |  |   |  |    |  |   |  (   |       |\  |   ___ \  \__ \ \n\
 _| _|  _|  _|  .__/  \__._| \__| _| _|  _| \__. |      _| \_| _/    _\ ____/\n\
               _|                           |___/\n")
+
+reports = False
 
 # load data
 df = pd.read_sql_query('''SELECT * FROM hours''', connection)
@@ -41,15 +42,15 @@ df[columns] = df[columns].interpolate()
 
 df = df.drop("instant", axis=1).rename(columns={"index": "datetime"})
 
-check_and_create_and_insert(
-    connection, "hours_complete", df, create_table_hours_complete)
+df.to_sql("hours_complete", connection, if_exists="replace", index=False)
 
-os.chdir("./images")
-prof = ProfileReport(df)
-prof.to_file(output_file='imputed_profile.html')
+if reports == True:
+    os.chdir("./images")
+    prof = ProfileReport(df)
+    prof.to_file(output_file='imputed_profile.html')
 
-prof1 = ProfileReport(df1)
-prof1.to_file(output_file='starting_profile.html')
+    prof1 = ProfileReport(df1)
+    prof1.to_file(output_file='starting_profile.html')
 
 # print statement
 print(" __ \                      |\n\
