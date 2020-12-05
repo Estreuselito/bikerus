@@ -1,5 +1,4 @@
-from data_storage import connection, check_and_create_and_insert
-from sql_commands import create_table_max_min_count, create_table_hours_preprocessed
+from data_storage import connection
 import pandas as pd
 from sklearn import preprocessing
 
@@ -37,10 +36,10 @@ df = df.drop(red_var, axis=1)
 
 
 # coerce correct data types for categorical data
-cat_var = ["season", "yr", "mnth", "hr", "holiday",
-           "weekday", "workingday", "weathersit"]
-for v in cat_var:
-    df[v] = df[v].astype("category")
+# cat_var = ["season", "yr", "mnth", "hr", "holiday",
+#            "weekday", "workingday", "weathersit"]
+# for v in cat_var:
+#     df[v] = df[v].astype("category")
 
 
 # normalize continous variables
@@ -53,16 +52,15 @@ max_min_count = pd.concat([max_count, min_count], axis=1)
 max_min_count.columns = ["max", "min"]
 
 # store in database
-check_and_create_and_insert(connection, "max_min_count", max_min_count, create_table_max_min_count)
+max_min_count.to_sql("max_min_count", connection,
+                     if_exists="replace", index=False)
 
 # normalize data
 mm_scaler = preprocessing.MinMaxScaler()
 df[conti_var] = mm_scaler.fit_transform(df[conti_var])
 
-
 # storage of preprocessed file
-check_and_create_and_insert(
-    connection, "hours_preprocessed", df, create_table_hours_preprocessed)
+df.to_sql("hours_preprocessed", connection, if_exists="replace", index=False)
 
 # print statement
 print(" __ \                      |\n\

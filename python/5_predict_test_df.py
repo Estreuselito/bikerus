@@ -1,5 +1,4 @@
-from data_storage import connection, check_and_create_and_insert
-from sql_commands import create_table_predicted_df
+from data_storage import connection
 from model_helpers import predict_test_df
 from catboost import CatBoostRegressor
 import pickle
@@ -22,12 +21,8 @@ try:
 except:
     print("Something did not work! Could not load models! Execute script 4 again!")
 
-check_and_create_and_insert(connection,
-                            "predicted_df",
-                            predict_test_df(
-                                neural_net, random_forest, catboost),
-                            create_table_predicted_df)
-
+predict_test_df(neural_net, random_forest, catboost).to_sql(
+    "predicted_df", connection, if_exists="replace", index=False)
 
 print(" __ \                      |\n\
  |   |  _ \   __ \    _ \  |\n\
