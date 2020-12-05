@@ -58,6 +58,8 @@ import joblib
 ###########
 
 # Sklearn support vector regression trained on random split with Grid/RandomizedCV
+
+
 def sklearn_support_vector_regression_rs_gridcv():
 
     try:
@@ -74,41 +76,41 @@ def sklearn_support_vector_regression_rs_gridcv():
         ## HYPERPARAMETER OPTIMIZATION ###
 
         # 1st RandomizedSearchCV parameters:
-            # param_grid = {
-                # "degree": [2, 4, 6]
-                # "C": [1, 2, 4, 6],
-                # "epsilon": [0.0, 0.05, 0.1],
-                # "gamma": [1., 2., 3.],
-                # "kernel": ["poly", "rbf"]
-            # }
-            # best parameters: {'kernel': 'rbf', 'gamma': 1.0, 'epsilon': 0.0, 'degree': 2, 'C': 1}
+        # param_grid = {
+        # "degree": [2, 4, 6]
+        # "C": [1, 2, 4, 6],
+        # "epsilon": [0.0, 0.05, 0.1],
+        # "gamma": [1., 2., 3.],
+        # "kernel": ["poly", "rbf"]
+        # }
+        # best parameters: {'kernel': 'rbf', 'gamma': 1.0, 'epsilon': 0.0, 'degree': 2, 'C': 1}
 
         # 2nd RandomizedSearchCV parameters:
-            # param_grid = {
-                # "C": [0.5, 1, 1.5],
-                # "epsilon": [0.0, 0.01, 0.03],
-                # "gamma": ["scale", "auto", 0., 1.],
-                # "kernel": ["rbf"]
-            # }
-            # best parameters: {'kernel': 'rbf', 'gamma': 1.0, 'epsilon': 0.01, 'C': 1.5}
+        # param_grid = {
+        # "C": [0.5, 1, 1.5],
+        # "epsilon": [0.0, 0.01, 0.03],
+        # "gamma": ["scale", "auto", 0., 1.],
+        # "kernel": ["rbf"]
+        # }
+        # best parameters: {'kernel': 'rbf', 'gamma': 1.0, 'epsilon': 0.01, 'C': 1.5}
 
         # 3nd RandomizedSearchCV parameters:
-            # param_grid = {
-                # "C": [1.25, 1.5, 1.75],
-                # "epsilon": [0.005, 0.01, 0.02],
-                # "gamma": [0.75, 1.0, 1.25],
-                # "kernel": ["rbf"]
-            # }
-            # best parameters: {'kernel': 'rbf', 'gamma': 1.0, 'epsilon': 0.01, 'C': 1.75}
+        # param_grid = {
+        # "C": [1.25, 1.5, 1.75],
+        # "epsilon": [0.005, 0.01, 0.02],
+        # "gamma": [0.75, 1.0, 1.25],
+        # "kernel": ["rbf"]
+        # }
+        # best parameters: {'kernel': 'rbf', 'gamma': 1.0, 'epsilon': 0.01, 'C': 1.75}
 
         ## TRAINING ON OPTIMAL PARAMETERS ###
 
         # set optimal parameters
-        SVR_regr_CV_model = SVR(C = 1.75, 
-                                epsilon = 0.01,
-                                gamma = 1.0,
-                                kernel = "rbf",
-                                max_iter = 25000)
+        SVR_regr_CV_model = SVR(C=1.75,
+                                epsilon=0.01,
+                                gamma=1.0,
+                                kernel="rbf",
+                                max_iter=25000)
 
         SVR_regr_CV_model.fit(X_train, Y_train.values.ravel())
 
@@ -119,11 +121,14 @@ def sklearn_support_vector_regression_rs_gridcv():
         joblib.dump(SVR_regr_CV_model,
                     "./models/SVR_files/Model_SVR_rs_gridcv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_rs(X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
+        r2, pseudor2 = r_squared_metrics_NN_SVR_rs(
+            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
 
         return r2.values[0], pseudor2.values[0]
 
 # Sklearn support vector regression trained on time series split with Grid/RandomizedCV
+
+
 def sklearn_support_vector_regression_ts_gridcv():
 
     try:
@@ -140,41 +145,41 @@ def sklearn_support_vector_regression_ts_gridcv():
         ## HYPERPARAMETER OPTIMIZATION ###
 
         # 1st RandomizedSearchCV parameters:
-            # param_grid = {
-                # "degree": [2, 4, 6]
-                # "C": [1, 2, 4],
-                # "epsilon": [0.0, 0.5, 0.1],
-                # "gamma": [0.5, 1, 2],
-                # "kernel": ["poly", "rbf"]
-            # }
-            # best parameters: {'kernel': 'rbf', 'gamma': 1, 'epsilon': 0.0, 'degree': 2, 'C': 1}
+        # param_grid = {
+        # "degree": [2, 4, 6]
+        # "C": [1, 2, 4],
+        # "epsilon": [0.0, 0.5, 0.1],
+        # "gamma": [0.5, 1, 2],
+        # "kernel": ["poly", "rbf"]
+        # }
+        # best parameters: {'kernel': 'rbf', 'gamma': 1, 'epsilon': 0.0, 'degree': 2, 'C': 1}
 
         # 2nd RandomizedSearchCV parameters:
-            # param_grid = {
-                # "C": [0.75, 1, 1.25, 1.5],
-                # "epsilon": [0, 0.01, 0.03],
-                # "gamma": [0.75, 1, 1.5],
-                # "kernel": ["rbf"]
-            # }
-            # best parameters: {'kernel': 'rbf', 'gamma': 0.75, 'epsilon': 0.03, 'C': 0.75}
+        # param_grid = {
+        # "C": [0.75, 1, 1.25, 1.5],
+        # "epsilon": [0, 0.01, 0.03],
+        # "gamma": [0.75, 1, 1.5],
+        # "kernel": ["rbf"]
+        # }
+        # best parameters: {'kernel': 'rbf', 'gamma': 0.75, 'epsilon': 0.03, 'C': 0.75}
 
         # 3nd RandomizedSearchCV parameters:
-            # param_grid = {
-                # "C": [0.25, 0.5, 0.75],
-                # "epsilon": [0.02, 0.025, 0.03],
-                # "gamma": [0.6, 0.75, 0.8],
-                # "kernel": ["rbf"]
-            # }
-            # best parameters: {'kernel': 'rbf', 'gamma': 0.6, 'epsilon': 0.03, 'C': 0.5}
+        # param_grid = {
+        # "C": [0.25, 0.5, 0.75],
+        # "epsilon": [0.02, 0.025, 0.03],
+        # "gamma": [0.6, 0.75, 0.8],
+        # "kernel": ["rbf"]
+        # }
+        # best parameters: {'kernel': 'rbf', 'gamma': 0.6, 'epsilon': 0.03, 'C': 0.5}
 
         ## TRAINING ON OPTIMAL PARAMETERS ###
 
         # set optimal parameters
-        SVR_regr_CV_model = SVR(C = 0.5,
-                                epsilon = 0.03,
-                                gamma = 0.6,
-                                kernel = "rbf",
-                                max_iter =25000)
+        SVR_regr_CV_model = SVR(C=0.5,
+                                epsilon=0.03,
+                                gamma=0.6,
+                                kernel="rbf",
+                                max_iter=25000)
 
         SVR_regr_CV_model.fit(X_train, Y_train.values.ravel())
 
@@ -185,11 +190,14 @@ def sklearn_support_vector_regression_ts_gridcv():
         joblib.dump(SVR_regr_CV_model,
                     "./models/SVR_files/Model_SVR_ts_gridcv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_ts(X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
+        r2, pseudor2 = r_squared_metrics_NN_SVR_ts(
+            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
 
         return r2.values[0], pseudor2.values[0]
 
 # Sklearn support vector regression trained on time series split with TimeSeriesCV
+
+
 def sklearn_support_vector_regression_ts_tscv():
 
     try:
@@ -201,14 +209,14 @@ def sklearn_support_vector_regression_ts_tscv():
 
         # ## FIND OPTIMAL PARAMETERS ###
         # 1st CV parameters:
-            # param_grid = {
-                # "C": [1.25, 1.5, 1.75],
-                # "epsilon": [0.005, 0.01, 0.02],
-                # "gamma": [0.75, 1.0, 1.25],
-                # "kernel": ["rbf"]
-            # }
-            # best parameters: C=0.5, epsilon=0.03, gamma=0.5, kernel=”rbf”
-        
+        # param_grid = {
+        # "C": [1.25, 1.5, 1.75],
+        # "epsilon": [0.005, 0.01, 0.02],
+        # "gamma": [0.75, 1.0, 1.25],
+        # "kernel": ["rbf"]
+        # }
+        # best parameters: C=0.5, epsilon=0.03, gamma=0.5, kernel=”rbf”
+
         # see procedure below
         # Training the model incl. Cross Validation
         # df_parameters = pd.DataFrame()
@@ -299,17 +307,17 @@ def sklearn_support_vector_regression_ts_tscv():
         #                         gamma=
         #                             best_parameters['gamma']
         #                         )
-        
+
         # SVR_regr_CV_model.fit(X_train, Y_train.values.ravel())
 
         ### TRAINING ON OPTIMAL PARAMETERS ###
 
         # set optimal parameters
-        SVR_regr_CV_model = SVR(max_iter = 25000,
-                                C = 0.5,
-                                epsilon = 0.03,
-                                gamma = 0.5,
-                                kernel = 'rbf'
+        SVR_regr_CV_model = SVR(max_iter=25000,
+                                C=0.5,
+                                epsilon=0.03,
+                                gamma=0.5,
+                                kernel='rbf'
                                 )
 
         SVR_regr_CV_model.fit(X_train, Y_train.values.ravel())
@@ -326,13 +334,13 @@ def sklearn_support_vector_regression_ts_tscv():
 
         return r2.values[0], pseudor2.values[0]
 
-sklearn_support_vector_regression_ts_tscv()
-    
 ##########
 ### NN ###
 ##########
 
 # Sklearn neural net trained on random split with Grid/RandomizedCV
+
+
 def sklearn_neural_net_multilayerperceptron_rs_gridcv():
 
     try:
@@ -351,30 +359,30 @@ def sklearn_neural_net_multilayerperceptron_rs_gridcv():
         ### HYPERPARAMETER OPTIMIZATION ###
 
         # 1st RandomizedSearchCV parameters:
-            # param_grid = {
-            #     "hidden_layer_sizes": [(10,), (25,), (50,), (10, 10,), (25, 10,), (10, 25,), (25, 25,), (50, 50,)],
-            #     "activation": ["logistic", "tanh", "relu"],
-            #     "alpha": [0.01, 0.02, 0.05, 0.1, 0.2, 0.3],
-            # }
-            # best parameters: {'hidden_layer_sizes': (50, 50,), 'alpha': 0.02, 'activation': 'tanh'}
+        # param_grid = {
+        #     "hidden_layer_sizes": [(10,), (25,), (50,), (10, 10,), (25, 10,), (10, 25,), (25, 25,), (50, 50,)],
+        #     "activation": ["logistic", "tanh", "relu"],
+        #     "alpha": [0.01, 0.02, 0.05, 0.1, 0.2, 0.3],
+        # }
+        # best parameters: {'hidden_layer_sizes': (50, 50,), 'alpha': 0.02, 'activation': 'tanh'}
 
         # 2nd RandomizedSearchCV parameters:
-            # param_grid = {
-            #     "hidden_layer_sizes": [(100,), (200,), (300,), (50, 50,), (75, 75,), (100, 100,)],
-            #     "activation": ["logistic", "tanh", "relu"],
-            #     "alpha": [0.01, 0.015, 0.02, 0.025, 0.03],
-            # }
-            # best parameters: {'hidden_layer_sizes': (200,), 'alpha': 0.025, 'activation': 'relu'}
+        # param_grid = {
+        #     "hidden_layer_sizes": [(100,), (200,), (300,), (50, 50,), (75, 75,), (100, 100,)],
+        #     "activation": ["logistic", "tanh", "relu"],
+        #     "alpha": [0.01, 0.015, 0.02, 0.025, 0.03],
+        # }
+        # best parameters: {'hidden_layer_sizes': (200,), 'alpha': 0.025, 'activation': 'relu'}
 
         ### TRAINING ON OPTIMAL PARAMETERS ###
 
         # set optimal parameters
-        NN_regr_CV_model = MLPRegressor(solver= "lbfgs",
-                                        max_iter = 10000,
-                                        random_state = 0,
-                                        hidden_layer_sizes = (200,),
-                                        activation= "relu",
-                                        alpha= 0.025
+        NN_regr_CV_model = MLPRegressor(solver="lbfgs",
+                                        max_iter=10000,
+                                        random_state=0,
+                                        hidden_layer_sizes=(200,),
+                                        activation="relu",
+                                        alpha=0.025
                                         )
 
         NN_regr_CV_model.fit(X_train, Y_train.values.ravel())
@@ -386,11 +394,14 @@ def sklearn_neural_net_multilayerperceptron_rs_gridcv():
         joblib.dump(NN_regr_CV_model,
                     "./models/NN_MLP_files/Model_MLP_rs_gridcv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_rs(X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
+        r2, pseudor2 = r_squared_metrics_NN_SVR_rs(
+            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
 
         return r2.values[0], pseudor2.values[0]
 
 # Sklearn neural net trained on time series split with Grid/RandomizedCV
+
+
 def sklearn_neural_net_multilayerperceptron_ts_gridcv():
 
     try:
@@ -409,30 +420,30 @@ def sklearn_neural_net_multilayerperceptron_ts_gridcv():
         ### HYPERPARAMETER OPTIMIZATION ###
 
         # 1st RandomizedSearchCV parameters:
-            # param_grid = {
-            #     "hidden_layer_sizes": [(50,), (100,), (50, 25,), (50, 50,)],
-            #     "activation": ["tanh", "relu"],
-            #     "alpha": [0.01, 0.02, 0.04, 0.05],
-            # }
-            # best parameters: {'hidden_layer_sizes': (50, 25), 'alpha': 0.02, 'activation': 'tanh'}
+        # param_grid = {
+        #     "hidden_layer_sizes": [(50,), (100,), (50, 25,), (50, 50,)],
+        #     "activation": ["tanh", "relu"],
+        #     "alpha": [0.01, 0.02, 0.04, 0.05],
+        # }
+        # best parameters: {'hidden_layer_sizes': (50, 25), 'alpha': 0.02, 'activation': 'tanh'}
 
         # 2nd RandomizedSearchCV parameters:
-            # param_grid = {
-            #     "hidden_layer_sizes": [(50, 25,), (75, 25,), (75, 50,)],
-            #     "activation": ["tanh", "relu"],
-            #     "alpha": [0.015, 0.02, 0.025],
-            # }
-            # best parameters: {'hidden_layer_sizes': (50, 25), 'alpha': 0.02, 'activation': 'tanh'}
+        # param_grid = {
+        #     "hidden_layer_sizes": [(50, 25,), (75, 25,), (75, 50,)],
+        #     "activation": ["tanh", "relu"],
+        #     "alpha": [0.015, 0.02, 0.025],
+        # }
+        # best parameters: {'hidden_layer_sizes': (50, 25), 'alpha': 0.02, 'activation': 'tanh'}
 
         ### TRAINING ON OPTIMAL PARAMETERS ###
 
         # set optimal parameters
-        NN_regr_CV_model = MLPRegressor(solver= "lbfgs",
-                                        max_iter = 10000,
-                                        random_state = 0,
-                                        hidden_layer_sizes = (50, 25),
-                                        activation= 'tanh',
-                                        alpha= 0.02
+        NN_regr_CV_model = MLPRegressor(solver="lbfgs",
+                                        max_iter=10000,
+                                        random_state=0,
+                                        hidden_layer_sizes=(50, 25),
+                                        activation='tanh',
+                                        alpha=0.02
                                         )
 
         NN_regr_CV_model.fit(X_train, Y_train.values.ravel())
@@ -444,11 +455,14 @@ def sklearn_neural_net_multilayerperceptron_ts_gridcv():
         joblib.dump(NN_regr_CV_model,
                     "./models/NN_MLP_files/Model_MLP_ts_gridcv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_ts(X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
+        r2, pseudor2 = r_squared_metrics_NN_SVR_ts(
+            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
 
         return r2.values[0], pseudor2.values[0]
 
 # Sklearn neural net trained on time series split with TimeSeriesCV
+
+
 def sklearn_neural_net_multilayerperceptron_ts_tscv():
 
     try:
@@ -460,12 +474,12 @@ def sklearn_neural_net_multilayerperceptron_ts_tscv():
 
         ### FIND OPTIMAL PARAMETERS ###
         # 1st CV parameters:
-            # param_grid = {
-            #     "hidden_layer_sizes": [(50,), (100,), (50, 25,)],
-            #     "activation": ["tanh", "relu"],
-            #     "alpha": [0.015, 0.02, 0.025],
-            # }
-            # best parameters: {hidden_layer_sizes=(50, 25,), alpha=0.015, activation=”relu”}
+        # param_grid = {
+        #     "hidden_layer_sizes": [(50,), (100,), (50, 25,)],
+        #     "activation": ["tanh", "relu"],
+        #     "alpha": [0.015, 0.02, 0.025],
+        # }
+        # best parameters: {hidden_layer_sizes=(50, 25,), alpha=0.015, activation=”relu”}
 
         # see procedure below
         # # Training the model incl. Cross Validation
@@ -567,12 +581,12 @@ def sklearn_neural_net_multilayerperceptron_ts_tscv():
         ### TRAINING ON OPTIMAL PARAMETERS ###
 
         # set optimal parameters
-        NN_regr_CV_model = MLPRegressor(solver= "lbfgs",
-                                        max_iter = 10000,
-                                        random_state = 0,
-                                        hidden_layer_sizes = (50, 25,),
-                                        activation= 'relu',
-                                        alpha= 0.015
+        NN_regr_CV_model = MLPRegressor(solver="lbfgs",
+                                        max_iter=10000,
+                                        random_state=0,
+                                        hidden_layer_sizes=(50, 25,),
+                                        activation='relu',
+                                        alpha=0.015
                                         )
 
         NN_regr_CV_model.fit(X_train, Y_train.values.ravel())
@@ -588,7 +602,6 @@ def sklearn_neural_net_multilayerperceptron_ts_tscv():
             X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
 
         return r2.values[0], pseudor2.values[0]
-
 
 
 def catboost_regressor():
