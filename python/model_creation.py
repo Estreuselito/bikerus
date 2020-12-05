@@ -124,7 +124,7 @@ def sklearn_neural_net_multilayerperceptron():
             estimator=NN_regr_CV, param_grid=param_grid, cv=5)
 
         # execute grid search
-        NN_regr_CV_model.fit(X_train, Y_train)
+        NN_regr_CV_model.fit(X_train, Y_train["cnt"].array)
 
         print("the model is being trained on optimal parameters")
 
@@ -133,7 +133,7 @@ def sklearn_neural_net_multilayerperceptron():
 
         ### TRAINING ###
         # train model on optimal parameters
-        NN_regr_CV.fit(X_train, Y_train)
+        NN_regr_CV.fit(X_train, Y_train["cnt"].array)
 
         # store optimal parameters
         if not os.path.exists("./models/NN_MLP_files"):
