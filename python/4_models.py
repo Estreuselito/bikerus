@@ -1,6 +1,7 @@
-from model_creation import catboost_regressor
-from model_creation import sklearn_neural_net_multilayerperceptron
+# TODO SVR
+# TODO from model_creation import sklearn_neural_net_multilayerperceptron
 from model_creation import sklearn_random_forest
+from model_creation import catboost_regressor
 import pandas as pd
 
 # only activate in an environment with fastai running
@@ -24,18 +25,23 @@ report = pd.DataFrame(columns=['Modelname', 'R-Squared', 'Pseudo R-Squared'])
 #                         "Pseudo R-Squared": pseudor2},
 #                         ignore_index=True)
 
+# Sklearn support vector regression
+# TODO
+
+
+# Sklearn neural net
+# TODO
+# print("\nsklearn nn MLP")
+# r2, pseudor2 = sklearn_neural_net_multilayerperceptron()
+# report = report.append({"Modelname": "Sklearn NN MLP",
+#                         "R-Squared": r2,
+#                         "Pseudo R-Squared": pseudor2},
+#                        ignore_index=True)
+
 # catboost regression
 print("\nCatboost regressor")
 r2, pseudor2 = catboost_regressor()
 report = report.append({"Modelname": "Catboost regression",
-                        "R-Squared": r2,
-                        "Pseudo R-Squared": pseudor2},
-                       ignore_index=True)
-
-# Sklearn neural net
-print("\nsklearn nn MLP")
-r2, pseudor2 = sklearn_neural_net_multilayerperceptron()
-report = report.append({"Modelname": "Sklearn NN MLP",
                         "R-Squared": r2,
                         "Pseudo R-Squared": pseudor2},
                        ignore_index=True)

@@ -55,10 +55,35 @@ create_table_hours_preprocessed = '''
             weekday INTEGER,
             workingday INTEGER,
             weathersit INTEGER,
-            temp REAL,
+            atemp REAL,
             hum REAL,
             windspeed INTEGER,
-            cnt INTEGER 
+            cnt INTEGER,
+            rush_hour INTEGER 
+            ) 
+        '''
+
+create_table_hours_preprocessed_NN_SVR = ''' 
+        CREATE TABLE hours_preprocessed_NN_SVR( 
+            datetime DATE,  
+            yr INTEGER, 
+            holiday INTEGER,
+            workingday INTEGER,
+            atemp REAL,
+            hum REAL,
+            windspeed INTEGER,
+            cnt INTEGER,
+            rush_hour INTEGER,
+            season_sin REAL,
+            season_cos REAL,
+            mnth_sin REAL,
+            mnth_cos REAL,
+            hr_sin REAL,
+            hr_cos REAL,
+            weekday_sin REAL,
+            weekday_cos REAL,
+            weathersit_2 INTEGER,
+            weathersit_3 INTEGER
             ) 
         '''
 
@@ -116,13 +141,43 @@ create_table_X_train_test = """
             weekday INTEGER,
             workingday INTEGER,
             weathersit INTEGER,
-            temp REAL,
+            atemp REAL,
             hum REAL,
-            windspeed INTEGER
+            windspeed INTEGER,
+            rush_hour INTEGER 
             ) 
         """
 
 create_table_Y_train_test = """
+    CREATE TABLE {}(
+            cnt INTEGER
+            ) 
+        """
+
+create_table_X_train_test_NN_SVR = """
+    CREATE TABLE {}(
+            datetime DATE,  
+            yr INTEGER, 
+            holiday INTEGER,
+            workingday INTEGER,
+            atemp REAL,
+            hum REAL,
+            windspeed INTEGER,
+            rush_hour INTEGER,
+            season_sin REAL,
+            season_cos REAL,
+            mnth_sin REAL,
+            mnth_cos REAL,
+            hr_sin REAL,
+            hr_cos REAL,
+            weekday_sin REAL,
+            weekday_cos REAL,
+            weathersit_2 INTEGER,
+            weathersit_3 INTEGER
+            ) 
+        """
+
+create_table_Y_train_test_NN_SVR = """
     CREATE TABLE {}(
             cnt INTEGER
             ) 
@@ -139,7 +194,7 @@ create_table_predicted_df = """
         weekday INTEGER,
         workingday INTEGER,
         weathersit INTEGER,
-        temp REAL,
+        atemp REAL,
         hum REAL,
         windspeed INTEGER,
         cnt INTEGER,
