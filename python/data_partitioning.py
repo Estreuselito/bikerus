@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def train_test_split_ts(data, train_size):
     # Sanity Check
     if train_size <= 0:
@@ -148,14 +151,14 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False)
         Y_test_cv_current = Y_train.iloc[list_tscv[fold-1]
                                          [0]:list_tscv[fold-1][1]]
 
-    check_and_create_and_insert(connection, "X_train_current", X_train_current,
-                                create_table_X_train_test.format("X_train_current"))
-    check_and_create_and_insert(connection, "Y_train_current", Y_train_current,
-                                create_table_Y_train_test.format("Y_train_current"))
-    check_and_create_and_insert(connection, "X_test_cv_current", X_test_cv_current,
-                                create_table_X_train_test.format("X_test_cv_current"))
-    check_and_create_and_insert(connection, "Y_test_cv_current", Y_test_cv_current,
-                                create_table_Y_train_test.format("Y_test_cv_current"))
+    X_train_current.to_sql("X_train_current", connection,
+                           if_exists="replace", index=False)
+    Y_train_current.to_sql("Y_train_current", connection,
+                           if_exists="replace", index=False)
+    X_test_cv_current.to_sql("X_test_current", connection,
+                             if_exists="replace", index=False)
+    Y_test_cv_current.to_sql("X_test_current", connection,
+                             if_exists="replace", index=False)
 
     # Visualization (Optional, only executed if vis is set to 'yes' when calling the function)
     if vis == True:
@@ -196,6 +199,7 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False)
     return X_train_current, Y_train_current, X_test_cv_current, Y_test_cv_current
 
 ### for NN & SVR ###
+
 
 def get_sample_for_cv_NN_SVR(n_splits, fold, X_train, Y_train, X_test=False):
     """This function creates the train and test sets for cross validation for time-series data specifically for NN & SVR.
@@ -269,17 +273,17 @@ def get_sample_for_cv_NN_SVR(n_splits, fold, X_train, Y_train, X_test=False):
         Y_train_current_NN_SVR = Y_train.iloc[:list_tscv[fold-1][0]]
         # +1 to include the last element X_train
         X_test_cv_current_NN_SVR = X_train.iloc[list_tscv[fold-1]
-                                         [0]:list_tscv[fold-1][1]+1]
+                                                [0]:list_tscv[fold-1][1]+1]
         # +1 to include the last element of Y_train
         Y_test_cv_current_NN_SVR = Y_train.iloc[list_tscv[fold-1]
-                                         [0]:list_tscv[fold-1][1]+1]
+                                                [0]:list_tscv[fold-1][1]+1]
     else:
         X_train_current_NN_SVR = X_train.iloc[:list_tscv[fold-1][0]]
         Y_train_current_NN_SVR = Y_train.iloc[:list_tscv[fold-1][0]]
         X_test_cv_current_NN_SVR = X_train.iloc[list_tscv[fold-1]
-                                         [0]:list_tscv[fold-1][1]]
+                                                [0]:list_tscv[fold-1][1]]
         Y_test_cv_current_NN_SVR = Y_train.iloc[list_tscv[fold-1]
-                                         [0]:list_tscv[fold-1][1]]
+                                                [0]:list_tscv[fold-1][1]]
 
     check_and_create_and_insert(connection, "X_train_current_NN_SVR", X_train_current_NN_SVR,
                                 create_table_X_train_test_NN_SVR.format("X_train_current_NN_SVR"))

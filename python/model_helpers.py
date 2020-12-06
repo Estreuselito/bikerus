@@ -6,21 +6,26 @@ from tqdm import tqdm
 ### for general data ###
 ########################
 
-def import_train_test_calc(rs=None):
+
+def import_train_test_calc(rs=None, nn=None):
     """Returns various metrics regarding the train and test splits
+
+    set nn = "_NN_SVR" for using this parameter
     """
 
-    df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
-    min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
+    df = pd.read_sql_query(
+        '''SELECT * FROM hours_preprocessed''' + str(nn or ""), connection)
+    min_max = pd.read_sql_query(
+        '''SELECT * FROM max_min_count''', connection)
 
     Y_train = pd.read_sql_query(
-        '''SELECT * FROM Y_train''' + str(rs or ""), connection)
+        '''SELECT * FROM Y_train''' + str(rs or "") + str(nn or ""), connection)
     X_train = pd.read_sql_query(
-        '''SELECT * FROM X_train''' + str(rs or ""), connection)
+        '''SELECT * FROM X_train''' + str(rs or "") + str(nn or ""), connection)
     Y_test = pd.read_sql_query(
-        '''SELECT * FROM Y_test''' + str(rs or ""), connection)
+        '''SELECT * FROM Y_test''' + str(rs or "") + str(nn or ""), connection)
     X_test = pd.read_sql_query(
-        '''SELECT * FROM X_test''' + str(rs or ""), connection)
+        '''SELECT * FROM X_test''' + str(rs or "") + str(nn or ""), connection)
 
     X_train = X_train.drop('datetime', axis=1)
     X_test = X_test.drop('datetime', axis=1)
@@ -77,95 +82,3 @@ def predict_test_df(*models):
             final_df["cnt_pred_norm_" + i.__module__] = final_df["cnt_pred_" + i.__module__].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
     return final_df
-
-#########################
-### for NN & SVR data ###
-#########################
-
-### time series split ###
-
-def import_train_test_calc_NN_SVR_ts():
-    """Returns various metrics regarding the train and test splits
-    """
-
-    df_NN_SVR = pd.read_sql_query('''SELECT * FROM hours_preprocessed_NN_SVR''', connection)
-    min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
-
-    Y_train_NN_SVR = pd.read_sql_query(
-        '''SELECT * FROM Y_train_NN_SVR''', connection)
-    X_train_NN_SVR = pd.read_sql_query(
-        '''SELECT * FROM X_train_NN_SVR''', connection)
-    Y_test_NN_SVR = pd.read_sql_query(
-        '''SELECT * FROM Y_test_NN_SVR''', connection)
-    X_test_NN_SVR = pd.read_sql_query(
-        '''SELECT * FROM X_test_NN_SVR''', connection)
-
-    X_train_NN_SVR = X_train_NN_SVR.drop('datetime', axis=1)
-    X_test_NN_SVR = X_test_NN_SVR.drop('datetime', axis=1)
-
-    Y_train_mean_NN_SVR = Y_train_NN_SVR.mean()
-    #Y_train_meandev_NN_SVR = sum((Y_train_NN_SVR-Y_train_mean_NN_SVR)**2)
-    Y_train_meandev_NN_SVR = ((Y_train_NN_SVR-Y_train_mean_NN_SVR)**2).sum()
-    #Y_test_meandev = sum((Y_test-Y_train_mean)**2)
-    Y_test_meandev_NN_SVR = ((Y_test_NN_SVR-Y_train_mean_NN_SVR)**2).sum()
-    return df_NN_SVR, min_max, Y_train_NN_SVR, Y_test_NN_SVR, X_train_NN_SVR, X_test_NN_SVR, Y_train_mean_NN_SVR, Y_train_meandev_NN_SVR, Y_test_meandev_NN_SVR
-
-def r_squared_metrics_NN_SVR_ts(X_train_NN_SVR, X_test_NN_SVR, Y_train_NN_SVR, Y_train_meandev_NN_SVR, Y_test_NN_SVR, Y_test_meandev_NN_SVR, model, print=False):
-
-    # calculate r-squared
-    Y_train_pred_NN_SVR = model.predict(X_train_NN_SVR)
-    Y_train_dev_NN_SVR = sum((Y_train_NN_SVR["cnt"].array-Y_train_pred_NN_SVR)**2)
-    r2 = 1 - Y_train_dev_NN_SVR/Y_train_meandev_NN_SVR
-
-    # calculate pseudo-r-squared
-    Y_test_pred_NN_SVR = model.predict(X_test_NN_SVR)
-    Y_test_dev_NN_SVR = sum((Y_test_NN_SVR["cnt"].array-Y_test_pred_NN_SVR)**2)
-    pseudor2 = 1 - Y_test_dev_NN_SVR/Y_test_meandev_NN_SVR
-
-    if print == True:
-        print(f"R2 = {r2}\nPseudo-R2 = {pseudor2}")
-    return r2, pseudor2
-
-### random split ###
-
-def import_train_test_calc_NN_SVR_rs():
-    """Returns various metrics regarding the train and test splits
-    """
-
-    df_NN_SVR_rs = pd.read_sql_query('''SELECT * FROM hours_preprocessed_NN_SVR''', connection)
-    min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
-
-    Y_train_rs_NN_SVR = pd.read_sql_query(
-        '''SELECT * FROM Y_train_rs_NN_SVR''', connection)
-    X_train_rs_NN_SVR = pd.read_sql_query(
-        '''SELECT * FROM X_train_rs_NN_SVR''', connection)
-    Y_test_rs_NN_SVR = pd.read_sql_query(
-        '''SELECT * FROM Y_test_rs_NN_SVR''', connection)
-    X_test_rs_NN_SVR = pd.read_sql_query(
-        '''SELECT * FROM X_test_rs_NN_SVR''', connection)
-
-    X_train_rs_NN_SVR = X_train_rs_NN_SVR.drop('datetime', axis=1)
-    X_test_rs_NN_SVR = X_test_rs_NN_SVR.drop('datetime', axis=1)
-
-    Y_train_rs_mean_NN_SVR = Y_train_rs_NN_SVR.mean()
-    #Y_train_meandev_rs_NN_SVR = sum((Y_train_rs_NN_SVR-Y_train_rs_mean_NN_SVR)**2)
-    Y_train_rs_meandev_NN_SVR = ((Y_train_rs_NN_SVR-Y_train_rs_mean_NN_SVR)**2).sum()
-    #Y_test_meandev_rs = sum((Y_test_rs-Y_train_rs_mean)**2)
-    Y_test_rs_meandev_NN_SVR = ((Y_test_rs_NN_SVR-Y_train_rs_mean_NN_SVR)**2).sum()
-    return df_NN_SVR_rs, min_max, Y_train_rs_NN_SVR, Y_test_rs_NN_SVR, X_train_rs_NN_SVR, X_test_rs_NN_SVR, Y_train_rs_mean_NN_SVR, Y_train_rs_meandev_NN_SVR, Y_test_rs_meandev_NN_SVR
-
-def r_squared_metrics_NN_SVR_rs(X_train_rs_NN_SVR, X_test_rs_NN_SVR, Y_train_rs_NN_SVR, Y_train_rs_meandev_NN_SVR, Y_test_rs_NN_SVR, Y_test_rs_meandev_NN_SVR, model, print=False):
-
-    # calculate r-squared
-    Y_train_rs_pred_NN_SVR = model.predict(X_train_rs_NN_SVR)
-    Y_train_rs_dev_NN_SVR = sum((Y_train_rs_NN_SVR["cnt"].array-Y_train_rs_pred_NN_SVR)**2)
-    r2 = 1 - Y_train_rs_dev_NN_SVR/Y_train_rs_meandev_NN_SVR
-
-    # calculate pseudo-r-squared
-    Y_test_rs_pred_NN_SVR = model.predict(X_test_rs_NN_SVR)
-    Y_test_rs_dev_NN_SVR = sum((Y_test_rs_NN_SVR["cnt"].array-Y_test_rs_pred_NN_SVR)**2)
-    pseudor2 = 1 - Y_test_rs_dev_NN_SVR/Y_test_rs_meandev_NN_SVR
-
-    if print == True:
-        print(f"R2 = {r2}\nPseudo-R2 = {pseudor2}")
-    return r2, pseudor2

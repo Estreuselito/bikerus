@@ -1,13 +1,13 @@
 # TODO SVR
 # TODO from model_creation import sklearn_neural_net_multilayerperceptron
-from model_creation import {sklearn_random_forest,
+from model_creation import (sklearn_random_forest,
                             catboost_regressor,
                             sklearn_support_vector_regression_rs_gridcv,
                             sklearn_support_vector_regression_ts_gridcv,
                             sklearn_support_vector_regression_ts_tscv,
                             sklearn_neural_net_multilayerperceptron_rs_gridcv,
                             sklearn_neural_net_multilayerperceptron_ts_gridcv,
-                            sklearn_neural_net_multilayerperceptron_ts_tscv}
+                            sklearn_neural_net_multilayerperceptron_ts_tscv)
 import pandas as pd
 
 # only activate in an environment with fastai running

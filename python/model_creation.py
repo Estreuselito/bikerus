@@ -1,7 +1,13 @@
 import pandas as pd
 import numpy as np
 from data_partitioning import train_test_split_ts, get_sample_for_cv
-from model_helpers import import_train_test_calc, r_squared_metrics, import_train_test_calc_NN_SVR_ts, r_squared_metrics_NN_SVR_ts, import_train_test_calc_NN_SVR_rs, r_squared_metrics_NN_SVR_rs
+from model_helpers import (import_train_test_calc,
+                           r_squared_metrics,
+                           #    import_train_test_calc_NN_SVR_ts,
+                           #    r_squared_metrics_NN_SVR_ts,
+                           #    import_train_test_calc_NN_SVR_rs,
+                           #    r_squared_metrics_NN_SVR_rs
+                           )
 import os
 from catboost import CatBoostRegressor
 from sklearn.model_selection import train_test_split
@@ -61,13 +67,13 @@ import joblib
 
 
 def sklearn_support_vector_regression_rs_gridcv():
-
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(
+        rs="_rs", nn="_NN_SVR")
     try:
         filename = "Model_SVR_rs_gridcv.sav"
-        NN_regr_CV_model = joblib.load(
+        SVR_regr_CV_model = joblib.load(
             "./models/SVR_files/" + str(filename))
     except:
-        df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc_NN_SVR_rs()
 
         ### MODEL CREATION ###
         # initialize SVR
@@ -121,23 +127,22 @@ def sklearn_support_vector_regression_rs_gridcv():
         joblib.dump(SVR_regr_CV_model,
                     "./models/SVR_files/Model_SVR_rs_gridcv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_rs(
-            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
 
-        return r2.values[0], pseudor2.values[0]
+    return r2.values[0], pseudor2.values[0]
 
 # Sklearn support vector regression trained on time series split with Grid/RandomizedCV
 
 
 def sklearn_support_vector_regression_ts_gridcv():
-
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(
+        nn="_NN_SVR")
     try:
         filename = "Model_SVR_ts_gridcv.sav"
-        NN_regr_CV_model = joblib.load(
+        SVR_regr_CV_model = joblib.load(
             "./models/SVR_files/" + str(filename))
     except:
-        df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc_NN_SVR_ts()
-
         ### MODEL CREATION ###
         # initialize SVR
         # SVR_regr_CV = SVR(max_iter=25000)
@@ -190,23 +195,22 @@ def sklearn_support_vector_regression_ts_gridcv():
         joblib.dump(SVR_regr_CV_model,
                     "./models/SVR_files/Model_SVR_ts_gridcv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_ts(
-            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
 
-        return r2.values[0], pseudor2.values[0]
+    return r2.values[0], pseudor2.values[0]
 
 # Sklearn support vector regression trained on time series split with TimeSeriesCV
 
 
 def sklearn_support_vector_regression_ts_tscv():
-
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(
+        nn="_NN_SVR")
     try:
         filename = "Model_SVR_ts_tscv.sav"
-        NN_regr_CV_model = joblib.load(
+        SVR_regr_CV_model = joblib.load(
             "./models/SVR_files/" + str(filename))
     except:
-        df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc_NN_SVR_ts()
-
         # ## FIND OPTIMAL PARAMETERS ###
         # 1st CV parameters:
         # param_grid = {
@@ -329,10 +333,10 @@ def sklearn_support_vector_regression_ts_tscv():
         joblib.dump(SVR_regr_CV_model,
                     "./models/SVR_files/Model_SVR_ts_tscv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_ts(
-            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, SVR_regr_CV_model)
 
-        return r2.values[0], pseudor2.values[0]
+    return r2.values[0], pseudor2.values[0]
 
 ##########
 ### NN ###
@@ -342,14 +346,13 @@ def sklearn_support_vector_regression_ts_tscv():
 
 
 def sklearn_neural_net_multilayerperceptron_rs_gridcv():
-
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(
+        rs="_rs", nn="_NN_SVR")
     try:
         filename = "Model_MLP_rs_gridcv.sav"
         NN_regr_CV_model = joblib.load(
             "./models/NN_MLP_files/" + str(filename))
     except:
-        df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc_NN_SVR_rs()
-
         ### MODEL CREATION ###
 
         # initialize MLPRegressor (lbfgs solver used due to its efficiency)
@@ -394,23 +397,22 @@ def sklearn_neural_net_multilayerperceptron_rs_gridcv():
         joblib.dump(NN_regr_CV_model,
                     "./models/NN_MLP_files/Model_MLP_rs_gridcv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_rs(
-            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
 
-        return r2.values[0], pseudor2.values[0]
+    return r2.values[0], pseudor2.values[0]
 
 # Sklearn neural net trained on time series split with Grid/RandomizedCV
 
 
 def sklearn_neural_net_multilayerperceptron_ts_gridcv():
-
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(
+        nn="_NN_SVR")
     try:
         filename = "Model_MLP_ts_gridcv.sav"
         NN_regr_CV_model = joblib.load(
             "./models/NN_MLP_files/" + str(filename))
     except:
-        df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc_NN_SVR_ts()
-
         ### MODEL CREATION ###
 
         # initialize MLPRegressor (lbfgs solver used due to its efficiency)
@@ -455,23 +457,22 @@ def sklearn_neural_net_multilayerperceptron_ts_gridcv():
         joblib.dump(NN_regr_CV_model,
                     "./models/NN_MLP_files/Model_MLP_ts_gridcv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_ts(
-            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
 
-        return r2.values[0], pseudor2.values[0]
+    return r2.values[0], pseudor2.values[0]
 
 # Sklearn neural net trained on time series split with TimeSeriesCV
 
 
 def sklearn_neural_net_multilayerperceptron_ts_tscv():
-
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(
+        nn="_NN_SVR")
     try:
         filename = "Model_MLP_ts_tscv.sav"
         NN_regr_CV_model = joblib.load(
             "./models/NN_MLP_files/" + str(filename))
     except:
-        df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc_NN_SVR_ts()
-
         ### FIND OPTIMAL PARAMETERS ###
         # 1st CV parameters:
         # param_grid = {
@@ -598,10 +599,10 @@ def sklearn_neural_net_multilayerperceptron_ts_tscv():
         joblib.dump(NN_regr_CV_model,
                     "./models/NN_MLP_files/Model_MLP_ts_tscv.sav")
 
-        r2, pseudor2 = r_squared_metrics_NN_SVR_ts(
-            X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, NN_regr_CV_model)
 
-        return r2.values[0], pseudor2.values[0]
+    return r2.values[0], pseudor2.values[0]
 
 
 def catboost_regressor():
@@ -649,7 +650,7 @@ def sklearn_random_forest():
         filename = 'Model_RandomForest.sav'
         random_forest = joblib.load(
             "./models/RandomForest_Model/" + str(filename))
-    except:
+    except FileNotFoundError:
         # Training the model incl. Cross Validation
         df_parameters = pd.DataFrame()
         folds = list(range(1, 6))
@@ -675,10 +676,14 @@ def sklearn_random_forest():
                                 # to evaluate the prediction quality, we use the R2 measure
                                 # as a benchmark, we initially calculated the mean value and the residual sum of squares of the target variable for the specific fold
                                 Y_train_mean_cv = Y_train_cv.mean()
-                                Y_train_meandev_cv = sum(
-                                    (Y_train_cv-Y_train_mean_cv)**2)
-                                Y_test_meandev_cv = sum(
-                                    (Y_test_cv-Y_train_mean_cv)**2)
+                                """ print("Y_train_cv type: ", type(
+                                    Y_train_cv), "\tValue: ", Y_train_cv, "\n",
+                                    "Y_train_mean_cv type: ", type(Y_train_mean_cv), "\tValue: ", Y_train_mean_cv) """
+                                # print(((Y_test_cv-Y_train_mean_cv)**2).sum())
+                                Y_train_meandev_cv = (
+                                    (Y_train_cv-Y_train_mean_cv)**2).sum()
+                                Y_test_meandev_cv = (
+                                    (Y_test_cv-Y_train_mean_cv)**2).sum()
 
                                 # initialize model
                                 RForreg = RandomForestRegressor(max_depth=max_depth[depth],
@@ -689,18 +694,18 @@ def sklearn_random_forest():
                                                                 random_state=0)
 
                                 # train the model
-                                RForreg.fit(X_train_cv, Y_train_cv)
+                                RForreg.fit(X_train_cv, Y_train_cv["cnt"])
 
                                 # Make predictions based on the traing set
                                 Y_train_pred_cv = RForreg.predict(X_train_cv)
-                                Y_train_dev_cv = sum(
-                                    (Y_train_cv-Y_train_pred_cv)**2)
+                                Y_train_dev_cv = (
+                                    (Y_train_cv["cnt"]-Y_train_pred_cv)**2).sum()
                                 r2_cv = 1 - Y_train_dev_cv/Y_train_meandev_cv
 
                                 # Evaluate the result by applying the model to the test set
                                 Y_test_pred_cv = RForreg.predict(X_test_cv)
-                                Y_test_dev_cv = sum(
-                                    (Y_test_cv-Y_test_pred_cv)**2)
+                                Y_test_dev_cv = (
+                                    (Y_test_cv["cnt"]-Y_test_pred_cv)**2).sum()
                                 pseudor2_cv = 1 - Y_test_dev_cv/Y_test_meandev_cv
 
                                 # Append results to dataframe
