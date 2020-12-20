@@ -1,6 +1,7 @@
 from data_partitioning import train_test_split_ts, train_test_split_rs
 from data_storage import connection
 import pandas as pd
+from logger import logger
 
 print(" |                _)              |                |                      | _)  |\n\
  __|   __|   _` |  |  __ \        __|   _ \   __|  __|        __|  __ \   |  |  __|\n\
@@ -15,13 +16,13 @@ print(" |                _)              |                |                     
 # load data
 df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
 
-print("Let's start with the time-series-split!")
+logger.info("Let's start with the time-series-split!")
 
 # train-test-split based on time
 # define training size
 train_size = 0.8
 
-print(f'Train-Test-Split\nTraining Size: {train_size}')
+logger.info(f'Train-Test-Split\nTraining Size: {train_size}')
 
 # create train test split samples
 X_train, Y_train, X_test, Y_test = train_test_split_ts(df, train_size)
@@ -32,13 +33,13 @@ Y_train.to_sql("Y_train", connection, if_exists="replace", index=False)
 X_test.to_sql("X_test", connection, if_exists="replace", index=False)
 Y_test.to_sql("Y_test", connection, if_exists="replace", index=False)
 
-print('Now the random sample!')
+logger.info('Now the random sample!')
 
 # random train-test-split
 # define training size
 train_size = 0.8
 
-print(f'Train-Test-Split\nTraining Size: {train_size}')
+logger.info(f'Train-Test-Split\nTraining Size: {train_size}')
 
 # create train test split samples
 X_train_rs, Y_train_rs, X_test_rs, Y_test_rs = train_test_split_rs(
@@ -55,19 +56,20 @@ Y_test.to_sql("Y_test_rs", connection, if_exists="replace", index=False)
 ### for NN & SVR preprocessed data ###
 ######################################
 
-print("Let's do the same things for the preprocessed data for the NN & SVR models!")
+logger.info(
+    "Let's do the same things for the preprocessed data for the NN & SVR models!")
 
 # load data
 df_NN_SVR = pd.read_sql_query(
     '''SELECT * FROM hours_preprocessed_NN_SVR''', connection)
 
-print("Let's start with the time-series-split!")
+logger.info("Let's start with the time-series-split!")
 
 # train-test-split based on time
 # define training size
 train_size_NN_SVR = 0.8
 
-print(f'Train-Test-Split\nTraining Size: {train_size}')
+logger.info(f'Train-Test-Split\nTraining Size: {train_size}')
 
 # create train test split samples
 X_train, Y_train, X_test, Y_test = train_test_split_ts(
@@ -79,13 +81,13 @@ Y_train.to_sql("Y_train_NN_SVR", connection, if_exists="replace", index=False)
 X_test.to_sql("X_test_NN_SVR", connection, if_exists="replace", index=False)
 Y_test.to_sql("Y_test_NN_SVR", connection, if_exists="replace", index=False)
 
-print('Now the random sample!')
+logger.info('Now the random sample!')
 
 # random train-test-split
 # define training size
 train_size_NN_SVR = 0.8
 
-print(f'Train-Test-Split\nTraining Size: {train_size_NN_SVR}')
+logger.info(f'Train-Test-Split\nTraining Size: {train_size_NN_SVR}')
 
 # create train test split samples
 X_train_rs, Y_train_rs, X_test_rs, Y_test_rs = train_test_split_rs(

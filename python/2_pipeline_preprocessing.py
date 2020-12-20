@@ -2,6 +2,7 @@ from data_storage import connection
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
+from logger import logger
 
 print("                                                               _)\n\
  __ \    __|   _ \  __ \    __|   _ \    __|   _ \   __|   __|  |  __ \    _  |\n\
@@ -9,7 +10,7 @@ print("                                                               _)\n\
  .__/  _|    \___|  .__/  _|    \___/  \___| \___| ____/ ____/ _| _|  _| \__. |\n\
 _|                 _|                                                    |___/\n")
 
-print("Preprocessing for ML Models (Regression)")
+logger.info("Preprocessing for ML Models (Regression)")
 # load data
 df = pd.read_sql_query('''SELECT * FROM hours_complete''', connection)
 
@@ -64,7 +65,7 @@ df[conti_var] = mm_scaler.fit_transform(df[conti_var])
 # storage of preprocessed file
 df.to_sql("hours_preprocessed", connection, if_exists="replace", index=False)
 
-print("Preprocessing for Neural Net and Support Vector Regression")
+logger.info("Preprocessing for Neural Net and Support Vector Regression")
 # load data
 df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
 

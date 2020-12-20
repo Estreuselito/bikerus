@@ -3,6 +3,7 @@ import numpy as np
 from data_partitioning import train_test_split_ts, get_sample_for_cv
 from model_helpers import (import_train_test_calc,
                            r_squared_metrics)
+from logger import logger
 import os
 from catboost import CatBoostRegressor
 from sklearn.model_selection import train_test_split
@@ -68,8 +69,9 @@ def sklearn_support_vector_regression_rs_gridcv():
         filename = "Model_SVR_rs_gridcv.sav"
         SVR_regr_CV_model = joblib.load(
             "./models/SVR_files/" + str(filename))
+        logger.info("Model is loaded!\n")
     except:
-
+        logger.info("Model is creating!\n")
         ### MODEL CREATION ###
         # initialize SVR
         # SVR_regr_CV = SVR(max_iter=25000)
@@ -137,7 +139,9 @@ def sklearn_support_vector_regression_ts_gridcv():
         filename = "Model_SVR_ts_gridcv.sav"
         SVR_regr_CV_model = joblib.load(
             "./models/SVR_files/" + str(filename))
+        logger.info("Model is loaded!\n")
     except:
+        logger.info("Model is creating!\n")
         ### MODEL CREATION ###
         # initialize SVR
         # SVR_regr_CV = SVR(max_iter=25000)
@@ -205,7 +209,9 @@ def sklearn_support_vector_regression_ts_tscv():
         filename = "Model_SVR_ts_tscv.sav"
         SVR_regr_CV_model = joblib.load(
             "./models/SVR_files/" + str(filename))
+        logger.info("Model is loaded!\n")
     except:
+        logger.info("Model is creating!\n")
         # ## FIND OPTIMAL PARAMETERS ###
         # 1st CV parameters:
         # param_grid = {
@@ -347,7 +353,9 @@ def sklearn_neural_net_multilayerperceptron_rs_gridcv():
         filename = "Model_MLP_rs_gridcv.sav"
         NN_regr_CV_model = joblib.load(
             "./models/NN_MLP_files/" + str(filename))
+        logger.info("Model is loaded!\n")
     except:
+        logger.info("Model is creating!\n")
         ### MODEL CREATION ###
 
         # initialize MLPRegressor (lbfgs solver used due to its efficiency)
@@ -407,7 +415,9 @@ def sklearn_neural_net_multilayerperceptron_ts_gridcv():
         filename = "Model_MLP_ts_gridcv.sav"
         NN_regr_CV_model = joblib.load(
             "./models/NN_MLP_files/" + str(filename))
+        logger.info("Model is loaded!\n")
     except:
+        logger.info("Model is creating!\n")
         ### MODEL CREATION ###
 
         # initialize MLPRegressor (lbfgs solver used due to its efficiency)
@@ -467,7 +477,9 @@ def sklearn_neural_net_multilayerperceptron_ts_tscv():
         filename = "Model_MLP_ts_tscv.sav"
         NN_regr_CV_model = joblib.load(
             "./models/NN_MLP_files/" + str(filename))
+        logger.info("Model is loaded!\n")
     except:
+        logger.info("Model is creating!\n")
         ### FIND OPTIMAL PARAMETERS ###
         # 1st CV parameters:
         # param_grid = {
@@ -615,8 +627,9 @@ def catboost_regressor():
 
     try:
         model.load_model("./models/catboost/catboost_model")
-        print("Model loaded!")
+        logger.info("Model is loaded!\n")
     except:
+        logger.info("Model is creating!\n")
         if not os.path.exists("./models/catboost"):
             os.makedirs("./models/catboost")
 
@@ -645,7 +658,9 @@ def sklearn_random_forest():
         filename = 'Model_RandomForest.sav'
         random_forest = joblib.load(
             "./models/RandomForest_Model/" + str(filename))
+        logger.info("Model is loaded!\n")
     except FileNotFoundError:
+        logger.info("Model is creating!\n")
         # Training the model incl. Cross Validation
         df_parameters = pd.DataFrame()
         folds = list(range(1, 6))
@@ -745,7 +760,7 @@ def sklearn_random_forest():
                                                   best_parameters['max_leaf_nodes']),
                                               random_state=0)
         # train the model with the hyperparameters
-        random_forest.fit(X_train, Y_train)
+        random_forest.fit(X_train, Y_train.array)
 
         joblib.dump(random_forest,
                     "./models/RandomForest_Model/Model_RandomForest.sav")

@@ -5,6 +5,7 @@ import shutil
 from data_preprocessing import import_data
 from data_storage import connection
 from download import download
+from logger import logger
 
 print(" _       _       _                                 _           ___     _                           _\n\
 ( )  _  ( )     (_ )                              ( )_        (  _ \ _( )                         ( )\n\
@@ -34,7 +35,8 @@ for file_path in list_of_zip_path:
 
 station_locs = pd.read_csv(
     "https://opendata.arcgis.com/datasets/a1f7acf65795451d89f0a38565a975b3_5.csv")
-print("\n\nYour data has been downloaded! \n\nNow your data is inputed into a database!\n")
+logger.info(
+    "\n\nYour data has been downloaded! \n\nNow your data is inputed into a database!\n")
 
 raw = pd.concat([import_data("./data/raw/2011-capitalbikeshare-tripdata.csv",
                              parse_dates=["Start date", "End date"]),
@@ -58,7 +60,7 @@ dir_path = './data'
 try:
     shutil.rmtree(dir_path)
 except OSError as e:
-    print("Error: %s : %s" % (dir_path, e.strerror))
+    logger.info("Error: %s : %s" % (dir_path, e.strerror))
 
 # print statement
 print(" __ \                      |\n\

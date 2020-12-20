@@ -5,6 +5,7 @@ import pandas as pd
 import pickle
 import joblib
 import os
+from logger import logger
 
 print("  _ \                  | _)        |   _)                |\n\
  |   |  __|   _ \   _` |  |   __|  __|  |  __ \    _  |  |\n\
@@ -32,7 +33,8 @@ try:
     NN_regr_CV_model_ts_tscv = joblib.load(
         "./models/NN_MLP_files/Model_MLP_ts_tscv.sav")
 except:
-    print("Something did not work! Could not load models! Execute script 4 again!")
+    logger.error(
+        "Something did not work! Could not load models! Execute script 4 again!")
 
 # print("NN_regr_CV_model_ts_tscv: ", NN_regr_CV_model_ts_tscv.__module__)
 
