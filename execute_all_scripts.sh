@@ -10,4 +10,4 @@ python python/2_pipeline_preprocessing.py
 python python/3_pipeline_train_test.py
 python python/4_models.py
 python python/5_predict_test_df.py
-python flask/app.py
+# python flask/app.py
