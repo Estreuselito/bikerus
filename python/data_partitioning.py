@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def train_test_split_ts(data, train_size):
     # Sanity Check
     if train_size <= 0:
@@ -148,14 +151,14 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False)
         Y_test_cv_current = Y_train.iloc[list_tscv[fold-1]
                                          [0]:list_tscv[fold-1][1]]
 
-    check_and_create_and_insert(connection, "X_train_current", X_train_current,
-                                create_table_X_train_test.format("X_train_current"))
-    check_and_create_and_insert(connection, "Y_train_current", Y_train_current,
-                                create_table_Y_train_test.format("Y_train_current"))
-    check_and_create_and_insert(connection, "X_test_cv_current", X_test_cv_current,
-                                create_table_X_train_test.format("X_test_cv_current"))
-    check_and_create_and_insert(connection, "Y_test_cv_current", Y_test_cv_current,
-                                create_table_Y_train_test.format("Y_test_cv_current"))
+    X_train_current.to_sql("X_train_current", connection,
+                           if_exists="replace", index=False)
+    Y_train_current.to_sql("Y_train_current", connection,
+                           if_exists="replace", index=False)
+    X_test_cv_current.to_sql("X_test_current", connection,
+                             if_exists="replace", index=False)
+    Y_test_cv_current.to_sql("X_test_current", connection,
+                             if_exists="replace", index=False)
 
     # Visualization (Optional, only executed if vis is set to 'yes' when calling the function)
     if vis == True:
@@ -194,3 +197,101 @@ def get_sample_for_cv(n_splits, fold, X_train, Y_train, X_test=False, vis=False)
         plt.savefig("./images/Train_Test_Split_Visualization", dpi=300)
 
     return X_train_current, Y_train_current, X_test_cv_current, Y_test_cv_current
+
+### for NN & SVR ###
+
+
+def get_sample_for_cv_NN_SVR(n_splits, fold, X_train, Y_train, X_test=False):
+    """This function creates the train and test sets for cross validation for time-series data specifically for NN & SVR.
+    Furthermore, it creates the horizontal bardiagramm to visualiuze cross-validation/testing iterations 
+    including the final testing after all cross-validations have been performed.
+
+    Parameters
+    ----------
+    n_splits: int
+        This determines the number of splits used for cross-validation.
+        It must be greater than 1.
+    fold: int
+        This determines the current fold of the train and test set for cross validation.
+        It must be greater than 0 and not greater than the number of splits.
+
+    X_train: DataFrame
+        Data used for training including determining the samples for cross validation.
+        X_train includes all columns except for the target column.
+
+    Y_train: DataFrame
+        Data are used for training including determining the samples for cross validation.
+        Y_train onlys include the target column (field to predict).
+
+    X_test: DataFrame
+        Here, X_test is only used to create the horizontal bardiagramm to visualize the testing
+        iterations. It is therefore initialized as 'None'. To create the horizontal bardiagramm, 
+        X_test has to be added to the function.
+
+    Returns
+    -------
+    This functions returns the four sets: 
+    X_train_current and Y_train_current for training.
+    X_cv_current and Y_cv_current for cross validation.
+    Optionally, it returns the horizontal bardiagramm to visualize the testing iterations.
+    """
+
+    # Necessary Imports
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as mpatches
+    from data_storage import check_and_create_and_insert, connection
+    from sql_commands import create_table_X_train_test_NN_SVR, create_table_Y_train_test_NN_SVR
+    from sklearn.model_selection import TimeSeriesSplit
+
+    # Sanity Check
+    if type(n_splits) != int:
+        print('Number of splits must be an integer.')
+        return None
+    if type(fold) != int:
+        print('Number of folds must be an integer.')
+        return None
+    if n_splits < 2:
+        print('Number of splits must be at least 2.')
+        return None
+    if fold == 0:
+        print('Fold must be greater than 0.')
+        return None
+    if fold > n_splits:
+        print('Fold cannot be greater than number of splits.')
+        return None
+
+    # Creation of train and test sets for cross validation
+    tscv = TimeSeriesSplit(n_splits=n_splits)
+    list_tscv = []
+    for train, test in tscv.split(X_train):
+        list_tscv.append([test[0], test[-1]])
+
+    if n_splits == fold:
+        X_train_current_NN_SVR = X_train.iloc[:list_tscv[fold-1][0]]
+        Y_train_current_NN_SVR = Y_train.iloc[:list_tscv[fold-1][0]]
+        # +1 to include the last element X_train
+        X_test_cv_current_NN_SVR = X_train.iloc[list_tscv[fold-1]
+                                                [0]:list_tscv[fold-1][1]+1]
+        # +1 to include the last element of Y_train
+        Y_test_cv_current_NN_SVR = Y_train.iloc[list_tscv[fold-1]
+                                                [0]:list_tscv[fold-1][1]+1]
+    else:
+        X_train_current_NN_SVR = X_train.iloc[:list_tscv[fold-1][0]]
+        Y_train_current_NN_SVR = Y_train.iloc[:list_tscv[fold-1][0]]
+        X_test_cv_current_NN_SVR = X_train.iloc[list_tscv[fold-1]
+                                                [0]:list_tscv[fold-1][1]]
+        Y_test_cv_current_NN_SVR = Y_train.iloc[list_tscv[fold-1]
+                                                [0]:list_tscv[fold-1][1]]
+
+    check_and_create_and_insert(connection, "X_train_current_NN_SVR", X_train_current_NN_SVR,
+                                create_table_X_train_test_NN_SVR.format("X_train_current_NN_SVR"))
+    check_and_create_and_insert(connection, "Y_train_current_NN_SVR", Y_train_current_NN_SVR,
+                                create_table_Y_train_test_NN_SVR.format("Y_train_current_NN_SVR"))
+    check_and_create_and_insert(connection, "X_test_cv_current_NN_SVR", X_test_cv_current_NN_SVR,
+                                create_table_X_train_test_NN_SVR.format("X_test_cv_current_NN_SVR"))
+    check_and_create_and_insert(connection, "Y_test_cv_current_NN_SVR", Y_test_cv_current_NN_SVR,
+                                create_table_Y_train_test_NN_SVR.format("Y_test_cv_current_NN_SVR"))
+
+    return X_train_current_NN_SVR, Y_train_current_NN_SVR, X_test_cv_current_NN_SVR, Y_test_cv_current_NN_SVR

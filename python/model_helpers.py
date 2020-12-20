@@ -2,22 +2,30 @@ from data_storage import connection
 import pandas as pd
 from tqdm import tqdm
 
+########################
+### for general data ###
+########################
 
-def import_train_test_calc(rs=None):
+
+def import_train_test_calc(rs=None, nn=None):
     """Returns various metrics regarding the train and test splits
+
+    set nn = "_NN_SVR" for using this parameter
     """
 
-    df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
-    min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
+    df = pd.read_sql_query(
+        '''SELECT * FROM hours_preprocessed''' + str(nn or ""), connection)
+    min_max = pd.read_sql_query(
+        '''SELECT * FROM max_min_count''', connection)
 
     Y_train = pd.read_sql_query(
-        '''SELECT * FROM Y_train''' + str(rs or ""), connection)
+        '''SELECT * FROM Y_train''' + str(rs or "") + str(nn or ""), connection)
     X_train = pd.read_sql_query(
-        '''SELECT * FROM X_train''' + str(rs or ""), connection)
+        '''SELECT * FROM X_train''' + str(rs or "") + str(nn or ""), connection)
     Y_test = pd.read_sql_query(
-        '''SELECT * FROM Y_test''' + str(rs or ""), connection)
+        '''SELECT * FROM Y_test''' + str(rs or "") + str(nn or ""), connection)
     X_test = pd.read_sql_query(
-        '''SELECT * FROM X_test''' + str(rs or ""), connection)
+        '''SELECT * FROM X_test''' + str(rs or "") + str(nn or ""), connection)
 
     X_train = X_train.drop('datetime', axis=1)
     X_test = X_test.drop('datetime', axis=1)
@@ -59,6 +67,10 @@ def predict_test_df(*models):
     test_df = test_df.drop(["datetime", "cnt"], axis=1)
     for i in tqdm(models):
         if i.__module__ == 'catboost.core':
+            df = pd.read_sql_query(
+                '''SELECT * FROM hours_preprocessed''', connection)
+            test_df = df[round(len(df)*0.8):].copy()
+            test_df = test_df.drop(["datetime", "cnt"], axis=1)
             # test_df = test_df.drop(["cnt"], axis = 1)
             cat_var = ["season", "yr", "mnth", "hr", "holiday",
                        "weekday", "workingday", "weathersit"]
@@ -66,11 +78,19 @@ def predict_test_df(*models):
             for v in cat_var:
                 test_df[v] = test_df[v].astype("int64")
 
-            final_df["cnt_pred_" + i.__module__] = i.predict(test_df)
-            final_df["cnt_pred_norm_" + i.__module__] = final_df["cnt_pred_" + i.__module__].apply(
+            final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
+            final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
+                lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
+        elif i.__module__ in ["sklearn.svm._classes", "sklearn.neural_network._multilayer_perceptron"]:
+            df = pd.read_sql_query(
+                '''SELECT * FROM hours_preprocessed_NN_SVR''', connection)
+            test_df = df[round(len(df)*0.8):].copy()
+            test_df = test_df.drop(["datetime", "cnt"], axis=1)
+            final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
+            final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
         else:
-            final_df["cnt_pred_" + i.__module__] = i.predict(test_df)
-            final_df["cnt_pred_norm_" + i.__module__] = final_df["cnt_pred_" + i.__module__].apply(
+            final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
+            final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
     return final_df
