@@ -2,12 +2,7 @@ import pandas as pd
 import numpy as np
 from data_partitioning import train_test_split_ts, get_sample_for_cv
 from model_helpers import (import_train_test_calc,
-                           r_squared_metrics,
-                           #    import_train_test_calc_NN_SVR_ts,
-                           #    r_squared_metrics_NN_SVR_ts,
-                           #    import_train_test_calc_NN_SVR_rs,
-                           #    r_squared_metrics_NN_SVR_rs
-                           )
+                           r_squared_metrics)
 import os
 from catboost import CatBoostRegressor
 from sklearn.model_selection import train_test_split

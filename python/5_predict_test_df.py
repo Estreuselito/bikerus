@@ -34,7 +34,11 @@ try:
 except:
     print("Something did not work! Could not load models! Execute script 4 again!")
 
+# print("NN_regr_CV_model_ts_tscv: ", NN_regr_CV_model_ts_tscv.__module__)
+
 # print(neural_net)
+# predict_test_df(NN_regr_CV_model_ts_tscv)
+
 predict_test_df(random_forest, SVR_regr_CV_model_rs, SVR_regr_CV_model_ts, SVR_regr_CV_model_ts_tscv,
                 NN_regr_CV_model_rs_gridcv, NN_regr_CV_model_ts_gridcv, NN_regr_CV_model_ts_tscv, catboost).to_sql(
     "predicted_df", connection, if_exists="replace", index=False)
