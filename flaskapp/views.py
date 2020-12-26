@@ -8,9 +8,10 @@ import pandas as pd
 import sys  # nopep8
 sys.path.insert(1, './python')  # nopep8
 from data_storage import connection
+from flaskapp import app
 
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 # load train dataset
 train_dataset = pd.read_sql_query(
@@ -85,5 +86,5 @@ def predict():
                            random_forest=int(vfunc(rf_pred).round().item()))
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
