@@ -7,4 +7,4 @@ if __name__ == '__main__':
         PORT = int(environ.get('SERVER_PORT', '3000'))
     except ValueError:
         PORT = 3000
-    app.run(HOST, PORT)
+    app.run(HOST, PORT, debug=True)

@@ -1,6 +1,7 @@
 from data_storage import connection
 import pandas as pd
 from tqdm import tqdm
+import numpy as np
 
 ########################
 ### for general data ###
@@ -55,15 +56,18 @@ def r_squared_metrics(X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_
     return r2, pseudor2
 
 
-def predict_test_df(*models, webapp=False, filter=None, date=None):
+def predict_test_df(*models, webapp=False, filter_=None):
 
-    df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
+    df = pd.read_sql_query(
+        '''SELECT * FROM hours_preprocessed''', connection)
     min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
 
     test_df = df[round(len(df)*0.8):].copy()
 
-    if filter is not None:
-        test_df = test_df[(test_df.datetime == date)]
+    if filter_ is not None:
+        vfunc = np.vectorize(lambda x: round(
+            x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
+        test_df = test_df[(test_df.datetime == filter_)]
 
     final_df = df[round(len(df)*0.8):].copy()
     final_df["cnt_norm"] = test_df["cnt"].apply(
@@ -75,12 +79,19 @@ def predict_test_df(*models, webapp=False, filter=None, date=None):
             df = pd.read_sql_query(
                 '''SELECT * FROM hours_preprocessed''', connection)
             test_df = df[round(len(df)*0.8):].copy()
+
+            if filter_ is not None:
+                test_df = test_df[(test_df.datetime == filter_)]
+
             test_df = test_df.drop(["datetime", "cnt"], axis=1)
             cat_var = ["season", "yr", "mnth", "hr", "holiday",
                        "weekday", "workingday", "weathersit"]
 
             for v in cat_var:
                 test_df[v] = test_df[v].astype("int64")
+
+            if webapp == True:
+                return vfunc(i.predict(test_df))
 
             final_df["cnt_pred_" + f'{i.__module__}' +
                      f'{i.get_params()}'] = i.predict(test_df)
@@ -95,22 +106,26 @@ def predict_test_df(*models, webapp=False, filter=None, date=None):
             df = pd.read_sql_query(
                 '''SELECT * FROM hours_preprocessed_NN_SVR''', connection)
             test_df = df[round(len(df)*0.8):].copy()
+
+            if filter_ is not None:
+                test_df = test_df[(test_df.datetime == filter_)]
+
             test_df = test_df.drop(["datetime", "cnt"], axis=1)
+
+            if webapp == True:
+                return vfunc(i.predict(test_df))
+
             final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
             final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
-
-            if webapp == True:
-                return i.predict(test_df).apply(
-                    lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
         else:
+            if webapp == True:
+                return vfunc(i.predict(test_df))
+
             final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
             final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
 
-            if webapp == True:
-                return i.predict(test_df).apply(
-                    lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
     return final_df
 
 

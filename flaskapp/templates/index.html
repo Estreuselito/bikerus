@@ -65,13 +65,23 @@
         <div style="width: 33.3%; float: left;"><img align="middle" width="80%" height="80%"
             src="../static/image_catboost.png" alt="Catboost Logo"><br>
           <center>
-            <h2> {{ Catboost }} </h2>
+            <h2>Catboost random split & grid CV: {{ catboost_rs }} </h2><br>
+            <h2>Catboost time series split & grid CV: {{catboost_ts_gridcv}} </h2><br>
+            <h2>Catboost time series split & times series CV: {{catboost_model_ts_tscv}}</h2>
+
           </center>
         </div>
         <div style="width: 33.3%; float: left;"><img align="middle" width="60%" height="60%"
             src="../static/scitlearn-logo.png" alt="Scikit learn Logo"><br>
-          <h2>Neural net: {{ Neural_net }} </h2><br>
-          <h2>Random forest: {{ random_forest}}</h2>
+          <h2>neural net random split & grid CV: {{ NN_regr_CV_model_rs_gridcv }} </h2><br>
+          <h2>neural net time series split & grid CV: {{NN_regr_CV_model_ts_gridcv}}</h2><br>
+          <h2>neural net time series split & times series CV: {{NN_regr_CV_model_ts_tscv}}</h2><br>
+          <h2>SVR random split & grid CV: {{SVR_regr_CV_model_rs}}</h2><br>
+          <h2>SVR time series split & grid CV: {{SVR_regr_CV_model_ts}}</h2><br>
+          <h2>SVR time series split & times series CV: {{SVR_regr_CV_model_ts_tscv}}</h2>
+          <h2>RF random split & grid CV: {{ random_forest_rs_gridcv}}</h2><br>
+          <h2>RF time series split & grid CV: {{random_forest_model_ts_gridcv}}</h2><br>
+          <h2>RF time series split & times series CV: {{random_forest_ts_tscv}}</h2>
         </div>
         <br style="clear: left;" />
       </div>

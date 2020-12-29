@@ -20,7 +20,7 @@ def create_connection(db_name):
     conn: connection
         direct connect to database
     """
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(db_name, check_same_thread=False)
     # c = conn.cursor()
     return conn
 
