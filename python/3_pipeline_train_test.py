@@ -46,10 +46,10 @@ X_train_rs, Y_train_rs, X_test_rs, Y_test_rs = train_test_split_rs(
     df, train_size)
 
 # save in database
-X_train.to_sql("X_train_rs", connection, if_exists="replace", index=False)
-Y_train.to_sql("Y_train_rs", connection, if_exists="replace", index=False)
-X_test.to_sql("X_test_rs", connection, if_exists="replace", index=False)
-Y_test.to_sql("Y_test_rs", connection, if_exists="replace", index=False)
+X_train_rs.to_sql("X_train_rs", connection, if_exists="replace", index=False)
+Y_train_rs.to_sql("Y_train_rs", connection, if_exists="replace", index=False)
+X_test_rs.to_sql("X_test_rs", connection, if_exists="replace", index=False)
+Y_test_rs.to_sql("Y_test_rs", connection, if_exists="replace", index=False)
 
 
 ######################################
@@ -69,7 +69,7 @@ logger.info("Let's start with the time-series-split!")
 # define training size
 train_size_NN_SVR = 0.8
 
-logger.info(f'Train-Test-Split\nTraining Size: {train_size}')
+logger.info(f'Train-Test-Split\nTraining Size: {train_size_NN_SVR}')
 
 # create train test split samples
 X_train, Y_train, X_test, Y_test = train_test_split_ts(
@@ -94,16 +94,18 @@ X_train_rs, Y_train_rs, X_test_rs, Y_test_rs = train_test_split_rs(
     df_NN_SVR, train_size_NN_SVR)
 
 # create train test split samples
-X_train_rs, Y_train_rs, X_test_rs, Y_test_rs = train_test_split_rs(
-    df, train_size)
+# X_train_rs, Y_train_rs, X_test_rs, Y_test_rs = train_test_split_rs(
+#     df, train_size)
 
 # save in database
-X_train.to_sql("X_train_rs_NN_SVR", connection,
-               if_exists="replace", index=False)
-Y_train.to_sql("Y_train_rs_NN_SVR", connection,
-               if_exists="replace", index=False)
-X_test.to_sql("X_test_rs_NN_SVR", connection, if_exists="replace", index=False)
-Y_test.to_sql("Y_test_rs_NN_SVR", connection, if_exists="replace", index=False)
+X_train_rs.to_sql("X_train_rs_NN_SVR", connection,
+                  if_exists="replace", index=False)
+Y_train_rs.to_sql("Y_train_rs_NN_SVR", connection,
+                  if_exists="replace", index=False)
+X_test_rs.to_sql("X_test_rs_NN_SVR", connection,
+                 if_exists="replace", index=False)
+Y_test_rs.to_sql("Y_test_rs_NN_SVR", connection,
+                 if_exists="replace", index=False)
 
 
 # print statement

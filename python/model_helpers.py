@@ -55,23 +55,27 @@ def r_squared_metrics(X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_
     return r2, pseudor2
 
 
-def predict_test_df(*models):
+def predict_test_df(*models, webapp=False, filter=None):
 
     df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
     min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
 
     test_df = df[round(len(df)*0.8):].copy()
+
+    if filter is not None:
+        test_df = test_df[(test_df.datetime)]
+
     final_df = df[round(len(df)*0.8):].copy()
     final_df["cnt_norm"] = test_df["cnt"].apply(
         lambda x: x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0])
     test_df = test_df.drop(["datetime", "cnt"], axis=1)
+
     for i in tqdm(models):
         if i.__module__ == 'catboost.core':
             df = pd.read_sql_query(
                 '''SELECT * FROM hours_preprocessed''', connection)
             test_df = df[round(len(df)*0.8):].copy()
             test_df = test_df.drop(["datetime", "cnt"], axis=1)
-            # test_df = test_df.drop(["cnt"], axis = 1)
             cat_var = ["season", "yr", "mnth", "hr", "holiday",
                        "weekday", "workingday", "weathersit"]
 
@@ -81,6 +85,11 @@ def predict_test_df(*models):
             final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
             final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
+
+            if webapp == True:
+                return i.predict(test_df).apply(
+                    lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
+
         elif i.__module__ in ["sklearn.svm._classes", "sklearn.neural_network._multilayer_perceptron"]:
             df = pd.read_sql_query(
                 '''SELECT * FROM hours_preprocessed_NN_SVR''', connection)
@@ -89,8 +98,16 @@ def predict_test_df(*models):
             final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
             final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
+
+            if webapp == True:
+                return i.predict(test_df).apply(
+                    lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
         else:
             final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
             final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
+
+            if webapp == True:
+                return i.predict(test_df).apply(
+                    lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
     return final_df
