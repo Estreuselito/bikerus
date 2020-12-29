@@ -18,8 +18,21 @@ try:
                                  learning_rate=0.1, iterations=1000, od_type='Iter', od_wait=10)
     catboost.load_model("./models/catboost/catboost_model")
     # neural_net = pickle.load(open("./models/NN_MLP_files/NN_MLP_saved", "rb"))
-    random_forest = joblib.load(
-        "./models/RandomForest_Model/Model_RandomForest.sav")
+    # random_forest = joblib.load(
+    #     "./models/RandomForest_Model/Model_RandomForest.sav")
+
+    filename = 'Model_RandomForest_ts_tscv.sav'
+    random_forest_ts_tscv = joblib.load(
+        "./models/RandomForest_Model/" + str(filename))
+
+    filename = 'Model_RandomForest_rs_gridcv.sav'
+    random_forest_rs_gridcv = joblib.load(
+        "./models/RandomForest_Model/" + str(filename))
+
+    filename = 'Model_RandomForest_ts_gridcv.sav'
+    random_forest_model_ts_gridcv = joblib.load(
+        "./models/RandomForest_Model/" + str(filename))
+
     SVR_regr_CV_model_rs = joblib.load(
         "./models/SVR_files/Model_SVR_rs_gridcv.sav")
     SVR_regr_CV_model_ts = joblib.load(
@@ -41,7 +54,7 @@ except:
 # print(neural_net)
 # predict_test_df(NN_regr_CV_model_ts_tscv)
 
-predict_test_df(random_forest, SVR_regr_CV_model_rs, SVR_regr_CV_model_ts, SVR_regr_CV_model_ts_tscv,
+predict_test_df(random_forest_ts_tscv, random_forest_rs_gridcv, random_forest_model_ts_gridcv, SVR_regr_CV_model_rs, SVR_regr_CV_model_ts, SVR_regr_CV_model_ts_tscv,
                 NN_regr_CV_model_rs_gridcv, NN_regr_CV_model_ts_gridcv, NN_regr_CV_model_ts_tscv, catboost).to_sql(
     "predicted_df", connection, if_exists="replace", index=False)
 
