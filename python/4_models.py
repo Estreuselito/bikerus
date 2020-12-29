@@ -1,6 +1,8 @@
 # TODO SVR
 # TODO from model_creation import sklearn_neural_net_multilayerperceptron
-from model_creation import (sklearn_random_forest,
+from model_creation import (sklearn_random_forest_ts_tscv,
+                            sklearn_random_forest_ts_gridcv,
+                            sklearn_random_forest_rs_gridcv,
                             catboost_regressor,
                             sklearn_support_vector_regression_rs_gridcv,
                             sklearn_support_vector_regression_ts_gridcv,
@@ -88,9 +90,23 @@ report = report.append({"Modelname": "Catboost regression",
                        ignore_index=True)
 
 # Sklearn random forest
-logger.info("\nsklearn RandomForest")
-r2, pseudor2 = sklearn_random_forest()
-report = report.append({"Modelname": "Sklearn RF",
+logger.info("\nsklearn RandomForest with time series split")
+r2, pseudor2 = sklearn_random_forest_ts_tscv()
+report = report.append({"Modelname": "Sklearn RF time series split",
+                        "R-Squared": r2,
+                        "Pseudo R-Squared": pseudor2},
+                       ignore_index=True)
+
+logger.info("\nsklearn RandomForest with time series split and random CV")
+r2, pseudor2 = sklearn_random_forest_ts_gridcv()
+report = report.append({"Modelname": "Sklearn RF with time series split and random CV",
+                        "R-Squared": r2,
+                        "Pseudo R-Squared": pseudor2},
+                       ignore_index=True)
+
+logger.info("\nsklearn RandomForest with random split")
+r2, pseudor2 = sklearn_random_forest_rs_gridcv()
+report = report.append({"Modelname": "Sklearn RF with random split",
                         "R-Squared": r2,
                         "Pseudo R-Squared": pseudor2},
                        ignore_index=True)
