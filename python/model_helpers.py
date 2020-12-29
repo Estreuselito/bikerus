@@ -55,7 +55,7 @@ def r_squared_metrics(X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_
     return r2, pseudor2
 
 
-def predict_test_df(*models, webapp=False, filter=None):
+def predict_test_df(*models, webapp=False, filter=None, date=None):
 
     df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
     min_max = pd.read_sql_query('''SELECT * FROM max_min_count''', connection)
@@ -63,7 +63,7 @@ def predict_test_df(*models, webapp=False, filter=None):
     test_df = df[round(len(df)*0.8):].copy()
 
     if filter is not None:
-        test_df = test_df[(test_df.datetime)]
+        test_df = test_df[(test_df.datetime == date)]
 
     final_df = df[round(len(df)*0.8):].copy()
     final_df["cnt_norm"] = test_df["cnt"].apply(
