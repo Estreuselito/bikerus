@@ -612,9 +612,10 @@ def sklearn_neural_net_multilayerperceptron_ts_tscv():
     return r2.values[0], pseudor2.values[0]
 
 
-def catboost_regressor():
+def catboost_regressor_rs():
 
-    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc()
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(
+        rs="_rs")
 
     cat_var = ["season", "yr", "mnth", "hr", "holiday",
                "weekday", "workingday", "weathersit"]
@@ -626,7 +627,7 @@ def catboost_regressor():
                               learning_rate=0.1, iterations=1000, od_type='Iter', od_wait=10)
 
     try:
-        model.load_model("./models/catboost/catboost_model")
+        model.load_model("./models/catboost/catboost_model_rs")
         logger.info("Model is loaded!\n")
     except:
         logger.info("Model is creating!\n")
@@ -643,7 +644,175 @@ def catboost_regressor():
             plot=True
         )
 
-        model.save_model("./models/catboost/catboost_model", format="cbm")
+        model.save_model("./models/catboost/catboost_model_rs", format="cbm")
+
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, model)
+    return r2.values[0], pseudor2.values[0]
+
+
+def catboost_regressor_ts_gridcv():
+
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc()
+
+    cat_var = ["season", "yr", "mnth", "hr", "holiday",
+               "weekday", "workingday", "weathersit"]
+    for v in cat_var:
+        X_train[v] = X_train[v].astype("int64")
+        X_test[v] = X_test[v].astype("int64")
+
+    model = CatBoostRegressor(loss_function='RMSE', depth=10,
+                              learning_rate=0.05, iterations=1000, od_type='Iter', od_wait=10)
+
+    try:
+        model.load_model("./models/catboost/catboost_model_ts_gridcv")
+        print("Model loaded!")
+    except:
+        if not os.path.exists("./models/catboost"):
+            os.makedirs("./models/catboost")
+
+        model.fit(
+            X_train, Y_train,
+            use_best_model=True,
+            cat_features=["season", "yr", "mnth", "hr",
+                          "holiday", "weekday", "workingday", "weathersit", "rush_hour"],
+            eval_set=(X_test, Y_test),
+            verbose=True,
+            plot=True
+        )
+
+        model.save_model(
+            "./models/catboost/catboost_model_ts_gridcv", format="cbm")
+
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, model)
+    return r2.values[0], pseudor2.values[0]
+
+
+def catboost_regressor_ts_tscv():
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc()
+
+    cat_var = ["season", "yr", "mnth", "hr", "holiday",
+               "weekday", "workingday", "weathersit"]
+    for v in cat_var:
+        X_train[v] = X_train[v].astype("int64")
+        X_test[v] = X_test[v].astype("int64")
+
+    model = CatBoostRegressor(loss_function='RMSE', depth=6,
+                              learning_rate=0.2, iterations=200, od_type='Iter', od_wait=10)
+
+    try:
+        model.load_model("./models/catboost/catboost_model_ts_tscv")
+        print("Model loaded!")
+    except:
+        if not os.path.exists("./models/catboost"):
+            os.makedirs("./models/catboost")
+
+        df_parameters = pd.DataFrame()
+        folds = list(range(1, 6))
+        depths = [6, 8, 10]
+        learning_rates = [0.01, 0.05, 0.1, 0.2, 0.3]
+        iterations = [30, 50, 100, 200, 400, 600, 800, 1000]
+
+        for depth in list(range(len(depths))):
+            for learning_rate in list(range(len(learning_rates))):
+                for iteration in list(range(len(iterations))):
+                    # important: fold needs to be the last for-loop to be able to compute the means of Pseudo R^2 across the folds
+                    for fold in list(range(len(folds))):
+
+                        X_train_cv, Y_train_cv, X_test_cv, Y_test_cv = get_sample_for_cv(folds[-1],  # specify the number of total folds, last index of the list
+                                                                                         # specifiy the current fold
+                                                                                         folds[fold],
+                                                                                         X_train,  # DataFrame X_train, which was created with the function train_test_split_ts
+                                                                                         Y_train)  # DataFrame Y_train, which was created with the function train_test_split_ts
+
+                        # to evaluate the prediction quality, we use the R2 measure
+                        # as a benchmark, we initially calculated the mean value and the residual sum of squares of the target variable for the specific fold
+                        Y_train_mean_cv = Y_train_cv.mean()
+
+                        # remove error-causing header
+                        Y_train_cv = Y_train_cv.iloc[:, 0]
+                        Y_test_cv = Y_test_cv.iloc[:, 0]
+                        Y_train_meandev_cv = sum(
+                            (Y_train_cv - float(Y_train_mean_cv))**2)
+                        Y_test_meandev_cv = sum(
+                            (Y_test_cv - float(Y_train_mean_cv))**2)
+
+                        # initialize model
+
+                        cat_var = ["season", "yr", "mnth", "hr", "holiday",
+                                   "weekday", "workingday", "weathersit", "rush_hour"]
+                        for v in cat_var:
+                            X_train_cv[v] = X_train_cv[v].astype("int64")
+                            X_test_cv[v] = X_test_cv[v].astype("int64")
+
+                        model = CatBoostRegressor(loss_function='RMSE', depth=depths[depth], learning_rate=learning_rates[
+                                                  learning_rate], iterations=iterations[iteration], od_type='Iter', od_wait=10)
+
+                        # train the model
+                        model.fit(
+                            X_train_cv, Y_train_cv,
+                            use_best_model=True,
+                            cat_features=["season", "yr", "mnth", "hr",
+                                          "holiday", "weekday", "workingday", "weathersit", "rush_hour"],
+                            eval_set=(X_test_cv, Y_test_cv),
+                            verbose=True,
+                            plot=True
+                        )
+
+                        # Make predictions based on the traing set
+                        Y_train_pred_cv = model.predict(X_train_cv)
+                        Y_train_dev_cv = sum((Y_train_cv-Y_train_pred_cv)**2)
+                        r2_cv = 1 - Y_train_dev_cv/Y_train_meandev_cv
+
+                        # Evaluate the result by applying the model to the test set
+                        Y_test_pred_cv = model.predict(X_test_cv)
+                        Y_test_dev_cv = sum((Y_test_cv - Y_test_pred_cv)**2)
+                        pseudor2_cv = 1 - Y_test_dev_cv/Y_test_meandev_cv
+
+                        # Append results to dataframe
+                        new_row = {'fold': folds[fold],
+                                   'max_depth': depths[depth],
+                                   'iterations': iterations[iteration],
+                                   'learning_rate': learning_rates[learning_rate],
+                                   'R2': r2_cv,
+                                   'PseudoR2': pseudor2_cv}
+
+                        # Calculate means to find the best hyperparameters across all folds
+                        n_folds = folds[-1]
+                        i = 0
+                        index = 0
+                        mean_max = 0
+                        while i < len(df_parameters):
+                            if df_parameters.iloc[i:i+n_folds, 0].mean() > mean_max:
+                                mean_max = df_parameters.iloc[i:i +
+                                                              n_folds, 0].mean()
+                                index = i
+                                i += n_folds
+                            else:
+                                i += n_folds
+                        df_parameters = df_parameters.append(
+                            new_row, ignore_index=True)
+
+                        # best parameters based on mean of PseudoR^2
+                        # only the hyperparameters are included here, therefore the index starts at 3
+                        best_parameters = pd.Series(
+                            df_parameters.iloc[index, 3:])
+
+        model = CatBoostRegressor(loss_function='RMSE', depth=best_parameters["max_depth"],
+                                  learning_rate=best_parameters["learning_rate"], iterations=best_parameters["iterations"], od_type='Iter', od_wait=10)
+        model.fit(
+            X_train, Y_train,
+            use_best_model=True,
+            cat_features=["season", "yr", "mnth", "hr",
+                                                  "holiday", "weekday", "workingday", "weathersit", "rush_hour"],
+            eval_set=(X_test, Y_test),
+            verbose=True,
+            plot=True
+        )
+
+        model.save_model(
+            "./models/catboost/catboost_model_ts_tscv", format="cbm")
 
     r2, pseudor2 = r_squared_metrics(
         X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, model)
@@ -682,9 +851,10 @@ def sklearn_random_forest_ts_tscv():
                         for fold in list(range(len(folds))):
 
                             X_train_cv, Y_train_cv, X_test_cv, Y_test_cv = get_sample_for_cv(folds[-1],  # specify the number of total folds, last index of the list
-                                                                                            folds[fold], # specifiy the current fold
-                                                                                            X_train,  # DataFrame X_train, which was created with the function train_test_split_ts
-                                                                                            Y_train)  # DataFrame Y_train, which was created with the function train_test_split_ts
+                                                                                             # specifiy the current fold
+                                                                                             folds[fold],
+                                                                                             X_train,  # DataFrame X_train, which was created with the function train_test_split_ts
+                                                                                             Y_train)  # DataFrame Y_train, which was created with the function train_test_split_ts
 
                             # to evaluate the prediction quality, we use the R2 measure
                             # as a benchmark, we initially calculated the mean value and the residual sum of squares of the target variable for the specific fold
@@ -722,12 +892,12 @@ def sklearn_random_forest_ts_tscv():
 
                             # Append results to dataframe
                             new_row = {'fold': folds[fold],
-                                        'max_depth': max_depth[depth],
-                                        'n_estimators': n_estimators[number_trees],
-                                        'max_leaf_nodes': max_leaf_nodes[node],
-                                        'max_samples': max_samples[sample],
-                                        'R2': r2_cv,
-                                        'PseudoR2': pseudor2_cv}
+                                       'max_depth': max_depth[depth],
+                                       'n_estimators': n_estimators[number_trees],
+                                       'max_leaf_nodes': max_leaf_nodes[node],
+                                       'max_samples': max_samples[sample],
+                                       'R2': r2_cv,
+                                       'PseudoR2': pseudor2_cv}
 
                             # Calculate means to find the best hyperparameters across all folds
                             n_folds = folds[-1]
@@ -737,7 +907,7 @@ def sklearn_random_forest_ts_tscv():
                             while i < len(df_parameters):
                                 if df_parameters.iloc[i:i+n_folds, 0].mean() > mean_max:
                                     mean_max = df_parameters.iloc[i:i +
-                                                                n_folds, 0].mean()
+                                                                  n_folds, 0].mean()
                                     index = i
                                     i += n_folds
                                 else:
@@ -747,17 +917,17 @@ def sklearn_random_forest_ts_tscv():
 
                             # best parameters based on mean of PseudoR^2
                             # only the hyperparameters are included here, therefore the index starts at 3
-                            best_parameters = pd.Series(df_parameters.iloc[index, 3:])
+                            best_parameters = pd.Series(
+                                df_parameters.iloc[index, 3:])
 
         # Initialize the model and the regressor with the best hyperparameters
         random_forest_ts_tscv = RandomForestRegressor(max_depth=int(best_parameters['max_depth']),
-                                                n_estimators=int(
-                                                    best_parameters['n_estimators']),
-                                                max_leaf_nodes=int(
-                                                    best_parameters['max_leaf_nodes']),
-                                                max_samples=
-                                                    best_parameters['max_samples'],
-                                                random_state=0)
+                                                      n_estimators=int(
+            best_parameters['n_estimators']),
+            max_leaf_nodes=int(
+            best_parameters['max_leaf_nodes']),
+            max_samples=best_parameters['max_samples'],
+            random_state=0)
         # train the model with the hyperparameters
         random_forest_ts_tscv.fit(X_train, Y_train.values.ravel())
 
@@ -768,8 +938,10 @@ def sklearn_random_forest_ts_tscv():
         X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, random_forest_ts_tscv)
     return r2.values[0], pseudor2.values[0]
 
+
 def sklearn_random_forest_rs_gridcv():
-    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(rs="_rs")
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(
+        rs="_rs")
 
     try:
         filename = 'Model_RandomForest_rs_gridcv.sav'
@@ -783,21 +955,23 @@ def sklearn_random_forest_rs_gridcv():
         RForregCV = RandomForestRegressor(random_state=0)
         # Determine hyperparameter combinations
         # param_grid = { 'max_depth': [8, 9, 10, 11, 12, 13],
-                        # 'n_estimators': [80, 100, 120],
-                        # 'max_leaf_nodes': [60, 70, 80],
-                        # 'max_samples': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]}
+        # 'n_estimators': [80, 100, 120],
+        # 'max_leaf_nodes': [60, 70, 80],
+        # 'max_samples': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]}
         # final values
-        param_grid = { 'max_depth': [12],
-                        'n_estimators': [120],
-                        'max_leaf_nodes': [80],
-                        'max_samples': [0.3]}
+        param_grid = {'max_depth': [12],
+                      'n_estimators': [120],
+                      'max_leaf_nodes': [80],
+                      'max_samples': [0.3]}
 
         # Cross Validation
-        CV_rfmodel = GridSearchCV(estimator=RForregCV, param_grid=param_grid, cv=5)
+        CV_rfmodel = GridSearchCV(
+            estimator=RForregCV, param_grid=param_grid, cv=5)
         CV_rfmodel.fit(X_train, Y_train.values.ravel())
 
         # Final training
-        random_forest_rs_gridcv = RForregCV.set_params(**CV_rfmodel.best_params_)
+        random_forest_rs_gridcv = RForregCV.set_params(
+            **CV_rfmodel.best_params_)
         random_forest_rs_gridcv.fit(X_train, Y_train.values.ravel())
 
         # Save model
@@ -809,7 +983,7 @@ def sklearn_random_forest_rs_gridcv():
 
     return r2.values[0], pseudor2.values[0]
 
-        
+
 def sklearn_random_forest_ts_gridcv():
     df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc()
 
@@ -825,22 +999,24 @@ def sklearn_random_forest_ts_gridcv():
         RForregCV = RandomForestRegressor(random_state=0)
         # Determine hyperparameter combinations
         # param_grid = {'max_depth': [8, 9, 10, 11, 12],
-                        # 'n_estimators': [80, 100, 120, 140],
-                        # 'max_leaf_nodes': [60, 70, 80],
-                        # 'max_samples': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]}
+        # 'n_estimators': [80, 100, 120, 140],
+        # 'max_leaf_nodes': [60, 70, 80],
+        # 'max_samples': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]}
 
         # final values
         param_grid = {'max_depth': [10],
-                        'n_estimators': [100],
-                        'max_leaf_nodes': [80],
-                        'max_samples': [0.2]}
+                      'n_estimators': [100],
+                      'max_leaf_nodes': [80],
+                      'max_samples': [0.2]}
 
         # Cross Validation
-        CV_rfmodel = GridSearchCV(estimator=RForregCV, param_grid=param_grid, cv=5)
+        CV_rfmodel = GridSearchCV(
+            estimator=RForregCV, param_grid=param_grid, cv=5)
         CV_rfmodel.fit(X_train, Y_train.values.ravel())
 
         # Final training
-        random_forest_model_ts_gridcv = RForregCV.set_params(**CV_rfmodel.best_params_)
+        random_forest_model_ts_gridcv = RForregCV.set_params(
+            **CV_rfmodel.best_params_)
         random_forest_model_ts_gridcv.fit(X_train, Y_train.values.ravel())
 
         # Save model

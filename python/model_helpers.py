@@ -111,3 +111,63 @@ def predict_test_df(*models, webapp=False, filter=None):
                 return i.predict(test_df).apply(
                     lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
     return final_df
+
+
+# only for grid search for Catboost model
+
+def GridSearch_for_Catboost():
+    print(format('How to find optimal parameters for CatBoost using GridSearchCV for Regression', '*^82'))
+
+    import warnings
+    warnings.filterwarnings("ignore")
+
+    # load libraries
+    from data_storage import check_and_create_and_insert, connection
+    from sklearn import datasets
+    from sklearn.model_selection import GridSearchCV
+    from catboost import CatBoostRegressor
+
+    df = pd.read_sql_query('''SELECT * FROM hours_preprocessed''', connection)
+
+    Y = df.cnt
+    X = df.drop("cnt", axis=1)
+
+    X_train, X_test, Y_train, Y_test = train_test_split(
+        X, Y, test_size=0.2, random_state=0)
+
+    X_train = X_train.drop("datetime", axis=1)
+    X_test = X_test.drop("datetime", axis=1)
+
+    cat_var = ["season", "mnth", "hr", "holiday",
+               "weekday", "workingday", "weathersit", "rush_hour"]
+    for v in cat_var:
+        X_train[v] = X_train[v].astype("int64")
+        X_test[v] = X_test[v].astype("int64")
+
+    model = CatBoostRegressor(loss_function='RMSE', cat_features=["season", "yr", "mnth", "hr", "holiday",
+                                                                  "weekday", "workingday", "weathersit", "rush_hour"])
+    parameters = {'depth': [6, 8, 10],
+                  'learning_rate': [0.01, 0.05, 0.1, 0.2, 0.3],
+                  'iterations': [30, 50, 100, 200, 400, 600, 800, 1000]
+                  }
+    grid = GridSearchCV(
+        estimator=model, param_grid=parameters,  cv=5, n_jobs=-1)
+    grid.fit(X_train, Y_train)
+
+    # Results from Grid Search
+    print("\n========================================================")
+    print(" Results from Grid Search ")
+    print("========================================================")
+
+    print("\n The best estimator across ALL searched params:\n",
+          grid.best_estimator_)
+
+    print("\n The best score across ALL searched params:\n",
+          grid.best_score_)
+
+    print("\n The best parameters across ALL searched params:\n",
+          grid.best_params_)
+
+    print("\n ========================================================")
+
+# GridSearch_for_Catboost()

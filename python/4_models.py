@@ -3,7 +3,9 @@
 from model_creation import (sklearn_random_forest_ts_tscv,
                             sklearn_random_forest_ts_gridcv,
                             sklearn_random_forest_rs_gridcv,
-                            catboost_regressor,
+                            catboost_regressor_rs,
+                            catboost_regressor_ts_gridcv,
+                            catboost_regressor_ts_tscv,
                             sklearn_support_vector_regression_rs_gridcv,
                             sklearn_support_vector_regression_ts_gridcv,
                             sklearn_support_vector_regression_ts_tscv,
@@ -82,12 +84,27 @@ report = report.append({"Modelname": "Neural Net MLP with time series split and 
                        ignore_index=True)
 
 # catboost regression
-logger.info("\nCatboost regressor")
-r2, pseudor2 = catboost_regressor()
-report = report.append({"Modelname": "Catboost regression",
+logger.info("\nCatboost regressor random split")
+r2, pseudor2 = catboost_regressor_rs()
+report = report.append({"Modelname": "Catboost regression rs",
                         "R-Squared": r2,
                         "Pseudo R-Squared": pseudor2},
                        ignore_index=True)
+
+logger.info("\nCatboost regressor time series split and gridCV")
+r2, pseudor2 = catboost_regressor_ts_gridcv()
+report = report.append({"Modelname": "Catboost regression ts gridcv",
+                        "R-Squared": r2,
+                        "Pseudo R-Squared": pseudor2},
+                       ignore_index=True)
+
+logger.info("\nCatboost regressor time series split and CV")
+r2, pseudor2 = catboost_regressor_ts_tscv()
+report = report.append({"Modelname": "Catboost regression ts cv",
+                        "R-Squared": r2,
+                        "Pseudo R-Squared": pseudor2},
+                       ignore_index=True)
+
 
 # Sklearn random forest
 logger.info("\nsklearn RandomForest with time series split")

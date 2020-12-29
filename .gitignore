@@ -18,6 +18,9 @@ data/
 database/
 *.db
 
+#### catboost info ####
+catboost_info
+
 #### DrawIO ####
 *.drawio
 
