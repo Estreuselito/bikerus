@@ -82,8 +82,9 @@ def predict_test_df(*models, webapp=False, filter=None):
             for v in cat_var:
                 test_df[v] = test_df[v].astype("int64")
 
-            final_df["cnt_pred_" + f'{i}'] = i.predict(test_df)
-            final_df["cnt_pred_norm_" + f'{i}'] = final_df["cnt_pred_" + f'{i}'].apply(
+            final_df["cnt_pred_" + f'{i.__module__}' +
+                     f'{i.get_params()}'] = i.predict(test_df)
+            final_df["cnt_pred_norm_" + f'{i.__module__}' + f'{i.get_params()}'] = final_df["cnt_pred_" + f'{i.__module__}' + f'{i.get_params()}'].apply(
                 lambda x: round(x * (min_max["max"][0] - min_max["min"][0]) + min_max["min"][0]))
 
             if webapp == True:
