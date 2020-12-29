@@ -16,6 +16,28 @@
   </script>
 
 </head>
+<style>
+  .half-line {
+    line-height: .005em;
+  }
+
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+</style>
 <img align="right" width="20%" height="20%" src="../static/image-capital_bikeshare.png" alt="Capital Bike Share Logo">
 
 <br>
@@ -29,10 +51,14 @@
         <h1>
           <font face="Verdana" size="20">Bikerus</font>
         </h1>
-      </center>
-
-      <center>
-        <h2>Live Demo!</h2>
+        <br>
+        <h2>This website is the live demonstration for the Bikerus <a
+            href="https://github.com/Estreuselito/bikerus">GitHub Repository</a>. Our team members are: <a
+            href="https://github.com/Estreuselito">Yannik Suhre</a>,
+          <a href="https://github.com/Schuyler-lab">Skyler MacGowan</a>, <a href="https://github.com/jacobumland">Jacob
+            Umland</a>, <a href="https://github.com/TazTornadoo">Jan Faulstich</a>, and <a
+            href="https://github.com/Sydow93">Sebastian Sydow</a>. We hope you enjoy predicting bike share rentals!
+        </h2>
       </center>
       <br>
       <center>
@@ -55,7 +81,7 @@
         </h2>
       </center>
       <div style="width: 100%; overflow: hidden;">
-        <div style="width: 33.3%; float: left;">
+        <div style="width: 30%; float: left;">
           <img align="middle" width="80%" height="80%" src="../static/image-capital_bikeshare.png"
             alt="Capital Bike Share Logo"><br>
           <center>
@@ -64,28 +90,136 @@
         </div>
         <div style="width: 33.3%; float: left;"><img align="middle" width="80%" height="80%"
             src="../static/image_catboost.png" alt="Catboost Logo"><br>
-          <center>
-            <h2>Catboost random split & grid CV: {{ catboost_rs }} </h2><br>
-            <h2>Catboost time series split & grid CV: {{catboost_ts_gridcv}} </h2><br>
-            <h2>Catboost time series split & times series CV: {{catboost_model_ts_tscv}}</h2>
 
+          <center>
+            <table>
+              <tr>
+                <th>
+                  <h2>Model</h2>
+                </th>
+                <th>
+                  <h2>Prediction</h2>
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <h2>Catboost random split & grid CV:</h2>
+                </td>
+                <td>
+                  <h2>{{ catboost_rs }}</h2>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h2>Catboost time series split & grid CV:</h2>
+                </td>
+                <td>
+                  <h2>{{ catboost_ts_gridcv }}</h2>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h2>Catboost time series split & times series CV: </h2>
+                </td>
+                <td>
+                  <h2>{{ catboost_model_ts_tscv }}</h2>
+                </td>
+              </tr>
+            </table>
           </center>
         </div>
         <div style="width: 33.3%; float: left;"><img align="middle" width="60%" height="60%"
             src="../static/scitlearn-logo.png" alt="Scikit learn Logo"><br>
-          <h2>neural net random split & grid CV: {{ NN_regr_CV_model_rs_gridcv }} </h2><br>
-          <h2>neural net time series split & grid CV: {{NN_regr_CV_model_ts_gridcv}}</h2><br>
-          <h2>neural net time series split & times series CV: {{NN_regr_CV_model_ts_tscv}}</h2><br>
-          <h2>SVR random split & grid CV: {{SVR_regr_CV_model_rs}}</h2><br>
-          <h2>SVR time series split & grid CV: {{SVR_regr_CV_model_ts}}</h2><br>
-          <h2>SVR time series split & times series CV: {{SVR_regr_CV_model_ts_tscv}}</h2>
-          <h2>RF random split & grid CV: {{ random_forest_rs_gridcv}}</h2><br>
-          <h2>RF time series split & grid CV: {{random_forest_model_ts_gridcv}}</h2><br>
-          <h2>RF time series split & times series CV: {{random_forest_ts_tscv}}</h2>
+          <p class="half-line"></p>
+          <table>
+            <tr>
+              <th>
+                <h2>Model</h2>
+              </th>
+              <th>
+                <h2>Prediction</h2>
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <h2>Neural net random split & grid CV:</h2>
+              </td>
+              <td>
+                <h2>{{ NN_regr_CV_model_rs_gridcv }}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>Neural net time series split & grid CV:</h2>
+              </td>
+              <td>
+                <h2>{{ NN_regr_CV_model_ts_gridcv }}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>Neural net time series split & times series CV:</h2>
+              </td>
+              <td>
+                <h2>{{ NN_regr_CV_model_ts_tscv }}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>SVR random split & grid CV:</h2>
+              </td>
+              <td>
+                <h2>{{ SVR_regr_CV_model_rs }}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>SVR time series split & grid CV:</h2>
+              </td>
+              <td>
+                <h2>{{ SVR_regr_CV_model_ts }}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>SVR time series split & times series CV:</h2>
+              </td>
+              <td>
+                <h2>{{ SVR_regr_CV_model_ts_tscv }}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>RF random split & grid CV:</h2>
+              </td>
+              <td>
+                <h2>{{ random_forest_rs_gridcv }}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>RF time series split & grid CV:</h2>
+              </td>
+              <td>
+                <h2>{{ random_forest_model_ts_gridcv }}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2>RF time series split & times series CV:</h2>
+              </td>
+              <td>
+                <h2>{{ random_forest_ts_tscv }}</h2>
+              </td>
+            </tr>
+          </table>
         </div>
         <br style="clear: left;" />
       </div>
       {{ cnt }}
+      <i>Disclaimer: All product names, logos, and brands are property of their respective owners. All company, product
+        and service names used in this website are for identification purposes only. Use of these names, logos, and
+        brands does not imply endorsement.</i>
     </font>
     </center>
   </div>
