@@ -650,121 +650,204 @@ def catboost_regressor():
     return r2.values[0], pseudor2.values[0]
 
 
-def sklearn_random_forest():
+def sklearn_random_forest_ts_tscv():
 
     df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc()
 
     try:
-        filename = 'Model_RandomForest.sav'
-        random_forest = joblib.load(
+        filename = 'Model_RandomForest_ts_tscv.sav'
+        random_forest_ts_tscv = joblib.load(
             "./models/RandomForest_Model/" + str(filename))
         logger.info("Model is loaded!\n")
-    except FileNotFoundError:
+    except:
         logger.info("Model is creating!\n")
         # Training the model incl. Cross Validation
         df_parameters = pd.DataFrame()
         folds = list(range(1, 6))
-        max_depth = [11]
-        n_estimators = [300]
-        max_features = [10]
-        min_samples_leaf = [1]
+        # Determine hyperparameter combinations
+        # max_depth =  [8, 9, 10, 11, 12]
+        # n_estimators = [100, 120, 140]
+        # max_leaf_nodes = [60, 70, 80]
+        # max_samples = [0.1, 0.2, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]
+        # final values
+        max_depth = [10]
+        n_estimators = [120]
         max_leaf_nodes = [80]
+        max_samples = [0.5]
         for depth in list(range(len(max_depth))):
             for number_trees in list(range(len(n_estimators))):
-                for feature in list(range(len(max_features))):
-                    for leaf in list(range(len(min_samples_leaf))):
-                        for node in list(range(len(max_leaf_nodes))):
-                            # important: fold needs to be the last for-loop to be able to compute the means of Pseudo R^2 across the folds
-                            for fold in list(range(len(folds))):
+                for node in list(range(len(max_leaf_nodes))):
+                    for sample in list(range(len(max_samples))):
+                        # important: fold needs to be the last for-loop to be able to compute the means of Pseudo R^2 across the folds
+                        for fold in list(range(len(folds))):
 
-                                X_train_cv, Y_train_cv, X_test_cv, Y_test_cv = get_sample_for_cv(folds[-1],  # specify the number of total folds, last index of the list
-                                                                                                 # specifiy the current fold
-                                                                                                 folds[fold],
-                                                                                                 X_train,  # DataFrame X_train, which was created with the function train_test_split_ts
-                                                                                                 Y_train)  # DataFrame Y_train, which was created with the function train_test_split_ts
+                            X_train_cv, Y_train_cv, X_test_cv, Y_test_cv = get_sample_for_cv(folds[-1],  # specify the number of total folds, last index of the list
+                                                                                            folds[fold], # specifiy the current fold
+                                                                                            X_train,  # DataFrame X_train, which was created with the function train_test_split_ts
+                                                                                            Y_train)  # DataFrame Y_train, which was created with the function train_test_split_ts
 
-                                # to evaluate the prediction quality, we use the R2 measure
-                                # as a benchmark, we initially calculated the mean value and the residual sum of squares of the target variable for the specific fold
-                                Y_train_mean_cv = Y_train_cv.mean()
-                                """ print("Y_train_cv type: ", type(
-                                    Y_train_cv), "\tValue: ", Y_train_cv, "\n",
-                                    "Y_train_mean_cv type: ", type(Y_train_mean_cv), "\tValue: ", Y_train_mean_cv) """
-                                # print(((Y_test_cv-Y_train_mean_cv)**2).sum())
-                                Y_train_meandev_cv = (
-                                    (Y_train_cv-Y_train_mean_cv)**2).sum()
-                                Y_test_meandev_cv = (
-                                    (Y_test_cv-Y_train_mean_cv)**2).sum()
+                            # to evaluate the prediction quality, we use the R2 measure
+                            # as a benchmark, we initially calculated the mean value and the residual sum of squares of the target variable for the specific fold
+                            Y_train_mean_cv = Y_train_cv.mean()
+                            """ print("Y_train_cv type: ", type(
+                                Y_train_cv), "\tValue: ", Y_train_cv, "\n",
+                                "Y_train_mean_cv type: ", type(Y_train_mean_cv), "\tValue: ", Y_train_mean_cv) """
+                            # print(((Y_test_cv-Y_train_mean_cv)**2).sum())
+                            Y_train_meandev_cv = (
+                                (Y_train_cv-Y_train_mean_cv)**2).sum()
+                            Y_test_meandev_cv = (
+                                (Y_test_cv-Y_train_mean_cv)**2).sum()
 
-                                # initialize model
-                                RForreg = RandomForestRegressor(max_depth=max_depth[depth],
-                                                                n_estimators=n_estimators[number_trees],
-                                                                max_features=max_features[feature],
-                                                                min_samples_leaf=min_samples_leaf[leaf],
-                                                                max_leaf_nodes=max_leaf_nodes[node],
-                                                                random_state=0)
+                            # initialize model
+                            RForreg = RandomForestRegressor(max_depth=max_depth[depth],
+                                                            n_estimators=n_estimators[number_trees],
+                                                            max_leaf_nodes=max_leaf_nodes[node],
+                                                            max_samples=max_samples[sample],
+                                                            random_state=0)
 
-                                # train the model
-                                RForreg.fit(X_train_cv, Y_train_cv["cnt"])
+                            # train the model
+                            RForreg.fit(X_train_cv, Y_train_cv["cnt"])
 
-                                # Make predictions based on the traing set
-                                Y_train_pred_cv = RForreg.predict(X_train_cv)
-                                Y_train_dev_cv = (
-                                    (Y_train_cv["cnt"]-Y_train_pred_cv)**2).sum()
-                                r2_cv = 1 - Y_train_dev_cv/Y_train_meandev_cv
+                            # Make predictions based on the traing set
+                            Y_train_pred_cv = RForreg.predict(X_train_cv)
+                            Y_train_dev_cv = (
+                                (Y_train_cv["cnt"]-Y_train_pred_cv)**2).sum()
+                            r2_cv = 1 - Y_train_dev_cv/Y_train_meandev_cv
 
-                                # Evaluate the result by applying the model to the test set
-                                Y_test_pred_cv = RForreg.predict(X_test_cv)
-                                Y_test_dev_cv = (
-                                    (Y_test_cv["cnt"]-Y_test_pred_cv)**2).sum()
-                                pseudor2_cv = 1 - Y_test_dev_cv/Y_test_meandev_cv
+                            # Evaluate the result by applying the model to the test set
+                            Y_test_pred_cv = RForreg.predict(X_test_cv)
+                            Y_test_dev_cv = (
+                                (Y_test_cv["cnt"]-Y_test_pred_cv)**2).sum()
+                            pseudor2_cv = 1 - Y_test_dev_cv/Y_test_meandev_cv
 
-                                # Append results to dataframe
-                                new_row = {'fold': folds[fold],
-                                           'max_depth': max_depth[depth],
-                                           'n_estimators': n_estimators[number_trees],
-                                           'max_features': max_features[feature],
-                                           'min_samples_leaf': min_samples_leaf[leaf],
-                                           'max_leaf_nodes': max_leaf_nodes[node],
-                                           'R2': r2_cv,
-                                           'PseudoR2': pseudor2_cv}
+                            # Append results to dataframe
+                            new_row = {'fold': folds[fold],
+                                        'max_depth': max_depth[depth],
+                                        'n_estimators': n_estimators[number_trees],
+                                        'max_leaf_nodes': max_leaf_nodes[node],
+                                        'max_samples': max_samples[sample],
+                                        'R2': r2_cv,
+                                        'PseudoR2': pseudor2_cv}
 
-                                # Calculate means to find the best hyperparameters across all folds
-                                n_folds = folds[-1]
-                                i = 0
-                                index = 0
-                                mean_max = 0
-                                while i < len(df_parameters):
-                                    if df_parameters.iloc[i:i+n_folds, 1].mean() > mean_max:
-                                        mean_max = df_parameters.iloc[i:i +
-                                                                      n_folds, 1].mean()
-                                        index = i
-                                        i += n_folds
-                                    else:
-                                        i += n_folds
-                                df_parameters = df_parameters.append(
-                                    new_row, ignore_index=True)
+                            # Calculate means to find the best hyperparameters across all folds
+                            n_folds = folds[-1]
+                            i = 0
+                            index = 0
+                            mean_max = 0
+                            while i < len(df_parameters):
+                                if df_parameters.iloc[i:i+n_folds, 0].mean() > mean_max:
+                                    mean_max = df_parameters.iloc[i:i +
+                                                                n_folds, 0].mean()
+                                    index = i
+                                    i += n_folds
+                                else:
+                                    i += n_folds
+                            df_parameters = df_parameters.append(
+                                new_row, ignore_index=True)
 
-                                # best parameters based on mean of PseudoR^2
-                                # only the hyperparameters are included here, therefore the index starts at 3
-                                best_parameters = pd.Series(
-                                    df_parameters.iloc[index, 3:])
+                            # best parameters based on mean of PseudoR^2
+                            # only the hyperparameters are included here, therefore the index starts at 3
+                            best_parameters = pd.Series(df_parameters.iloc[index, 3:])
+
         # Initialize the model and the regressor with the best hyperparameters
-        random_forest = RandomForestRegressor(max_depth=int(best_parameters['max_depth']),
-                                              n_estimators=int(
-                                                  best_parameters['n_estimators']),
-                                              max_features=int(
-                                                  best_parameters['max_features']),
-                                              min_samples_leaf=int(
-                                                  best_parameters['min_samples_leaf']),
-                                              max_leaf_nodes=int(
-                                                  best_parameters['max_leaf_nodes']),
-                                              random_state=0)
+        random_forest_ts_tscv = RandomForestRegressor(max_depth=int(best_parameters['max_depth']),
+                                                n_estimators=int(
+                                                    best_parameters['n_estimators']),
+                                                max_leaf_nodes=int(
+                                                    best_parameters['max_leaf_nodes']),
+                                                max_samples=
+                                                    best_parameters['max_samples'],
+                                                random_state=0)
         # train the model with the hyperparameters
-        random_forest.fit(X_train, Y_train.array)
+        random_forest_ts_tscv.fit(X_train, Y_train.values.ravel())
 
-        joblib.dump(random_forest,
-                    "./models/RandomForest_Model/Model_RandomForest.sav")
+        joblib.dump(random_forest_ts_tscv,
+                    "./models/RandomForest_Model/Model_RandomForest_ts_tscv.sav")
 
     r2, pseudor2 = r_squared_metrics(
-        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, random_forest)
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, random_forest_ts_tscv)
+    return r2.values[0], pseudor2.values[0]
+
+def sklearn_random_forest_rs_gridcv():
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc(rs="_rs")
+
+    try:
+        filename = 'Model_RandomForest_rs_gridcv.sav'
+        random_forest_rs_gridcv = joblib.load(
+            "./models/RandomForest_Model/" + str(filename))
+        logger.info("Model is loaded!\n")
+    except:
+        logger.info("Model is creating!\n")
+        # Training the model incl. Cross Validation
+        # Initialize RandomForestRegressor
+        RForregCV = RandomForestRegressor(random_state=0)
+        # Determine hyperparameter combinations
+        # param_grid = { 'max_depth': [8, 9, 10, 11, 12, 13],
+                        # 'n_estimators': [80, 100, 120],
+                        # 'max_leaf_nodes': [60, 70, 80],
+                        # 'max_samples': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]}
+        # final values
+        param_grid = { 'max_depth': [12],
+                        'n_estimators': [120],
+                        'max_leaf_nodes': [80],
+                        'max_samples': [0.3]}
+
+        # Cross Validation
+        CV_rfmodel = GridSearchCV(estimator=RForregCV, param_grid=param_grid, cv=5)
+        CV_rfmodel.fit(X_train, Y_train.values.ravel())
+
+        # Final training
+        random_forest_rs_gridcv = RForregCV.set_params(**CV_rfmodel.best_params_)
+        random_forest_rs_gridcv.fit(X_train, Y_train.values.ravel())
+
+        # Save model
+        joblib.dump(random_forest_rs_gridcv,
+                    "./models/RandomForest_Model/Model_RandomForest_rs_gridcv.sav")
+
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, random_forest_rs_gridcv)
+
+    return r2.values[0], pseudor2.values[0]
+
+        
+def sklearn_random_forest_ts_gridcv():
+    df, min_max, Y_train, Y_test, X_train, X_test, Y_train_mean, Y_train_meandev, Y_test_meandev = import_train_test_calc()
+
+    try:
+        filename = 'Model_RandomForest_ts_gridcv.sav'
+        random_forest_model_ts_gridcv = joblib.load(
+            "./models/RandomForest_Model/" + str(filename))
+        logger.info("Model is loaded!\n")
+    except:
+        logger.info("Model is creating!\n")
+        # Training the model incl. Cross Validation
+        # Initialize RandomForestRegressor
+        RForregCV = RandomForestRegressor(random_state=0)
+        # Determine hyperparameter combinations
+        # param_grid = {'max_depth': [8, 9, 10, 11, 12],
+                        # 'n_estimators': [80, 100, 120, 140],
+                        # 'max_leaf_nodes': [60, 70, 80],
+                        # 'max_samples': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]}
+
+        # final values
+        param_grid = {'max_depth': [10],
+                        'n_estimators': [100],
+                        'max_leaf_nodes': [80],
+                        'max_samples': [0.2]}
+
+        # Cross Validation
+        CV_rfmodel = GridSearchCV(estimator=RForregCV, param_grid=param_grid, cv=5)
+        CV_rfmodel.fit(X_train, Y_train.values.ravel())
+
+        # Final training
+        random_forest_model_ts_gridcv = RForregCV.set_params(**CV_rfmodel.best_params_)
+        random_forest_model_ts_gridcv.fit(X_train, Y_train.values.ravel())
+
+        # Save model
+        joblib.dump(random_forest_model_ts_gridcv,
+                    "./models/RandomForest_Model/Model_RandomForest_ts_gridcv.sav")
+
+    r2, pseudor2 = r_squared_metrics(
+        X_train, X_test, Y_train, Y_train_meandev, Y_test, Y_test_meandev, random_forest_model_ts_gridcv)
+
     return r2.values[0], pseudor2.values[0]

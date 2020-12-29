@@ -95,17 +95,17 @@ X_train_rs, Y_train_rs, X_test_rs, Y_test_rs = train_test_split_rs(
 
 # create train test split samples
 # X_train_rs, Y_train_rs, X_test_rs, Y_test_rs = train_test_split_rs(
-#     df, train_size)
+    # df, train_size)
 
 # save in database
 X_train_rs.to_sql("X_train_rs_NN_SVR", connection,
-                  if_exists="replace", index=False)
+               if_exists="replace", index=False)
 Y_train_rs.to_sql("Y_train_rs_NN_SVR", connection,
-                  if_exists="replace", index=False)
+               if_exists="replace", index=False)
 X_test_rs.to_sql("X_test_rs_NN_SVR", connection,
-                 if_exists="replace", index=False)
+               if_exists="replace", index=False)
 Y_test_rs.to_sql("Y_test_rs_NN_SVR", connection,
-                 if_exists="replace", index=False)
+               if_exists="replace", index=False)
 
 
 # print statement
