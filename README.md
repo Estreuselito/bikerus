@@ -10,6 +10,7 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
 > 🚴 This repository shows how to predict the demand for bikes available for rent through Washington D.C.'s Capital Bikeshare.
 
 - [Bikerus](#bikerus)
+- [Check it out!](#check-it-out)
 - [Introduction for reproducibility](#introduction-for-reproducibility)
   - [Docker](#docker)
   - [Anaconda](#anaconda)
@@ -28,6 +29,9 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
   - [Scikit-learn - MLPRegressor](#scikit-learn---mlpregressor)
 - [Deployment and live predictions](#deployment-and-live-predictions)
 
+# Check it out!
+
+You can check our live demo [here](http://bikerus.azurewebsites.net/). If you want to have a deeper insight in how we did things, you can read our paper, which is also available within this repo.
 # Introduction for reproducibility
 
 > 💡 The text that follows outlines how to fully reproduce the findings of this repository.
