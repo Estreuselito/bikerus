@@ -4,7 +4,7 @@ Authors: *[Yannik Suhre](https://github.com/Estreuselito), [Jan Faulstich](https
 
 ![language](https://img.shields.io/badge/language-Python%20%7C%20Docker-blue)
 ![version](https://img.shields.io/badge/version-v1.0.0-yellow)
-![last-edited](https://img.shields.io/badge/last%20edited-12.11.2020-green)
+![last-edited](https://img.shields.io/badge/last%20edited-03.01.2020-green)
 ![licence](https://img.shields.io/badge/licence-GPLv3-red)
 
 > 🚴 This repository shows how to predict the demand for bikes available for rent through Washington D.C.'s Capital Bikeshare.
